@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "character",
+  "version": "1.0",
+  "title": "Character",
+  "description": "A human, creature, or identifiable subject. MASTER_SPEC §9.2 / §10.2 / §11.2. All fields are required; concept arrays MAY be empty.",
+  "type": "object",
+  "required": [
+    "id",
+    "identity",
+    "appearance",
+    "clothing",
+    "accessories",
+    "pose",
+    "expression",
+    "actions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "integer" },
+    "identity": { "type": "array", "items": { "$ref": "concept" } },
+    "appearance": { "type": "array", "items": { "$ref": "concept" } },
+    "clothing": { "type": "array", "items": { "$ref": "concept" } },
+    "accessories": { "type": "array", "items": { "$ref": "concept" } },
+    "pose": { "type": "array", "items": { "$ref": "concept" } },
+    "expression": { "type": "array", "items": { "$ref": "concept" } },
+    "actions": { "type": "array", "items": { "$ref": "concept" } }
+  }
+}

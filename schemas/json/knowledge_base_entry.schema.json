@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "knowledge_base_entry",
+  "version": "1.0",
+  "title": "Knowledge Base Entry",
+  "description": "A canonical Knowledge Base concept. MASTER_SPEC §11.6 / §15.5.",
+  "type": "object",
+  "required": ["id", "tags", "category"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$" },
+    "aliases": { "type": "array", "items": { "type": "string" } },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "category": { "type": "string" },
+    "expand": { "type": "array", "items": { "type": "string" } },
+    "deprecated": { "type": "boolean" },
+    "notes": { "type": "string" }
+  }
+}

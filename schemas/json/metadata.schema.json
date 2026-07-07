@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "metadata",
+  "version": "1.0",
+  "title": "Metadata",
+  "description": "Compiler metadata. MASTER_SPEC §9.7 / §11.5. MUST NOT affect compilation.",
+  "type": "object",
+  "required": ["schema_version"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "compiler_version": { "type": "string" },
+    "language": { "type": "string" },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  }
+}
