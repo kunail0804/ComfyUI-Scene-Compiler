@@ -1,0 +1,20 @@
+[
+  { "id": "chair", "tags": ["chair"], "category": "objects" },
+  { "id": "table", "tags": ["table"], "category": "objects" },
+  { "id": "book", "tags": ["book"], "category": "objects" },
+  { "id": "sword", "tags": ["sword"], "category": "objects" },
+  { "id": "shield", "tags": ["shield"], "category": "objects" },
+  { "id": "umbrella", "tags": ["umbrella"], "category": "objects" },
+  { "id": "cup", "aliases": ["mug"], "tags": ["cup"], "category": "objects" },
+  { "id": "flower", "tags": ["flower"], "category": "objects" },
+  { "id": "tree", "tags": ["tree"], "category": "objects" },
+  { "id": "car", "aliases": ["automobile"], "tags": ["car"], "category": "objects" },
+  { "id": "phone", "aliases": ["smartphone", "cellphone"], "tags": ["phone"], "category": "objects" },
+  { "id": "bag", "aliases": ["handbag"], "tags": ["bag"], "category": "objects" },
+  { "id": "window", "tags": ["window"], "category": "objects" },
+  { "id": "bench", "tags": ["bench"], "category": "objects" },
+  { "id": "lamp", "tags": ["lamp"], "category": "objects" },
+  { "id": "bottle", "tags": ["bottle"], "category": "objects" },
+  { "id": "guitar", "tags": ["guitar"], "category": "objects" },
+  { "id": "sign", "tags": ["sign"], "category": "objects" }
+]

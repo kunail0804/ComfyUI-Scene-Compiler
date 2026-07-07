@@ -1,0 +1,12 @@
+[
+  { "id": "animal_ears", "aliases": ["beast ears"], "tags": ["animal ears"], "category": "body" },
+  { "id": "cat_ears", "aliases": ["neko ears"], "tags": ["cat ears"], "category": "body" },
+  { "id": "fox_ears", "tags": ["fox ears"], "category": "body" },
+  { "id": "pointy_ears", "aliases": ["elf ears"], "tags": ["pointy ears"], "category": "body" },
+  { "id": "tail", "tags": ["tail"], "category": "body" },
+  { "id": "cat_tail", "tags": ["cat tail"], "category": "body" },
+  { "id": "wings", "tags": ["wings"], "category": "body" },
+  { "id": "angel_wings", "tags": ["angel wings"], "category": "body" },
+  { "id": "horns", "tags": ["horns"], "category": "body" },
+  { "id": "abs", "tags": ["abs"], "category": "body" }
+]

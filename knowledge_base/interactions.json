@@ -1,0 +1,9 @@
+[
+  { "id": "hug", "aliases": ["hugging", "embrace"], "tags": ["hug"], "category": "interaction" },
+  { "id": "holding_hands", "tags": ["holding hands"], "category": "interaction" },
+  { "id": "kiss", "aliases": ["kissing"], "tags": ["kiss"], "category": "interaction" },
+  { "id": "carrying", "tags": ["carrying"], "category": "interaction" },
+  { "id": "back_to_back", "tags": ["back-to-back"], "category": "interaction" },
+  { "id": "fighting", "tags": ["fighting"], "category": "interaction" },
+  { "id": "dancing_together", "tags": ["dancing"], "category": "interaction" }
+]

@@ -1,0 +1,11 @@
+[
+  { "id": "standing", "tags": ["standing"], "category": "pose" },
+  { "id": "sitting", "aliases": ["seated"], "tags": ["sitting"], "category": "pose" },
+  { "id": "kneeling", "tags": ["kneeling"], "category": "pose" },
+  { "id": "lying", "aliases": ["lying down"], "tags": ["lying"], "category": "pose" },
+  { "id": "crouching", "aliases": ["squatting"], "tags": ["crouching"], "category": "pose" },
+  { "id": "jumping", "tags": ["jumping"], "category": "pose" },
+  { "id": "arms_crossed", "aliases": ["arms crossed"], "tags": ["crossed arms"], "category": "pose" },
+  { "id": "hands_on_hips", "tags": ["hands on hips"], "category": "pose" },
+  { "id": "leaning", "tags": ["leaning"], "category": "pose" }
+]
