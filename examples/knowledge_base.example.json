@@ -1,0 +1,16 @@
+[
+  {
+    "id": "long_hair",
+    "aliases": ["lengthy hair"],
+    "tags": ["long hair"],
+    "category": "hair"
+  },
+  {
+    "id": "twin_braids",
+    "aliases": ["twintail braids", "double braids"],
+    "tags": ["twin braids"],
+    "category": "hair",
+    "expand": ["long_hair"],
+    "notes": "Composite hairstyle: resolving 'twin braids' also adds 'long hair' via expansion."
+  }
+]
