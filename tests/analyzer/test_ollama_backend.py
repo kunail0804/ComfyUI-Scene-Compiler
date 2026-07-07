@@ -55,7 +55,7 @@ def test_successful_generate_returns_text_and_telemetry() -> None:
     # Prompt is sent unmodified, with the configured model/temperature/timeout.
     assert captured["payload"]["prompt"] == "A blonde girl in a red dress."
     assert captured["payload"]["model"] == "llama3"
-    assert captured["payload"]["options"]["temperature"] == 0.0
+    assert captured["payload"]["options"]["temperature"] == pytest.approx(0.0)
     assert captured["payload"]["stream"] is False
     assert captured["timeout"] == 60
     assert captured["url"].endswith("/api/generate")
@@ -68,8 +68,9 @@ def test_timeout_maps_to_sc0013() -> None:
     def transport(url, payload, timeout):
         raise TimeoutError("timed out")
 
+    backend = make_backend(transport)
     with pytest.raises(BackendTimeoutError) as exc:
-        make_backend(transport).generate("hi")
+        backend.generate("hi")
     assert exc.value.code == "SC0013"
     assert exc.value.to_message().code == "SC0013"
 
@@ -78,8 +79,9 @@ def test_connection_failure_maps_to_sc0012_fatal() -> None:
     def transport(url, payload, timeout):
         raise ConnectionError("refused")
 
+    backend = make_backend(transport)
     with pytest.raises(BackendUnavailableError) as exc:
-        make_backend(transport).generate("hi")
+        backend.generate("hi")
     assert exc.value.code == "SC0012"
     assert exc.value.to_message().severity is Severity.FATAL
 
@@ -88,16 +90,18 @@ def test_urlerror_maps_to_connection_failure() -> None:
     def transport(url, payload, timeout):
         raise urllib.error.URLError("no route")
 
+    backend = make_backend(transport)
     with pytest.raises(BackendUnavailableError):
-        make_backend(transport).generate("hi")
+        backend.generate("hi")
 
 
 def test_http_error_maps_to_sc0018() -> None:
     def transport(url, payload, timeout):
         raise urllib.error.HTTPError(url, 500, "server error", hdrs=None, fp=None)
 
+    backend = make_backend(transport)
     with pytest.raises(BackendResponseError) as exc:
-        make_backend(transport).generate("hi")
+        backend.generate("hi")
     assert exc.value.code == "SC0018"
 
 
@@ -105,8 +109,9 @@ def test_missing_response_field_maps_to_sc0018() -> None:
     def transport(url, payload, timeout):
         return {"unexpected": "shape"}
 
+    backend = make_backend(transport)
     with pytest.raises(BackendResponseError) as exc:
-        make_backend(transport).generate("hi")
+        backend.generate("hi")
     assert exc.value.code == "SC0018"
 
 
@@ -114,5 +119,6 @@ def test_non_dict_response_maps_to_sc0018() -> None:
     def transport(url, payload, timeout):
         return "not a dict"
 
+    backend = make_backend(transport)
     with pytest.raises(BackendResponseError):
-        make_backend(transport).generate("hi")
+        backend.generate("hi")
