@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "interaction",
+  "version": "1.0",
+  "title": "Interaction",
+  "description": "A relationship between two or more characters. MASTER_SPEC §9.4 / §11.4. participants reference existing Character ids.",
+  "type": "object",
+  "required": ["participants", "concept"],
+  "additionalProperties": false,
+  "properties": {
+    "participants": { "type": "array", "items": { "type": "integer" } },
+    "concept": { "type": "string" }
+  }
+}

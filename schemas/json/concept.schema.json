@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "concept",
+  "version": "1.0",
+  "title": "Concept",
+  "description": "A semantic concept. MASTER_SPEC §9.3 / §11.3. Serialized either as a bare string (equivalent to {\"name\": <string>}) or as an object.",
+  "oneOf": [
+    { "type": "string" },
+    {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "source": { "type": "string" },
+        "metadata": { "type": "object" }
+      }
+    }
+  ]
+}

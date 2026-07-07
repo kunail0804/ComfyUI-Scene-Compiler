@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "category_map",
+  "version": "1.0",
+  "title": "Category Map",
+  "description": "Maps each category name to an ordered array of Resolved Tags. MASTER_SPEC §9.9 / §11.8. Category completeness is guaranteed by the Category Splitter, not this schema; missing categories are empty arrays.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "array",
+    "items": { "$ref": "resolved_tag" }
+  }
+}

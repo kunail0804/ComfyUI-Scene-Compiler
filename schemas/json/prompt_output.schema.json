@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "prompt_output",
+  "version": "1.0",
+  "title": "Prompt Output",
+  "description": "One final workflow output. MASTER_SPEC §9.10 / §11.9. value is always a string.",
+  "type": "object",
+  "required": ["name", "value"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string" },
+    "value": { "type": "string" }
+  }
+}

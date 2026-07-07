@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "resolved_tag",
+  "version": "1.0",
+  "title": "Resolved Tag",
+  "description": "A generated Illustrious tag with full traceability. MASTER_SPEC §9.8 / §11.7.",
+  "type": "object",
+  "required": ["tag", "category", "source_concept", "knowledge_base_entry"],
+  "additionalProperties": false,
+  "properties": {
+    "tag": { "type": "string" },
+    "category": { "type": "string" },
+    "source_concept": { "type": "string" },
+    "knowledge_base_entry": { "type": "string" }
+  }
+}

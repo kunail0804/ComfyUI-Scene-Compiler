@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scene",
+  "version": "1.0",
+  "title": "Scene",
+  "description": "The Scene JSON root. MASTER_SPEC §10.1 / §11.1. All sections are required; collections MAY be empty.",
+  "type": "object",
+  "required": [
+    "characters",
+    "interactions",
+    "objects",
+    "environment",
+    "camera",
+    "lighting",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "characters": { "type": "array", "items": { "$ref": "character" } },
+    "interactions": { "type": "array", "items": { "$ref": "interaction" } },
+    "objects": { "type": "array", "items": { "$ref": "concept" } },
+    "environment": { "type": "array", "items": { "$ref": "concept" } },
+    "camera": { "type": "array", "items": { "$ref": "concept" } },
+    "lighting": { "type": "array", "items": { "$ref": "concept" } },
+    "metadata": { "$ref": "metadata" }
+  }
+}
