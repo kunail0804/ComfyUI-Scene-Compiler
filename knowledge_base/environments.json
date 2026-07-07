@@ -1,0 +1,21 @@
+[
+  { "id": "forest", "tags": ["forest"], "category": "environment" },
+  { "id": "classroom", "tags": ["classroom"], "category": "environment" },
+  { "id": "beach", "tags": ["beach"], "category": "environment" },
+  { "id": "street", "tags": ["street"], "category": "environment" },
+  { "id": "city", "aliases": ["cityscape"], "tags": ["city"], "category": "environment" },
+  { "id": "bedroom", "tags": ["bedroom"], "category": "environment" },
+  { "id": "kitchen", "tags": ["kitchen"], "category": "environment" },
+  { "id": "cafe", "aliases": ["coffee shop"], "tags": ["cafe"], "category": "environment" },
+  { "id": "castle", "tags": ["castle"], "category": "environment" },
+  { "id": "park", "tags": ["park"], "category": "environment" },
+  { "id": "mountain", "aliases": ["mountains"], "tags": ["mountain"], "category": "environment" },
+  { "id": "ocean", "aliases": ["sea"], "tags": ["ocean"], "category": "environment" },
+  { "id": "sky", "tags": ["sky"], "category": "environment" },
+  { "id": "field", "aliases": ["meadow"], "tags": ["field"], "category": "environment" },
+  { "id": "indoors", "aliases": ["inside"], "tags": ["indoors"], "category": "environment" },
+  { "id": "outdoors", "aliases": ["outside"], "tags": ["outdoors"], "category": "environment" },
+  { "id": "rain", "aliases": ["rainy"], "tags": ["rain"], "category": "environment" },
+  { "id": "snow", "aliases": ["snowy"], "tags": ["snow"], "category": "environment" },
+  { "id": "night", "aliases": ["nighttime"], "tags": ["night"], "category": "environment" }
+]

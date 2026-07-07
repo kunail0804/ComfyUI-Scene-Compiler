@@ -1,0 +1,14 @@
+[
+  { "id": "walking", "tags": ["walking"], "category": "action" },
+  { "id": "running", "tags": ["running"], "category": "action" },
+  { "id": "reading", "tags": ["reading"], "category": "action" },
+  { "id": "sleeping", "tags": ["sleeping"], "category": "action" },
+  { "id": "eating", "tags": ["eating"], "category": "action" },
+  { "id": "drinking", "tags": ["drinking"], "category": "action" },
+  { "id": "dancing", "tags": ["dancing"], "category": "action" },
+  { "id": "waving", "tags": ["waving"], "category": "action" },
+  { "id": "holding_object", "aliases": ["holding"], "tags": ["holding"], "category": "action" },
+  { "id": "looking_at_viewer", "tags": ["looking at viewer"], "category": "action" },
+  { "id": "cooking", "tags": ["cooking"], "category": "action" },
+  { "id": "singing", "tags": ["singing"], "category": "action" }
+]

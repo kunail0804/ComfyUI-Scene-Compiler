@@ -1,0 +1,13 @@
+[
+  { "id": "close_up", "aliases": ["closeup"], "tags": ["close-up"], "category": "camera" },
+  { "id": "wide_shot", "tags": ["wide shot"], "category": "camera" },
+  { "id": "full_body", "tags": ["full body"], "category": "camera" },
+  { "id": "upper_body", "tags": ["upper body"], "category": "camera" },
+  { "id": "cowboy_shot", "tags": ["cowboy shot"], "category": "camera" },
+  { "id": "low_angle", "aliases": ["low angle"], "tags": ["from below"], "category": "camera" },
+  { "id": "high_angle", "aliases": ["high angle"], "tags": ["from above"], "category": "camera" },
+  { "id": "from_side", "aliases": ["side view", "profile view"], "tags": ["from side"], "category": "camera" },
+  { "id": "from_behind", "aliases": ["back view", "rear view"], "tags": ["from behind"], "category": "camera" },
+  { "id": "from_front", "aliases": ["front view"], "tags": ["front view"], "category": "camera" },
+  { "id": "dutch_angle", "tags": ["dutch angle"], "category": "camera" }
+]

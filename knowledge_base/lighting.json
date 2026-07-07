@@ -1,0 +1,12 @@
+[
+  { "id": "sunset", "tags": ["sunset"], "category": "lighting" },
+  { "id": "sunrise", "tags": ["sunrise"], "category": "lighting" },
+  { "id": "moonlight", "tags": ["moonlight"], "category": "lighting" },
+  { "id": "backlighting", "aliases": ["backlit"], "tags": ["backlighting"], "category": "lighting" },
+  { "id": "sunlight", "tags": ["sunlight"], "category": "lighting" },
+  { "id": "soft_lighting", "tags": ["soft lighting"], "category": "lighting" },
+  { "id": "studio_lighting", "tags": ["studio lighting"], "category": "lighting" },
+  { "id": "candlelight", "tags": ["candlelight"], "category": "lighting" },
+  { "id": "neon_lighting", "aliases": ["neon lights"], "tags": ["neon lighting"], "category": "lighting" },
+  { "id": "dim_lighting", "tags": ["dim lighting"], "category": "lighting" }
+]

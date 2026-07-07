@@ -1,0 +1,15 @@
+[
+  { "id": "smile", "aliases": ["smiling"], "tags": ["smile"], "category": "expression" },
+  { "id": "grin", "tags": ["grin"], "category": "expression" },
+  { "id": "frown", "tags": ["frown"], "category": "expression" },
+  { "id": "angry", "aliases": ["mad"], "tags": ["angry"], "category": "expression" },
+  { "id": "sad", "tags": ["sad"], "category": "expression" },
+  { "id": "crying", "aliases": ["tears"], "tags": ["crying"], "category": "expression" },
+  { "id": "surprised", "aliases": ["shocked"], "tags": ["surprised"], "category": "expression" },
+  { "id": "blush", "aliases": ["blushing"], "tags": ["blush"], "category": "expression" },
+  { "id": "laughing", "tags": ["laughing"], "category": "expression" },
+  { "id": "serious", "tags": ["serious"], "category": "expression" },
+  { "id": "embarrassed", "tags": ["embarrassed"], "category": "expression" },
+  { "id": "open_mouth", "tags": ["open mouth"], "category": "expression" },
+  { "id": "closed_mouth", "tags": ["closed mouth"], "category": "expression" }
+]
