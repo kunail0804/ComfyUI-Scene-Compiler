@@ -44,7 +44,7 @@ class Concept:
     name: str
     category: str | None = None
     source: str | None = None
-    metadata: Mapping[str, Any] = _EMPTY_METADATA
+    metadata: Mapping[str, Any] = field(default_factory=lambda: _EMPTY_METADATA)
 
     @classmethod
     def from_json(cls, data: str | Mapping[str, Any]) -> Concept:
@@ -197,7 +197,9 @@ class ResolvedTag:
 class CategoryMap:
     """Maps each category name to an ordered tuple of Resolved Tags (§9.9)."""
 
-    categories: Mapping[str, tuple[ResolvedTag, ...]] = _EMPTY_METADATA
+    categories: Mapping[str, tuple[ResolvedTag, ...]] = field(
+        default_factory=lambda: _EMPTY_METADATA
+    )
 
     @classmethod
     def from_json(cls, data: Mapping[str, Any]) -> CategoryMap:
