@@ -309,4 +309,7 @@ Our primary objective is reliability rather than creativity.
 # IA Usage in the project
 
 Pretty much everything from text to the code is done using IA. Maybe you don't like that and I understand but I am not qualified enough to understand how ComfyUI nodes works to create new ones and I lack in knowledge to know what a project like this needs. The idea is to use IA to learn as well as produce something usefull to me.
-The texte and brainstorming is done using GPT and the code is written using Claude Code with Opus 4.8.
+The text and brainstorming is done using GPT and the code is written using Claude Code with Opus 4.8.
+
+
+**Sorry for my english this is not my primary language**
