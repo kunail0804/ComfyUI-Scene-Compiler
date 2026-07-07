@@ -52,7 +52,7 @@
       "additionalProperties": false,
       "properties": {
         "enabled": { "type": "boolean" },
-        "level": { "type": "string" }
+        "level": { "type": "string", "enum": ["none", "basic", "verbose", "developer"] }
       }
     }
   }
