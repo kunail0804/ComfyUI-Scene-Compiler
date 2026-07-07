@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comfyui-scene-compiler"
+version = "0.1.0"
+description = "Deterministic natural-language-to-prompt compiler for ComfyUI (Illustrious)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "kunail0804" }]
+
+# Runtime dependencies are kept minimal; prefer the standard library (MASTER_SPEC §25.9).
+# jsonschema is the single validation dependency, used by the schema layer (issue #2 onward).
+dependencies = [
+    "jsonschema>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[project.urls]
+Homepage = "https://github.com/kunail0804/ComfyUI-Scene-Compiler"
+Wiki = "https://github.com/kunail0804/ComfyUI-Scene-Compiler/wiki"
+
+# The repository root is a ComfyUI custom node; its subdirectories are the importable
+# packages. We enumerate them explicitly so packaging does not treat data directories
+# (knowledge_base/, prompts/, ...) as Python packages.
+[tool.setuptools]
+packages = [
+    "nodes",
+    "compiler",
+    "compiler.analyzer",
+    "compiler.validator",
+    "compiler.resolver",
+    "compiler.splitter",
+    "compiler.builder",
+    "compiler.common",
+    "schemas",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+# E/W pycodestyle, F pyflakes, I import sorting, UP pyupgrade, B bugbear.
+select = ["E", "W", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Put the repository root on sys.path so `import compiler`, `import schemas`, etc.
+# resolve as top-level packages during tests (the root itself is loaded by ComfyUI
+# by path, not by name).
+pythonpath = ["."]
