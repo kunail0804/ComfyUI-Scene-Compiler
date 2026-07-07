@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "configuration",
+  "version": "1.0",
+  "title": "Configuration",
+  "description": "Global compiler configuration. MASTER_SPEC §23. Strict: unknown keys (including any random seed) are rejected. Every section and field is optional; omitted values fall back to defaults.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "analyzer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "backend": { "type": "string" },
+        "model": { "type": "string" },
+        "temperature": { "type": "number", "minimum": 0 },
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "timeout": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "resolver": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "knowledge_base": { "type": "string" },
+        "strict_mode": { "type": "boolean" },
+        "allow_aliases": { "type": "boolean" },
+        "expansion_enabled": { "type": "boolean" },
+        "max_expansion_depth": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allow_unknown_fields": { "type": "boolean" }
+      }
+    },
+    "prompt_builder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target": { "type": "string" },
+        "separator": { "type": "string" },
+        "trim_empty_outputs": { "type": "boolean" },
+        "remove_duplicate_tags": { "type": "boolean" }
+      }
+    },
+    "debug": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "level": { "type": "string" }
+      }
+    }
+  }
+}
