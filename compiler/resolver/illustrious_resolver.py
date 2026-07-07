@@ -1,0 +1,250 @@
+"""The Illustrious Resolver (MASTER_SPEC §17).
+
+Deterministically converts the semantic concepts of a validated Scene into
+Illustrious Resolved Tags using the Knowledge Base. No language model is involved
+and no concept or tag is ever invented.
+
+Per-concept pipeline (§17.2): normalize -> alias resolution (direct only) ->
+canonical lookup -> expansion -> tag generation. Concepts are processed in scene
+discovery order (§17.8) and every generated tag keeps the category of its
+Knowledge Base Entry.
+"""
+
+from __future__ import annotations
+
+import unicodedata
+from collections.abc import Iterator
+
+from compiler.common.categories import is_valid_category
+from compiler.common.config import Config
+from compiler.common.knowledge_base import KnowledgeBase, KnowledgeBaseEntry
+from compiler.common.log import StructuredLogger
+from compiler.common.message_codes import message
+from compiler.common.result import CompilerResult, Message
+from schemas.models import ResolvedTag, Scene
+
+_CHARACTER_CONCEPT_FIELDS = (
+    "identity",
+    "appearance",
+    "clothing",
+    "accessories",
+    "pose",
+    "expression",
+    "actions",
+)
+
+
+def normalize_concept(name: str) -> str:
+    """Normalize a concept for lookup (§17.3).
+
+    Applies Unicode (NFKC) normalization and lowercasing, and unifies underscores
+    with spaces before collapsing whitespace, so natural-language concepts
+    ("holding hands"), snake_case ids ("holding_hands"), and spaced aliases all
+    map to the same key.
+    """
+    text = unicodedata.normalize("NFKC", name).replace("_", " ").lower()
+    return " ".join(text.split())
+
+
+def resolve_scene(
+    scene: Scene,
+    knowledge_base: KnowledgeBase,
+    config: Config,
+    logger: StructuredLogger | None = None,
+) -> CompilerResult:
+    """Resolve a validated Scene into an ordered tuple of Resolved Tags.
+
+    Returns:
+        A CompilerResult whose ``data`` is the tuple of :class:`ResolvedTag` on
+        success, or ``None`` with error messages when an error condition
+        (circular expansion SC0003, invalid category SC0008) stops resolution.
+    """
+    index = _build_normalized_index(knowledge_base)
+    resolver = _ConceptResolver(knowledge_base, index, config, logger)
+
+    tags: list[ResolvedTag] = []
+    warnings: list[Message] = []
+    errors: list[Message] = []
+
+    for concept_name in _iter_scene_concepts(scene):
+        resolved = resolver.resolve(concept_name)
+        tags.extend(resolved.tags)
+        warnings.extend(resolved.warnings)
+        errors.extend(resolved.errors)
+
+    if errors:
+        result = CompilerResult()
+        for error in errors:
+            result = result.add_error(error)
+        return result
+
+    deduped, dedup_warnings = _deduplicate(tags)
+    warnings.extend(dedup_warnings)
+
+    result = CompilerResult(data=tuple(deduped))
+    for warning in warnings:
+        result = result.add_warning(warning)
+    if logger is not None:
+        logger.basic("scene_resolved", tags=len(deduped), warnings=len(warnings))
+    return result
+
+
+def _build_normalized_index(
+    knowledge_base: KnowledgeBase,
+) -> dict[str, KnowledgeBaseEntry]:
+    """Map every normalized canonical id and alias to its entry (aliases direct)."""
+    index: dict[str, KnowledgeBaseEntry] = {}
+    for entry in knowledge_base.by_id.values():
+        index[normalize_concept(entry.id)] = entry
+        for alias in entry.aliases:
+            index[normalize_concept(alias)] = entry
+    return index
+
+
+def _iter_scene_concepts(scene: Scene) -> Iterator[str]:
+    """Yield concept names in scene discovery order (§17.8)."""
+    for character in scene.characters:
+        for field in _CHARACTER_CONCEPT_FIELDS:
+            for concept in getattr(character, field):
+                yield concept.name
+    for interaction in scene.interactions:
+        yield interaction.concept
+    for field in ("objects", "environment", "camera", "lighting"):
+        for concept in getattr(scene, field):
+            yield concept.name
+
+
+class _Resolution:
+    """The outcome of resolving one concept."""
+
+    __slots__ = ("tags", "warnings", "errors")
+
+    def __init__(self) -> None:
+        self.tags: list[ResolvedTag] = []
+        self.warnings: list[Message] = []
+        self.errors: list[Message] = []
+
+
+class _ConceptResolver:
+    """Resolves a single concept (with expansion) against a normalized index."""
+
+    def __init__(
+        self,
+        knowledge_base: KnowledgeBase,
+        index: dict[str, KnowledgeBaseEntry],
+        config: Config,
+        logger: StructuredLogger | None,
+    ) -> None:
+        self._kb = knowledge_base
+        self._index = index
+        self._allow_aliases = config.resolver.allow_aliases
+        self._expansion_enabled = config.resolver.expansion_enabled
+        self._max_depth = config.resolver.max_expansion_depth
+        self._logger = logger
+
+    def resolve(self, concept_name: str) -> _Resolution:
+        outcome = _Resolution()
+        key = normalize_concept(concept_name)
+        entry = self._lookup(key)
+        if entry is None:
+            outcome.warnings.append(
+                message(
+                    "SC0001",
+                    f"Unknown concept '{concept_name}' has no Knowledge Base entry; ignored.",
+                    concept=concept_name,
+                )
+            )
+            if self._logger is not None:
+                self._logger.verbose("concept_unknown", concept=concept_name, normalized=key)
+            return outcome
+
+        self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
+        return outcome
+
+    def _lookup(self, key: str) -> KnowledgeBaseEntry | None:
+        entry = self._index.get(key)
+        if entry is None:
+            return None
+        # A key that matches an alias but not the entry's own id is an alias hit.
+        if not self._allow_aliases and key != normalize_concept(entry.id):
+            return None
+        return entry
+
+    def _expand(
+        self,
+        entry: KnowledgeBaseEntry,
+        source_concept: str,
+        depth: int,
+        path: tuple[str, ...],
+        outcome: _Resolution,
+    ) -> None:
+        if entry.id in path:
+            outcome.errors.append(
+                message(
+                    "SC0003",
+                    f"Circular expansion detected at '{entry.id}' (path: {' -> '.join(path)}).",
+                    entry=entry.id,
+                )
+            )
+            return
+        if not is_valid_category(entry.category):
+            outcome.errors.append(
+                message(
+                    "SC0008",
+                    f"Entry '{entry.id}' has invalid category '{entry.category}'.",
+                    entry=entry.id,
+                )
+            )
+            return
+        if entry.deprecated:
+            outcome.warnings.append(
+                message(
+                    "SC0006",
+                    f"Concept '{entry.id}' is deprecated; migration is encouraged.",
+                    entry=entry.id,
+                )
+            )
+
+        for tag in entry.tags:
+            outcome.tags.append(
+                ResolvedTag(
+                    tag=tag,
+                    category=entry.category,
+                    source_concept=source_concept,
+                    knowledge_base_entry=entry.id,
+                )
+            )
+        if self._logger is not None:
+            self._logger.verbose(
+                "concept_resolved",
+                concept=source_concept,
+                canonical=entry.id,
+                tags=list(entry.tags),
+            )
+
+        if not self._expansion_enabled or depth >= self._max_depth:
+            return
+        for target_id in entry.expand:
+            target = self._kb.get(target_id)
+            if target is not None:
+                self._expand(target, source_concept, depth + 1, (*path, entry.id), outcome)
+
+
+def _deduplicate(tags: list[ResolvedTag]) -> tuple[list[ResolvedTag], list[Message]]:
+    """Remove duplicate tags after expansion, keeping the first occurrence (§17.7)."""
+    seen: set[str] = set()
+    kept: list[ResolvedTag] = []
+    warnings: list[Message] = []
+    for resolved in tags:
+        if resolved.tag in seen:
+            warnings.append(
+                message(
+                    "SC0007",
+                    f"Duplicate tag '{resolved.tag}' removed after expansion.",
+                    tag=resolved.tag,
+                )
+            )
+            continue
+        seen.add(resolved.tag)
+        kept.append(resolved)
+    return kept, warnings
