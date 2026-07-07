@@ -1,18 +1,52 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "knowledge_base_entry",
-  "version": "1.0",
+  "version": "1.1",
   "title": "Knowledge Base Entry",
-  "description": "A canonical Knowledge Base concept. MASTER_SPEC §11.6 / §15.5.",
+  "description": "A canonical Knowledge Base concept. MASTER_SPEC §11.6, §15.4-§15.10. Cross-entry rules (global uniqueness of ids/aliases, expand targets exist) are enforced by the KB validation tooling, not this per-entry schema.",
   "type": "object",
   "required": ["id", "tags", "category"],
   "additionalProperties": false,
   "properties": {
     "id": { "type": "string", "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$" },
-    "aliases": { "type": "array", "items": { "type": "string" } },
-    "tags": { "type": "array", "items": { "type": "string" } },
-    "category": { "type": "string" },
-    "expand": { "type": "array", "items": { "type": "string" } },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "character",
+        "appearance",
+        "hair",
+        "face",
+        "eyes",
+        "expression",
+        "body",
+        "clothing",
+        "accessories",
+        "pose",
+        "action",
+        "interaction",
+        "objects",
+        "environment",
+        "camera",
+        "lighting",
+        "style",
+        "quality",
+        "miscellaneous"
+      ]
+    },
+    "expand": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$" }
+    },
     "deprecated": { "type": "boolean" },
     "notes": { "type": "string" }
   }
