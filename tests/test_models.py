@@ -41,7 +41,7 @@ def test_concept_from_object() -> None:
 
 def test_concept_confidence_lives_in_metadata() -> None:
     c = Concept.from_json({"name": "female", "metadata": {"confidence": 0.98}})
-    assert c.metadata["confidence"] == 0.98
+    assert c.metadata["confidence"] == pytest.approx(0.98)
 
 
 def test_concept_bare_string_serializes_back_to_string() -> None:
