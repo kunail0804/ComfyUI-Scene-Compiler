@@ -16,7 +16,8 @@
         "model": { "type": "string" },
         "temperature": { "type": "number", "minimum": 0 },
         "max_retries": { "type": "integer", "minimum": 0 },
-        "timeout": { "type": "number", "exclusiveMinimum": 0 }
+        "timeout": { "type": "number", "exclusiveMinimum": 0 },
+        "system_prompt": { "type": ["string", "null"] }
       }
     },
     "resolver": {

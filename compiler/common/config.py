@@ -48,15 +48,19 @@ class AnalyzerConfig:
     temperature: float = 0.0
     max_retries: int = 3
     timeout: int = 60
+    system_prompt: str | None = None
 
     def to_json(self) -> dict[str, Any]:
-        return {
+        result: dict[str, Any] = {
             "backend": self.backend,
             "model": self.model,
             "temperature": self.temperature,
             "max_retries": self.max_retries,
             "timeout": self.timeout,
         }
+        if self.system_prompt is not None:
+            result["system_prompt"] = self.system_prompt
+        return result
 
 
 @dataclass(frozen=True)
