@@ -102,9 +102,20 @@ def test_wrong_type_is_rejected() -> None:
     assert "SC0011" in codes(result.errors)
 
 
-def test_markdown_fenced_json_is_not_repaired() -> None:
-    # No heuristic repair: fenced output must fail rather than be stripped.
-    fenced = "```json\n" + scene_response() + "\n```"
-    result = parse_scene_response(fenced)
+def test_json_fenced_response_is_unwrapped() -> None:
+    # Most local models wrap JSON in a ```json fence; unwrapping is not repair.
+    result = parse_scene_response("```json\n" + scene_response() + "\n```")
+    assert result.success
+    assert isinstance(result.data, Scene)
+
+
+def test_plain_fenced_response_is_unwrapped() -> None:
+    result = parse_scene_response("```\n" + scene_response() + "\n```")
+    assert result.success
+
+
+def test_fenced_but_malformed_json_still_fails() -> None:
+    # Unwrapping only removes the fence; malformed JSON inside is still rejected.
+    result = parse_scene_response("```json\n{ not valid json\n```")
     assert not result.success
     assert "SC0011" in codes(result.errors)

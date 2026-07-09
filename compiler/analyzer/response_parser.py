@@ -34,7 +34,7 @@ def parse_scene_response(text: str, logger: StructuredLogger | None = None) -> C
         valid Scene JSON document.
     """
     try:
-        data = json.loads(text)
+        data = json.loads(_strip_code_fence(text))
     except json.JSONDecodeError as exc:
         return _reject("json_decode", f"Analyzer response is not valid JSON: {exc}", logger)
 
@@ -56,6 +56,24 @@ def parse_scene_response(text: str, logger: StructuredLogger | None = None) -> C
     if logger is not None:
         logger.verbose("analyzer_response_parsed", characters=len(scene.characters))
     return CompilerResult(data=scene)
+
+
+def _strip_code_fence(text: str) -> str:
+    """Unwrap a Markdown code fence around the response, if present.
+
+    Most local models wrap their JSON in a ```json ... ``` (or plain ```) fence
+    despite being told not to. Unwrapping the fence is not JSON repair (§12.9):
+    the JSON inside is left byte-for-byte unchanged; only the surrounding code-
+    block markers are removed. Text without a fence is returned unchanged.
+    """
+    stripped = text.strip()
+    if not stripped.startswith("```"):
+        return text
+    lines = stripped.splitlines()
+    lines = lines[1:]  # drop the opening ``` / ```json line
+    if lines and lines[-1].strip() == "```":
+        lines = lines[:-1]  # drop the closing ``` line
+    return "\n".join(lines)
 
 
 def _stamp_metadata(data: dict[str, Any]) -> None:
