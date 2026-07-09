@@ -35,6 +35,9 @@ class PromptBuilderNode:
         }
 
     def run(self, category_map: Any, config: Config | None = None) -> tuple[str, ...]:
+        if category_map is None:
+            # Upstream produced no Category Map; emit empty strings rather than crash.
+            return tuple("" for _ in _OUTPUT_NAMES)
         result = build_prompts(category_map, config or Config())
         by_name = {output.name: output.value for output in result.data}
         return tuple(by_name[name] for name in _OUTPUT_NAMES)

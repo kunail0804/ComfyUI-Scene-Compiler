@@ -12,7 +12,7 @@ from typing import Any
 from compiler.common.config import Config
 from compiler.validator.scene_validator import validate_scene
 
-from .adapters import format_messages
+from .adapters import format_messages, upstream_failure_message
 
 
 class SceneValidatorNode:
@@ -31,5 +31,7 @@ class SceneValidatorNode:
         }
 
     def run(self, scene: Any, config: Config | None = None) -> tuple[Any, str, str]:
+        if scene is None:
+            return (None, "", upstream_failure_message("scene"))
         result = validate_scene(scene.to_json(), config or Config())
         return (result.data, format_messages(result.warnings), format_messages(result.errors))
