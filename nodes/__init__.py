@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from .category_splitter_node import CategorySplitterNode
 from .debug_viewer_node import DebugViewerNode
+from .knowledge_base_loader_node import KnowledgeBaseLoaderNode
 from .prompt_builder_node import PromptBuilderNode
 from .resolver_node import ResolverNode
 from .scene_analyzer_node import SceneAnalyzerNode
@@ -21,6 +22,7 @@ NODE_CLASS_MAPPINGS: dict[str, type] = {
     "SceneCompilerCategorySplitter": CategorySplitterNode,
     "SceneCompilerPromptBuilder": PromptBuilderNode,
     "SceneCompilerDebugViewer": DebugViewerNode,
+    "SceneCompilerKnowledgeBaseLoader": KnowledgeBaseLoaderNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS: dict[str, str] = {
@@ -30,6 +32,7 @@ NODE_DISPLAY_NAME_MAPPINGS: dict[str, str] = {
     "SceneCompilerCategorySplitter": "Category Splitter",
     "SceneCompilerPromptBuilder": "Prompt Builder",
     "SceneCompilerDebugViewer": "Debug Viewer",
+    "SceneCompilerKnowledgeBaseLoader": "Knowledge Base Loader",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
