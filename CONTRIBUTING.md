@@ -34,3 +34,21 @@ pytest                # tests
 - **Tests ship with code** — new functionality includes tests; every bug fix adds a
   regression test.
 - Explicit type hints on public functions, docstrings, and structured logging (no `print`).
+
+## Contributing to the Knowledge Base
+
+The Knowledge Base is data, not code. To add or edit a concept, follow the field
+rules and file layout in [`knowledge_base/README.md`](knowledge_base/README.md),
+then validate your change:
+
+```bash
+python scripts/validate_knowledge_base.py knowledge_base/
+```
+
+A change that alters compiler output must also update the golden files
+deliberately (see [`tests/regression/golden/README.md`](tests/regression/golden/README.md)).
+
+## Node and developer reference
+
+- ComfyUI node inputs/outputs: [`docs/nodes.md`](docs/nodes.md)
+- Performance baselines: [`docs/benchmarks.md`](docs/benchmarks.md)
