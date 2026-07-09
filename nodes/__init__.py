@@ -8,6 +8,7 @@ Nodes are thin interfaces; all compiler logic lives in the ``compiler`` package.
 from __future__ import annotations
 
 from .category_splitter_node import CategorySplitterNode
+from .configuration_node import ConfigurationNode
 from .debug_viewer_node import DebugViewerNode
 from .knowledge_base_loader_node import KnowledgeBaseLoaderNode
 from .prompt_builder_node import PromptBuilderNode
@@ -23,6 +24,7 @@ NODE_CLASS_MAPPINGS: dict[str, type] = {
     "SceneCompilerPromptBuilder": PromptBuilderNode,
     "SceneCompilerDebugViewer": DebugViewerNode,
     "SceneCompilerKnowledgeBaseLoader": KnowledgeBaseLoaderNode,
+    "SceneCompilerConfiguration": ConfigurationNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS: dict[str, str] = {
@@ -33,6 +35,7 @@ NODE_DISPLAY_NAME_MAPPINGS: dict[str, str] = {
     "SceneCompilerPromptBuilder": "Prompt Builder",
     "SceneCompilerDebugViewer": "Debug Viewer",
     "SceneCompilerKnowledgeBaseLoader": "Knowledge Base Loader",
+    "SceneCompilerConfiguration": "Configuration",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
