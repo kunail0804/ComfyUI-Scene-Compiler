@@ -1,0 +1,20 @@
+{
+  "characters": [
+    {
+      "id": 0,
+      "identity": ["girl"],
+      "appearance": ["blonde hair", "blue eyes"],
+      "clothing": ["dress"],
+      "accessories": [],
+      "pose": ["standing"],
+      "expression": ["smile"],
+      "actions": []
+    }
+  ],
+  "interactions": [],
+  "objects": [],
+  "environment": ["classroom"],
+  "camera": ["closeup"],
+  "lighting": ["sunset"],
+  "metadata": { "schema_version": "1.0" }
+}

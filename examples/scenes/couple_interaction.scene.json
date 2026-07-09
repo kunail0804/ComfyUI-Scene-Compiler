@@ -1,0 +1,30 @@
+{
+  "characters": [
+    {
+      "id": 0,
+      "identity": ["girl"],
+      "appearance": ["long hair", "green eyes"],
+      "clothing": ["school uniform"],
+      "accessories": [],
+      "pose": [],
+      "expression": ["smile"],
+      "actions": []
+    },
+    {
+      "id": 1,
+      "identity": ["boy"],
+      "appearance": ["short hair"],
+      "clothing": ["jacket"],
+      "accessories": [],
+      "pose": [],
+      "expression": [],
+      "actions": []
+    }
+  ],
+  "interactions": [{ "participants": [0, 1], "concept": "holding hands" }],
+  "objects": [],
+  "environment": ["park"],
+  "camera": ["wide shot"],
+  "lighting": ["sunset"],
+  "metadata": { "schema_version": "1.0" }
+}
