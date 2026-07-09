@@ -1,0 +1,9 @@
+# Data shipped with the source distribution (in a ComfyUI install the whole
+# repository is present on disk; this ensures sdists are complete too).
+include LICENSE README.md CONTRIBUTING.md MASTER_SPEC.md CHANGELOG.md
+recursive-include schemas *.schema.json
+recursive-include knowledge_base *.json *.md
+recursive-include prompts *.md
+recursive-include config *.json
+recursive-include examples *.json *.md
+recursive-include docs *.md
