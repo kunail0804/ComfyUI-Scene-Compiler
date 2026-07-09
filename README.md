@@ -76,7 +76,7 @@ fixed workflow — every node can be used independently.
 | **Scene Analyzer** | Natural language, model, temperature, timeout | Scene JSON |
 | **Scene Validator** | Scene JSON | Validated Scene JSON |
 | **Resolver** | Scene JSON, Knowledge Base | Resolved Tags |
-| **Category Splitter** | Resolved Tags | One string per category |
+| **Category Splitter** | Resolved Tags | Category Map |
 | **Prompt Builder** | Category Map | One string per category (+ reserved Negative / Scene) |
 
 ### Support nodes
