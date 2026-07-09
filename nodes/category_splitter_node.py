@@ -15,7 +15,7 @@ from typing import Any
 
 from compiler.splitter.category_splitter import split_into_categories
 
-from .adapters import format_messages
+from .adapters import format_messages, upstream_failure_message
 
 
 class CategorySplitterNode:
@@ -31,5 +31,7 @@ class CategorySplitterNode:
         return {"required": {"resolved_tags": ("RESOLVED_TAGS",)}}
 
     def run(self, resolved_tags: Any) -> tuple[Any, str, str]:
+        if resolved_tags is None:
+            return (None, "", upstream_failure_message("resolved tags"))
         result = split_into_categories(tuple(resolved_tags))
         return (result.data, format_messages(result.warnings), format_messages(result.errors))

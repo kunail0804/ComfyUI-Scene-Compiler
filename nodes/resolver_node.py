@@ -12,7 +12,7 @@ from typing import Any
 from compiler.common.config import Config
 from compiler.resolver.illustrious_resolver import resolve_scene
 
-from .adapters import format_messages
+from .adapters import format_messages, upstream_failure_message
 
 
 class ResolverNode:
@@ -39,5 +39,7 @@ class ResolverNode:
         knowledge_base: Any,
         config: Config | None = None,
     ) -> tuple[Any, str, str]:
+        if scene is None or knowledge_base is None:
+            return (None, "", upstream_failure_message("scene or knowledge base"))
         result = resolve_scene(scene, knowledge_base, config or Config())
         return (result.data, format_messages(result.warnings), format_messages(result.errors))

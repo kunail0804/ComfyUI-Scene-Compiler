@@ -21,6 +21,14 @@ def format_messages(messages: Iterable[Message]) -> str:
     return "\n".join(f"{message.code}: {message.description}" for message in messages)
 
 
+def upstream_failure_message(what: str) -> str:
+    """A stage's error string when a required input is missing (upstream failed)."""
+    return (
+        f"No {what} received: the previous node produced no output. "
+        "Check the errors output of the upstream node."
+    )
+
+
 def render_debug_report(
     *,
     scene: Any = None,
