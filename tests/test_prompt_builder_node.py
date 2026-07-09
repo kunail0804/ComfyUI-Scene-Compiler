@@ -24,8 +24,8 @@ def outputs(result: tuple[str, ...]) -> dict[str, str]:
 
 
 def test_emits_one_output_per_category_plus_reserved() -> None:
-    assert PromptBuilderNode.RETURN_NAMES == (*CANONICAL_CATEGORIES, "negative", "scene")
-    assert PromptBuilderNode.RETURN_TYPES == ("STRING",) * 21
+    assert PromptBuilderNode.RETURN_NAMES == (*CANONICAL_CATEGORIES, "negative", "scene", "raw")
+    assert PromptBuilderNode.RETURN_TYPES == ("STRING",) * 22
 
 
 def test_formats_and_orders_category_strings() -> None:

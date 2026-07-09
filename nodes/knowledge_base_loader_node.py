@@ -3,17 +3,29 @@
 A thin interface: it loads a Knowledge Base directory via the loader module and
 exposes it for the Resolver node. No compiler logic; it never imports ComfyUI.
 
-Reloading is explicit: bumping the ``reload`` input changes the node's inputs so
-ComfyUI re-executes it (there is no automatic file watching).
+A relative ``path`` is resolved against this package (where the shipped
+``knowledge_base/`` lives), not ComfyUI's working directory, so the default works
+regardless of where ComfyUI is launched from. Reloading is explicit: bumping the
+``reload`` input re-executes the node (there is no automatic file watching).
 """
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from compiler.common.knowledge_base import KnowledgeBaseError, load_knowledge_base
 
 from .adapters import format_messages
+
+# Package root: the repository directory that ships knowledge_base/, prompts/, ...
+_PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _resolve_path(path: str) -> Path:
+    """Resolve a relative Knowledge Base path against the package root."""
+    candidate = Path(path)
+    return candidate if candidate.is_absolute() else _PACKAGE_ROOT / candidate
 
 
 class KnowledgeBaseLoaderNode:
@@ -21,8 +33,8 @@ class KnowledgeBaseLoaderNode:
 
     CATEGORY = "Scene Compiler"
     FUNCTION = "run"
-    RETURN_TYPES = ("KNOWLEDGE_BASE", "STRING", "STRING")
-    RETURN_NAMES = ("knowledge_base", "warnings", "errors")
+    RETURN_TYPES = ("KNOWLEDGE_BASE", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("knowledge_base", "warnings", "errors", "raw")
 
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
@@ -31,9 +43,21 @@ class KnowledgeBaseLoaderNode:
             "optional": {"reload": ("INT", {"default": 0, "min": 0})},
         }
 
-    def run(self, path: str, reload: int = 0) -> tuple[Any, str, str]:
+    def run(self, path: str, reload: int = 0) -> tuple[Any, str, str, str]:
+        resolved = _resolve_path(path)
         try:
-            knowledge_base = load_knowledge_base(path)
+            knowledge_base = load_knowledge_base(resolved)
         except KnowledgeBaseError as error:
-            return (None, "", format_messages([error.message, *error.findings]))
-        return (knowledge_base, "", "")
+            errors = format_messages([error.message, *error.findings])
+            return (None, "", errors, f"Failed to load Knowledge Base from: {resolved}")
+
+        count = len(knowledge_base)
+        warnings = ""
+        if count == 0:
+            warnings = (
+                f"Knowledge Base at '{resolved}' is empty (0 entries); "
+                "check the path. Every concept will be reported as unknown."
+            )
+        sample = ", ".join(sorted(knowledge_base.by_id)[:20])
+        raw = f"Loaded {count} entries from {resolved}\nFirst entries: {sample}"
+        return (knowledge_base, warnings, "", raw)

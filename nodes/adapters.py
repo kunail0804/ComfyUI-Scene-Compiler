@@ -21,6 +21,26 @@ def format_messages(messages: Iterable[Message]) -> str:
     return "\n".join(f"{message.code}: {message.description}" for message in messages)
 
 
+def to_raw_json(data: Any) -> str:
+    """Serialize a stage's data output to a pretty JSON string for inspection.
+
+    Handles models (via their ``to_json``), tuples/lists of models, plain values,
+    and ``None`` (returns an empty string). Used for the debug ``raw`` outputs.
+    """
+    if data is None:
+        return ""
+    try:
+        if hasattr(data, "to_json"):
+            payload: Any = data.to_json()
+        elif isinstance(data, list | tuple):
+            payload = [item.to_json() if hasattr(item, "to_json") else item for item in data]
+        else:
+            payload = data
+        return json.dumps(payload, indent=2, ensure_ascii=False)
+    except (TypeError, ValueError):
+        return repr(data)
+
+
 def upstream_failure_message(what: str) -> str:
     """A stage's error string when a required input is missing (upstream failed)."""
     return (

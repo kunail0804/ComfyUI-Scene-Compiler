@@ -13,7 +13,7 @@ from compiler.analyzer.backend import OllamaBackend
 from compiler.analyzer.scene_analyzer import analyze
 from compiler.common.config import Config
 
-from .adapters import format_messages
+from .adapters import format_messages, to_raw_json
 
 
 class SceneAnalyzerNode:
@@ -21,8 +21,8 @@ class SceneAnalyzerNode:
 
     CATEGORY = "Scene Compiler"
     FUNCTION = "run"
-    RETURN_TYPES = ("SCENE", "STRING", "STRING")
-    RETURN_NAMES = ("scene", "warnings", "errors")
+    RETURN_TYPES = ("SCENE", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("scene", "warnings", "errors", "raw")
 
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
@@ -57,4 +57,9 @@ class SceneAnalyzerNode:
         config = Config.from_json({"analyzer": analyzer})
         backend = OllamaBackend.from_config(config)
         result = analyze(natural_language, backend, config)
-        return (result.data, format_messages(result.warnings), format_messages(result.errors))
+        return (
+            result.data,
+            format_messages(result.warnings),
+            format_messages(result.errors),
+            to_raw_json(result.data),
+        )

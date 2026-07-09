@@ -8,6 +8,12 @@ as typed objects; the inter-stage types are `SCENE`, `RESOLVED_TAGS`,
 Nodes are thin adapters: all behaviour lives in the `compiler` package, which
 never imports ComfyUI.
 
+Every stage node also exposes a **`raw`** string output — a JSON dump of that
+node's data output — for inspecting the pipeline (wire it into a text/preview
+node). The Knowledge Base Loader's `raw` summarizes the loaded entries. A
+relative Knowledge Base `path` is resolved against the installed package, so the
+default `knowledge_base/` works regardless of ComfyUI's working directory.
+
 ## Pipeline nodes
 
 | Node | Inputs | Outputs |
