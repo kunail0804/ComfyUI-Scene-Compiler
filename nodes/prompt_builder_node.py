@@ -8,15 +8,17 @@ ComfyUI.
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from compiler.builder.prompt_builder import RESERVED_OUTPUTS, build_prompts
 from compiler.common.categories import CANONICAL_CATEGORIES
 from compiler.common.config import Config
 
-# The stable set of node outputs: one per canonical category, then the reserved
-# outputs. Matches the Prompt Outputs produced by build_prompts.
+# One output per canonical category, then the reserved outputs (matching the
+# Prompt Outputs produced by build_prompts), then a debug `raw` dump.
 _OUTPUT_NAMES: tuple[str, ...] = (*CANONICAL_CATEGORIES, *RESERVED_OUTPUTS)
+_RETURN_NAMES: tuple[str, ...] = (*_OUTPUT_NAMES, "raw")
 
 
 class PromptBuilderNode:
@@ -24,8 +26,8 @@ class PromptBuilderNode:
 
     CATEGORY = "Scene Compiler"
     FUNCTION = "run"
-    RETURN_TYPES = ("STRING",) * len(_OUTPUT_NAMES)
-    RETURN_NAMES = _OUTPUT_NAMES
+    RETURN_TYPES = ("STRING",) * len(_RETURN_NAMES)
+    RETURN_NAMES = _RETURN_NAMES
 
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
@@ -37,7 +39,9 @@ class PromptBuilderNode:
     def run(self, category_map: Any, config: Config | None = None) -> tuple[str, ...]:
         if category_map is None:
             # Upstream produced no Category Map; emit empty strings rather than crash.
-            return tuple("" for _ in _OUTPUT_NAMES)
+            return tuple("" for _ in _RETURN_NAMES)
         result = build_prompts(category_map, config or Config())
         by_name = {output.name: output.value for output in result.data}
-        return tuple(by_name[name] for name in _OUTPUT_NAMES)
+        values = tuple(by_name[name] for name in _OUTPUT_NAMES)
+        raw = json.dumps(by_name, indent=2, ensure_ascii=False)
+        return (*values, raw)

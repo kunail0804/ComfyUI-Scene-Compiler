@@ -21,8 +21,8 @@ def test_input_types_structure() -> None:
 
 
 def test_node_metadata() -> None:
-    assert SceneAnalyzerNode.RETURN_TYPES == ("SCENE", "STRING", "STRING")
-    assert SceneAnalyzerNode.RETURN_NAMES == ("scene", "warnings", "errors")
+    assert SceneAnalyzerNode.RETURN_TYPES == ("SCENE", "STRING", "STRING", "STRING")
+    assert SceneAnalyzerNode.RETURN_NAMES == ("scene", "warnings", "errors", "raw")
     assert SceneAnalyzerNode.FUNCTION == "run"
     assert SceneAnalyzerNode.CATEGORY == "Scene Compiler"
 
@@ -41,7 +41,7 @@ def test_run_delegates_to_analyzer_and_surfaces_messages(monkeypatch) -> None:
 
     monkeypatch.setattr(node_module, "analyze", fake_analyze)
 
-    scene, warnings, errors = SceneAnalyzerNode().run(
+    scene, warnings, errors, *_ = SceneAnalyzerNode().run(
         natural_language="A girl.",
         model_name="mistral",
         temperature=0.0,
@@ -56,7 +56,7 @@ def test_run_delegates_to_analyzer_and_surfaces_messages(monkeypatch) -> None:
 
 def test_no_messages_yield_empty_strings(monkeypatch) -> None:
     monkeypatch.setattr(node_module, "analyze", lambda d, b, c: CompilerResult(data="S"))
-    scene, warnings, errors = SceneAnalyzerNode().run("x", "llama3", 0.0, 60)
+    scene, warnings, errors, *_ = SceneAnalyzerNode().run("x", "llama3", 0.0, 60)
     assert (warnings, errors) == ("", "")
 
 

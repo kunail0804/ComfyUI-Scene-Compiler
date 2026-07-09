@@ -49,15 +49,15 @@ def scene() -> Scene:
 
 
 def test_node_metadata() -> None:
-    assert ResolverNode.RETURN_TYPES == ("RESOLVED_TAGS", "STRING", "STRING")
-    assert ResolverNode.RETURN_NAMES == ("resolved_tags", "warnings", "errors")
+    assert ResolverNode.RETURN_TYPES == ("RESOLVED_TAGS", "STRING", "STRING", "STRING")
+    assert ResolverNode.RETURN_NAMES == ("resolved_tags", "warnings", "errors", "raw")
     inputs = ResolverNode.INPUT_TYPES()
     assert set(inputs["required"]) == {"scene", "knowledge_base"}
     assert "config" in inputs["optional"]
 
 
 def test_resolves_tags_with_real_resolver() -> None:
-    resolved, warnings, errors = ResolverNode().run(scene(), kb())
+    resolved, warnings, errors, *_ = ResolverNode().run(scene(), kb())
     assert [t.tag for t in resolved] == ["1girl", "long hair"]
     assert errors == ""
 
@@ -67,7 +67,7 @@ def test_delegates_and_surfaces_messages(monkeypatch) -> None:
         return CompilerResult(data=()).add_warning(message("SC0001", "unknown 'x'"))
 
     monkeypatch.setattr(node_module, "resolve_scene", fake_resolve)
-    resolved, warnings, errors = ResolverNode().run(scene(), kb())
+    resolved, warnings, errors, *_ = ResolverNode().run(scene(), kb())
     assert resolved == ()
     assert "SC0001: unknown 'x'" in warnings
 

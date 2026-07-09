@@ -12,7 +12,7 @@ from typing import Any
 from compiler.common.config import Config
 from compiler.resolver.illustrious_resolver import resolve_scene
 
-from .adapters import format_messages, upstream_failure_message
+from .adapters import format_messages, to_raw_json, upstream_failure_message
 
 
 class ResolverNode:
@@ -20,8 +20,8 @@ class ResolverNode:
 
     CATEGORY = "Scene Compiler"
     FUNCTION = "run"
-    RETURN_TYPES = ("RESOLVED_TAGS", "STRING", "STRING")
-    RETURN_NAMES = ("resolved_tags", "warnings", "errors")
+    RETURN_TYPES = ("RESOLVED_TAGS", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("resolved_tags", "warnings", "errors", "raw")
 
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
@@ -38,8 +38,13 @@ class ResolverNode:
         scene: Any,
         knowledge_base: Any,
         config: Config | None = None,
-    ) -> tuple[Any, str, str]:
+    ) -> tuple[Any, str, str, str]:
         if scene is None or knowledge_base is None:
-            return (None, "", upstream_failure_message("scene or knowledge base"))
+            return (None, "", upstream_failure_message("scene or knowledge base"), "")
         result = resolve_scene(scene, knowledge_base, config or Config())
-        return (result.data, format_messages(result.warnings), format_messages(result.errors))
+        return (
+            result.data,
+            format_messages(result.warnings),
+            format_messages(result.errors),
+            to_raw_json(result.data),
+        )

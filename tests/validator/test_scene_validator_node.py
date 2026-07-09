@@ -37,8 +37,8 @@ def sample_scene() -> Scene:
 
 
 def test_node_metadata() -> None:
-    assert SceneValidatorNode.RETURN_TYPES == ("SCENE", "STRING", "STRING")
-    assert SceneValidatorNode.RETURN_NAMES == ("scene", "warnings", "errors")
+    assert SceneValidatorNode.RETURN_TYPES == ("SCENE", "STRING", "STRING", "STRING")
+    assert SceneValidatorNode.RETURN_NAMES == ("scene", "warnings", "errors", "raw")
     assert SceneValidatorNode.CATEGORY == "Scene Compiler"
     inputs = SceneValidatorNode.INPUT_TYPES()
     assert "scene" in inputs["required"]
@@ -46,9 +46,15 @@ def test_node_metadata() -> None:
 
 
 def test_valid_scene_passes_through() -> None:
-    scene, warnings, errors = SceneValidatorNode().run(sample_scene())
+    scene, warnings, errors, *_ = SceneValidatorNode().run(sample_scene())
     assert isinstance(scene, Scene)
     assert (warnings, errors) == ("", "")
+
+
+def test_raw_output_contains_scene_json() -> None:
+    _, _, _, raw = SceneValidatorNode().run(sample_scene())
+    assert '"characters"' in raw  # the debug raw output is the scene as JSON
+    assert "female" in raw
 
 
 def test_delegates_and_surfaces_messages(monkeypatch) -> None:
@@ -64,7 +70,7 @@ def test_delegates_and_surfaces_messages(monkeypatch) -> None:
 
     monkeypatch.setattr(node_module, "validate_scene", fake_validate)
     config = Config.from_json({"validator": {"allow_unknown_fields": True}})
-    scene, warnings, errors = SceneValidatorNode().run(sample_scene(), config)
+    scene, warnings, errors, *_ = SceneValidatorNode().run(sample_scene(), config)
     assert scene == "VALIDATED"
     assert captured["allow_unknown"] is True
     assert "SC0015: unexpected field removed" in warnings

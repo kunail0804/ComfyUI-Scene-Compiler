@@ -14,25 +14,25 @@ from nodes.scene_validator_node import SceneValidatorNode
 
 
 def test_validator_handles_none_scene() -> None:
-    scene, warnings, errors = SceneValidatorNode().run(None)
+    scene, warnings, errors, *_ = SceneValidatorNode().run(None)
     assert scene is None
     assert "no output" in errors.lower()
 
 
 def test_resolver_handles_none_scene() -> None:
-    resolved, _, errors = ResolverNode().run(None, knowledge_base=object())
+    resolved, _, errors, *_ = ResolverNode().run(None, knowledge_base=object())
     assert resolved is None
     assert errors
 
 
 def test_resolver_handles_none_knowledge_base() -> None:
-    resolved, _, errors = ResolverNode().run(scene=object(), knowledge_base=None)
+    resolved, _, errors, *_ = ResolverNode().run(scene=object(), knowledge_base=None)
     assert resolved is None
     assert errors
 
 
 def test_category_splitter_handles_none_tags() -> None:
-    category_map, _, errors = CategorySplitterNode().run(None)
+    category_map, _, errors, *_ = CategorySplitterNode().run(None)
     assert category_map is None
     assert errors
 
