@@ -10,18 +10,20 @@ The snapshot is committed so the repository is self-contained: the KB generator
 (``generate_kb_from_vocab.py``) consumes only the snapshot, never the external
 Raffle path.
 
+The source path is a hard-coded constant (no CLI/untrusted input): edit
+``_SOURCE`` below to point at your local Raffle checkout before running.
+
 Usage:
-    python scripts/build_vocab.py [--source PATH]
+    python scripts/build_vocab.py
 """
 
 from __future__ import annotations
 
-import argparse
 import re
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-_DEFAULT_SOURCE = Path(
+_SOURCE = Path(
     "/home/kunail/Documents/AIStuff/ComfyUI/custom_nodes/raffle/lists/categorized_tags.txt"
 )
 _OUTPUT = _REPO_ROOT / "data" / "danbooru_vocab.txt"
@@ -103,11 +105,7 @@ def build_vocab(source: Path) -> list[tuple[str, str]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=_DEFAULT_SOURCE)
-    args = parser.parse_args()
-
-    pairs = build_vocab(args.source)
+    pairs = build_vocab(_SOURCE)
     _OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     _OUTPUT.write_text("".join(f"{cat}\t{tag}\n" for cat, tag in pairs), encoding="utf-8")
     print(f"wrote {len(pairs)} tags to {_OUTPUT.relative_to(_REPO_ROOT)}")
