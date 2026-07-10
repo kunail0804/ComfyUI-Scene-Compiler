@@ -1,8 +1,9 @@
 """ComfyUI Debug Viewer node (MASTER_SPEC §20).
 
-A read-only inspector that renders any connected intermediate state — Scene JSON,
-Resolved Tags, Categories, Warnings, Errors — into a single report string. It
-never alters the data passing through and contains no compiler logic.
+A read-only inspector that renders connected state — Scene JSON, Warnings,
+Errors — into a single report string. (Resolved tags are inspectable directly via
+the Resolver's ``json`` output.) It never alters the data passing through and
+contains no compiler logic.
 """
 
 from __future__ import annotations
@@ -26,8 +27,6 @@ class DebugViewerNode:
         return {
             "optional": {
                 "scene": ("SCENE",),
-                "resolved_tags": ("RESOLVED_TAGS",),
-                "category_map": ("CATEGORY_MAP",),
                 "warnings": ("STRING", {"default": "", "forceInput": True}),
                 "errors": ("STRING", {"default": "", "forceInput": True}),
             }
@@ -36,16 +35,8 @@ class DebugViewerNode:
     def run(
         self,
         scene: Any = None,
-        resolved_tags: Any = None,
-        category_map: Any = None,
         warnings: str = "",
         errors: str = "",
     ) -> tuple[str]:
-        report = render_debug_report(
-            scene=scene,
-            resolved_tags=resolved_tags,
-            category_map=category_map,
-            warnings=warnings,
-            errors=errors,
-        )
+        report = render_debug_report(scene=scene, warnings=warnings, errors=errors)
         return (report,)

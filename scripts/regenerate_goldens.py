@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from tests.regression.golden_scenes import (  # noqa: E402
     GOLDEN_DIR,
     SCENES,
-    compile_prompt_outputs,
+    compile_prompt,
     load_reference_knowledge_base,
 )
 
@@ -29,9 +29,9 @@ def main() -> int:
     GOLDEN_DIR.mkdir(parents=True, exist_ok=True)
     knowledge_base = load_reference_knowledge_base()
     for name, scene in SCENES.items():
-        outputs = compile_prompt_outputs(scene, knowledge_base)
+        prompt = compile_prompt(scene, knowledge_base)
         path = GOLDEN_DIR / f"{name}.json"
-        path.write_text(json.dumps(outputs, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        path.write_text(json.dumps(prompt, indent=2) + "\n", encoding="utf-8")
         sys.stdout.write(f"wrote {path.relative_to(GOLDEN_DIR.parent.parent.parent)}\n")
     return 0
 

@@ -7,8 +7,6 @@ Scene Analyzer crashed the Scene Validator on ``None.to_json()``).
 
 from __future__ import annotations
 
-from nodes.category_splitter_node import CategorySplitterNode
-from nodes.prompt_builder_node import PromptBuilderNode
 from nodes.resolver_node import ResolverNode
 from nodes.scene_validator_node import SceneValidatorNode
 
@@ -20,24 +18,12 @@ def test_validator_handles_none_scene() -> None:
 
 
 def test_resolver_handles_none_scene() -> None:
-    resolved, _, errors, *_ = ResolverNode().run(None, knowledge_base=object())
-    assert resolved is None
+    prompt, _, errors, *_ = ResolverNode().run(None, knowledge_base=object())
+    assert prompt == ""
     assert errors
 
 
 def test_resolver_handles_none_knowledge_base() -> None:
-    resolved, _, errors, *_ = ResolverNode().run(scene=object(), knowledge_base=None)
-    assert resolved is None
+    prompt, _, errors, *_ = ResolverNode().run(scene=object(), knowledge_base=None)
+    assert prompt == ""
     assert errors
-
-
-def test_category_splitter_handles_none_tags() -> None:
-    category_map, _, errors, *_ = CategorySplitterNode().run(None)
-    assert category_map is None
-    assert errors
-
-
-def test_prompt_builder_handles_none_category_map() -> None:
-    outputs = PromptBuilderNode().run(None)
-    assert len(outputs) == len(PromptBuilderNode.RETURN_NAMES)
-    assert all(value == "" for value in outputs)

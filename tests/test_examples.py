@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from tests.regression.golden_scenes import (
-    compile_prompt_outputs,
+    compile_prompt,
     load_reference_knowledge_base,
 )
 
@@ -36,7 +36,7 @@ def test_example_scene_compiles_to_documented_outputs(scene_file: Path, knowledg
     scene = json.loads(scene_file.read_text(encoding="utf-8"))
     expected_file = scene_file.with_name(scene_file.name.replace(".scene.json", ".prompts.json"))
     expected = json.loads(expected_file.read_text(encoding="utf-8"))
-    assert compile_prompt_outputs(scene, knowledge_base) == expected
+    assert compile_prompt(scene, knowledge_base) == expected
 
 
 def test_workflow_is_valid_json_referencing_registered_nodes() -> None:
@@ -53,7 +53,5 @@ def test_workflow_is_valid_json_referencing_registered_nodes() -> None:
         "SceneCompilerAnalyzer",
         "SceneCompilerValidator",
         "SceneCompilerResolver",
-        "SceneCompilerCategorySplitter",
-        "SceneCompilerPromptBuilder",
     ):
         assert required in node_types

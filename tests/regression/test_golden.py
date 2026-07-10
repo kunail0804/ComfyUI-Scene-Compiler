@@ -15,7 +15,7 @@ import pytest
 from tests.regression.golden_scenes import (
     GOLDEN_DIR,
     SCENES,
-    compile_prompt_outputs,
+    compile_prompt,
     load_reference_knowledge_base,
 )
 
@@ -34,12 +34,12 @@ def test_all_ten_reference_scenes_have_goldens() -> None:
 @pytest.mark.parametrize("name", sorted(SCENES))
 def test_scene_matches_golden(name: str, knowledge_base) -> None:
     expected = json.loads((GOLDEN_DIR / f"{name}.json").read_text(encoding="utf-8"))
-    actual = compile_prompt_outputs(SCENES[name], knowledge_base)
+    actual = compile_prompt(SCENES[name], knowledge_base)
     assert actual == expected
 
 
 @pytest.mark.parametrize("name", sorted(SCENES))
 def test_scene_is_deterministic(name: str, knowledge_base) -> None:
-    first = compile_prompt_outputs(SCENES[name], knowledge_base)
-    second = compile_prompt_outputs(SCENES[name], knowledge_base)
+    first = compile_prompt(SCENES[name], knowledge_base)
+    second = compile_prompt(SCENES[name], knowledge_base)
     assert first == second

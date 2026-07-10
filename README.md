@@ -34,10 +34,11 @@ deterministic and traceable.
 Natural Language
   → Scene Analyzer      → Scene JSON
   → Scene Validator     → Validated Scene JSON
-  → Resolver            → Resolved Tags
-  → Category Splitter   → Category Map
-  → Prompt Builder      → Prompt Outputs
+  → Resolver            → Prompt
 ```
+
+The Resolver both resolves concepts to Knowledge Base tags and translates them
+into a single flat prompt string (in resolution order). There are no categories.
 
 Only the **Scene Analyzer** uses an LLM, and only to understand language — never
 to produce tags. Every generated tag is looked up deterministically in a
@@ -46,7 +47,7 @@ from a real Danbooru tag vocabulary, so the tags are always valid and never
 invented) and stays fully traceable:
 
 ```
-Natural Language → Scene JSON → Knowledge Base Entry → Resolved Tag → Prompt Output
+Natural Language → Scene JSON → Knowledge Base Entry → Resolved Tag → Prompt
 ```
 
 ---
@@ -75,11 +76,9 @@ fixed workflow — every node can be used independently.
 
 | Node | Input | Output |
 |---|---|---|
-| **Scene Analyzer** | Natural language, model, temperature, timeout | Scene JSON |
-| **Scene Validator** | Scene JSON | Validated Scene JSON |
-| **Resolver** | Scene JSON, Knowledge Base | Resolved Tags |
-| **Category Splitter** | Resolved Tags | Category Map |
-| **Prompt Builder** | Category Map | One string per category (+ reserved Negative / Scene) |
+| **Scene Analyzer** | Natural language, model, temperature, timeout | Scene JSON (+ warnings, errors, raw) |
+| **Scene Validator** | Scene JSON | Validated Scene JSON (+ warnings, errors, raw) |
+| **Resolver** | Scene JSON, Knowledge Base | Prompt (+ warnings, errors, json) |
 
 ### Support nodes
 
@@ -111,9 +110,9 @@ instance for language understanding; the rest of the pipeline runs fully offline
 
 1. Add a **Scene Analyzer** node and type a description, e.g.
    *"A blonde girl wearing a white dress hugs a young man while walking in the rain."*
-2. Connect **Scene Analyzer → Scene Validator → Resolver → Category Splitter → Prompt Builder**.
-3. Wire the **Prompt Builder** category outputs into your image-generation
-   workflow (e.g. EasyIllustrious).
+2. Connect **Scene Analyzer → Scene Validator → Resolver**.
+3. Wire the **Resolver**'s `prompt` output into your image-generation workflow
+   (e.g. EasyIllustrious).
 4. Use the **Debug Viewer** on any connection to inspect the intermediate state.
 
 Given the example above, the compiler extracts `female`, `blonde hair`,

@@ -194,44 +194,6 @@ class ResolvedTag:
 
 
 @dataclass(frozen=True)
-class CategoryMap:
-    """Maps each category name to an ordered tuple of Resolved Tags (§9.9)."""
-
-    categories: Mapping[str, tuple[ResolvedTag, ...]] = field(
-        default_factory=lambda: _EMPTY_METADATA
-    )
-
-    @classmethod
-    def from_json(cls, data: Mapping[str, Any]) -> CategoryMap:
-        categories = {
-            name: tuple(ResolvedTag.from_json(tag) for tag in tags) for name, tags in data.items()
-        }
-        return cls(categories=MappingProxyType(categories))
-
-    def tags_for(self, category: str) -> tuple[ResolvedTag, ...]:
-        """Return the Resolved Tags for ``category`` (empty tuple if absent)."""
-        return self.categories.get(category, ())
-
-    def to_json(self) -> dict[str, Any]:
-        return {name: [tag.to_json() for tag in tags] for name, tags in self.categories.items()}
-
-
-@dataclass(frozen=True)
-class PromptOutput:
-    """One final workflow output; ``value`` is always a string (§9.10)."""
-
-    name: str
-    value: str
-
-    @classmethod
-    def from_json(cls, data: Mapping[str, Any]) -> PromptOutput:
-        return cls(name=data["name"], value=data["value"])
-
-    def to_json(self) -> dict[str, Any]:
-        return {"name": self.name, "value": self.value}
-
-
-@dataclass(frozen=True)
 class Scene:
     """The Scene JSON root; all sections required, collections MAY be empty (§9.1)."""
 

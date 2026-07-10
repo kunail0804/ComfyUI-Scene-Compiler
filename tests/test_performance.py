@@ -13,7 +13,7 @@ from scripts.benchmark import (
 )
 from tests.regression.golden_scenes import (
     SCENES,
-    compile_prompt_outputs,
+    compile_prompt,
     load_reference_knowledge_base,
 )
 
@@ -75,5 +75,5 @@ def test_pipeline_does_not_reload_knowledge_base(monkeypatch) -> None:
         kb_module, "load_knowledge_base", lambda *a, **k: calls.__setitem__("n", calls["n"] + 1)
     )
     for scene in SCENES.values():
-        compile_prompt_outputs(scene, kb)
+        compile_prompt(scene, kb)
     assert calls["n"] == 0  # compilation reuses the passed Knowledge Base

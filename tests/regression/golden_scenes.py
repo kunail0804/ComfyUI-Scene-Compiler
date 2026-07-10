@@ -13,11 +13,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from compiler.builder.prompt_builder import build_prompts
 from compiler.common.config import Config
 from compiler.common.knowledge_base import KnowledgeBase, load_knowledge_base
-from compiler.resolver.illustrious_resolver import resolve_scene
-from compiler.splitter.category_splitter import split_into_categories
+from compiler.resolver.illustrious_resolver import resolve_scene, tags_to_prompt
 from compiler.validator.scene_validator import validate_scene
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -157,11 +155,9 @@ def load_reference_knowledge_base() -> KnowledgeBase:
     return load_knowledge_base(KB_DIR)
 
 
-def compile_prompt_outputs(scene: dict, knowledge_base: KnowledgeBase) -> dict[str, str]:
-    """Run the full no-LLM pipeline and return the prompt outputs (name -> value)."""
+def compile_prompt(scene: dict, knowledge_base: KnowledgeBase) -> str:
+    """Run the full no-LLM pipeline and return the flat prompt string."""
     config = Config()
     validated = validate_scene(scene, config)
     resolved = resolve_scene(validated.data, knowledge_base, config)
-    categorized = split_into_categories(resolved.data)
-    built = build_prompts(categorized.data, config)
-    return {output.name: output.value for output in built.data}
+    return tags_to_prompt(resolved.data, config.prompt_builder.separator)

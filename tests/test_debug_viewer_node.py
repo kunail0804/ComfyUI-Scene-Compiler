@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import json
-from types import MappingProxyType
 
 import nodes
 from nodes.debug_viewer_node import DebugViewerNode
-from schemas.models import CategoryMap, ResolvedTag, Scene
+from schemas.models import Scene
 
 
 def sample_scene() -> Scene:
@@ -24,15 +23,11 @@ def sample_scene() -> Scene:
     )
 
 
-def rtag(name: str, category: str) -> ResolvedTag:
-    return ResolvedTag(tag=name, category=category, source_concept=name, knowledge_base_entry=name)
-
-
 def test_node_metadata() -> None:
     assert DebugViewerNode.RETURN_NAMES == ("report",)
     assert DebugViewerNode.OUTPUT_NODE is True
     optional = DebugViewerNode.INPUT_TYPES()["optional"]
-    assert set(optional) == {"scene", "resolved_tags", "category_map", "warnings", "errors"}
+    assert set(optional) == {"scene", "warnings", "errors"}
 
 
 def test_empty_report_when_nothing_connected() -> None:
@@ -42,18 +37,12 @@ def test_empty_report_when_nothing_connected() -> None:
 
 def test_renders_each_state() -> None:
     scene = sample_scene()
-    tags = (rtag("chair", "objects"),)
-    category_map = CategoryMap(categories=MappingProxyType({"objects": tags}))
     (report,) = DebugViewerNode().run(
         scene=scene,
-        resolved_tags=tags,
-        category_map=category_map,
         warnings="SC0001: unknown",
         errors="",
     )
     assert "== Scene JSON ==" in report
-    assert "== Resolved Tags ==" in report
-    assert "== Categories ==" in report
     assert "== Warnings ==" in report
     assert "== Errors ==" not in report  # empty errors omitted
     assert "chair" in report
