@@ -31,7 +31,7 @@ class SceneAnalyzerNode:
                 "natural_language": ("STRING", {"multiline": True, "default": ""}),
                 "model_name": ("STRING", {"default": "llama3"}),
                 "temperature": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 2.0, "step": 0.1}),
-                "timeout": ("INT", {"default": 60, "min": 1, "max": 3600}),
+                "timeout": ("INT", {"default": 300, "min": 1, "max": 3600}),
             },
             "optional": {
                 "system_prompt": ("STRING", {"multiline": True, "default": ""}),
