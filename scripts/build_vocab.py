@@ -109,9 +109,7 @@ def main() -> None:
 
     pairs = build_vocab(args.source)
     _OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    _OUTPUT.write_text(
-        "".join(f"{cat}\t{tag}\n" for cat, tag in pairs), encoding="utf-8"
-    )
+    _OUTPUT.write_text("".join(f"{cat}\t{tag}\n" for cat, tag in pairs), encoding="utf-8")
     print(f"wrote {len(pairs)} tags to {_OUTPUT.relative_to(_REPO_ROOT)}")
 
 
