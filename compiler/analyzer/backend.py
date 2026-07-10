@@ -73,7 +73,9 @@ class BackendResponseError(AnalyzerBackendError):
 class AnalyzerBackend(Protocol):
     """A language-model backend that turns a prompt into raw text."""
 
-    def generate(self, prompt: str) -> BackendResult:  # pragma: no cover - interface
+    def generate(
+        self, prompt: str, *, temperature: float | None = None
+    ) -> BackendResult:  # pragma: no cover - interface
         ...
 
 
@@ -118,8 +120,14 @@ class OllamaBackend:
             transport=transport,
         )
 
-    def generate(self, prompt: str) -> BackendResult:
+    def generate(self, prompt: str, *, temperature: float | None = None) -> BackendResult:
         """Send ``prompt`` unmodified to Ollama and return the raw text response.
+
+        Args:
+            prompt: The full prompt, sent byte-for-byte unchanged.
+            temperature: Optional per-call sampling temperature; falls back to the
+                backend's configured temperature when ``None``. Used by the retry
+                orchestration to perturb sampling without altering the prompt.
 
         Raises:
             BackendTimeoutError: On timeout (SC0013).
@@ -127,11 +135,12 @@ class OllamaBackend:
             BackendResponseError: On an HTTP error or unexpected response (SC0018).
         """
         url = f"{self._base_url}/api/generate"
+        effective_temperature = self._temperature if temperature is None else temperature
         payload = {
             "model": self._model,
             "prompt": prompt,
             "stream": False,
-            "options": {"temperature": self._temperature},
+            "options": {"temperature": effective_temperature},
         }
 
         start = time.perf_counter()

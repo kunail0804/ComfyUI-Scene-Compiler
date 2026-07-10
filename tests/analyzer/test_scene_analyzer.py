@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from compiler.analyzer.backend import (
     BackendResult,
     BackendTimeoutError,
@@ -46,10 +48,12 @@ class FakeBackend:
         self._script = list(script)
         self.calls = 0
         self.prompts: list[str] = []
+        self.temperatures: list[float | None] = []
 
-    def generate(self, prompt: str) -> BackendResult:
+    def generate(self, prompt: str, *, temperature: float | None = None) -> BackendResult:
         self.calls += 1
         self.prompts.append(prompt)
+        self.temperatures.append(temperature)
         item = self._script.pop(0)
         if isinstance(item, Exception):
             raise item
@@ -86,6 +90,29 @@ def test_prompt_is_reused_unchanged_across_retries() -> None:
     backend = FakeBackend(["not json", "still not json", valid_scene_text()])
     analyze("A girl.", backend, config())
     assert len(set(backend.prompts)) == 1  # identical prompt every attempt
+
+
+def test_temperature_escalates_on_retries_only() -> None:
+    # First attempt at the base temperature (deterministic), retries escalate so a
+    # bad-JSON run can self-recover without a manual re-run.
+    backend = FakeBackend(["not json", "still not json", valid_scene_text()])
+    analyze("A girl.", backend, config())
+    assert backend.temperatures == pytest.approx([0.0, 0.2, 0.4])
+
+
+def test_temperature_escalation_builds_on_configured_base() -> None:
+    backend = FakeBackend(["bad", valid_scene_text()])
+    cfg = Config.from_json({"analyzer": {"temperature": 0.5}})
+    analyze("A girl.", backend, cfg)
+    assert backend.temperatures == pytest.approx([0.5, 0.7])
+
+
+def test_temperature_is_capped() -> None:
+    backend = FakeBackend(["bad"] * 10)
+    cfg = Config.from_json({"analyzer": {"temperature": 0.9, "max_retries": 5}})
+    analyze("A girl.", backend, cfg)
+    assert max(backend.temperatures) <= 1.0
+    assert backend.temperatures[-1] == pytest.approx(1.0)  # escalation is clamped at the cap
 
 
 def test_prompt_includes_system_prompt_and_description() -> None:

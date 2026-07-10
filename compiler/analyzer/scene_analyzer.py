@@ -27,6 +27,22 @@ from compiler.common.config import Config
 from compiler.common.log import StructuredLogger
 from compiler.common.result import CompilerResult
 
+# Retry temperature escalation (§12.9). The prompt is reused byte-for-byte on
+# every attempt, so at temperature 0 a bad-JSON attempt would deterministically
+# repeat and every retry would fail identically. Escalating the sampling
+# temperature on retries only (never the first attempt) lets a malformed run
+# self-recover, exactly like a fresh manual re-run, while keeping the happy path
+# deterministic.
+_TEMPERATURE_STEP = 0.2
+_TEMPERATURE_CAP = 1.0
+
+
+def _attempt_temperature(base: float, attempt_index: int) -> float:
+    """Temperature for a 0-based attempt: the base first, then escalating on retries."""
+    if attempt_index == 0:
+        return base
+    return min(base + _TEMPERATURE_STEP * attempt_index, _TEMPERATURE_CAP)
+
 
 def analyze(
     description: str,
@@ -59,10 +75,13 @@ def analyze(
     attempts = 0
     raw_response = ""
 
+    base_temperature = config.analyzer.temperature
+
     for _ in range(max_attempts):
+        temperature = _attempt_temperature(base_temperature, attempts)
         attempts += 1
         try:
-            backend_result = backend.generate(prompt)
+            backend_result = backend.generate(prompt, temperature=temperature)
         except (BackendUnavailableError, BackendTimeoutError) as exc:
             # Terminal: the backend is unreachable or too slow; retrying cannot help.
             return _finalize(
