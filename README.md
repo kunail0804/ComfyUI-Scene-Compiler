@@ -41,7 +41,9 @@ Natural Language
 
 Only the **Scene Analyzer** uses an LLM, and only to understand language — never
 to produce tags. Every generated tag is looked up deterministically in a
-data-only **Knowledge Base** and stays fully traceable:
+data-only **Knowledge Base** (Version 1 ships a large Knowledge Base generated
+from a real Danbooru tag vocabulary, so the tags are always valid and never
+invented) and stays fully traceable:
 
 ```
 Natural Language → Scene JSON → Knowledge Base Entry → Resolved Tag → Prompt Output
@@ -51,7 +53,7 @@ Natural Language → Scene JSON → Knowledge Base Entry → Resolved Tag → Pr
 
 ## Key principles
 
-- **Determinism first** — same input + Knowledge Base + config → same output, always. No random seeds anywhere.
+- **Determinism first** — the compiler core is deterministic: a given Scene JSON + Knowledge Base + config always produces the same output, with no random seeds. (The one non-deterministic step is the LLM understanding the language up front; everything after it is reproducible.)
 - **No hallucinations** — if it isn't in the description, it isn't in the output. Unknown concepts are reported, never guessed.
 - **Knowledge is data** — every concept→tag mapping lives in the Knowledge Base, never in code.
 - **Traceability** — every tag can be explained back to the sentence it came from.
@@ -151,6 +153,9 @@ The complete normative specification is [`MASTER_SPEC.md`](../MASTER_SPEC.md).
   fallback search, localization, performance — determinism preserved.
 - **Version 3 — Extensible Compiler Platform**: multi-model Resolvers, a plugin
   system, multiple Analyzer backends, and a standalone Compiler SDK.
+- **Version 4 — Consolidation**: tidy-up and a single unified node that runs the
+  whole pipeline, since most stage nodes carry little configuration. The granular
+  nodes stay available for debugging.
 
 See the [Roadmap](../../wiki/Roadmap) for details.
 
@@ -165,3 +170,14 @@ guide first. Core rule: **never hardcode knowledge, and never break determinism.
 ## License
 
 See [LICENSE](LICENSE).
+
+---
+
+## A note on AI assistance
+
+This project — its code, tests, and documentation — is built with heavy help from
+AI coding assistants, and is developed and maintained by a solo author. AI makes
+mistakes: despite testing and review, parts of this project and its docs may be
+inaccurate, out of date, or simply wrong. Please treat it as a good-faith best
+effort rather than authoritative truth — **if the docs and the code disagree, the
+code wins** — and open an issue when you spot something off.
