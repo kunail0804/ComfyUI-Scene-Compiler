@@ -18,6 +18,7 @@ def default_inputs() -> dict:
         "resolver_allow_aliases": True,
         "resolver_expansion_enabled": True,
         "resolver_max_expansion_depth": 8,
+        "resolver_include_nsfw": False,
         "validator_allow_unknown_fields": False,
         "prompt_target": "easy_illustrious",
         "prompt_separator": ",",
@@ -48,6 +49,7 @@ def test_inputs_flow_into_config() -> None:
     inputs = default_inputs()
     inputs["analyzer_model"] = "mistral"
     inputs["resolver_max_expansion_depth"] = 4
+    inputs["resolver_include_nsfw"] = True
     inputs["validator_allow_unknown_fields"] = True
     inputs["prompt_separator"] = " | "
     inputs["debug_enabled"] = True
@@ -55,6 +57,7 @@ def test_inputs_flow_into_config() -> None:
     config, _ = ConfigurationNode().run(**inputs)
     assert config.analyzer.model == "mistral"
     assert config.resolver.max_expansion_depth == 4
+    assert config.resolver.include_nsfw is True
     assert config.validator.allow_unknown_fields is True
     assert config.prompt_builder.separator == " | "
     assert config.debug.enabled is True
