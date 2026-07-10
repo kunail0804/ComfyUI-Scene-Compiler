@@ -61,6 +61,28 @@ def test_successful_generate_returns_text_and_telemetry() -> None:
     assert captured["url"].endswith("/api/generate")
 
 
+def test_temperature_override_reaches_payload() -> None:
+    captured = {}
+
+    def transport(url, payload, timeout):
+        captured["payload"] = payload
+        return {"response": "x"}
+
+    make_backend(transport).generate("hi", temperature=0.4)
+    assert captured["payload"]["options"]["temperature"] == pytest.approx(0.4)
+
+
+def test_temperature_defaults_to_configured_when_not_overridden() -> None:
+    captured = {}
+
+    def transport(url, payload, timeout):
+        captured["payload"] = payload
+        return {"response": "x"}
+
+    make_backend(transport).generate("hi")
+    assert captured["payload"]["options"]["temperature"] == pytest.approx(0.0)
+
+
 # --- failure modes ---------------------------------------------------------
 
 
