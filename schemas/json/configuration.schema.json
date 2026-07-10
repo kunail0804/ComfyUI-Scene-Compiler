@@ -28,7 +28,8 @@
         "strict_mode": { "type": "boolean" },
         "allow_aliases": { "type": "boolean" },
         "expansion_enabled": { "type": "boolean" },
-        "max_expansion_depth": { "type": "integer", "minimum": 1 }
+        "max_expansion_depth": { "type": "integer", "minimum": 1 },
+        "include_nsfw": { "type": "boolean" }
       }
     },
     "validator": {

@@ -12,7 +12,7 @@ def kb(*entries: KnowledgeBaseEntry) -> KnowledgeBase:
     return KnowledgeBase(list(entries))
 
 
-def entry(id_, tags, category="hair", aliases=(), expand=(), deprecated=False):
+def entry(id_, tags, category="hair", aliases=(), expand=(), deprecated=False, rating="general"):
     return KnowledgeBaseEntry(
         id=id_,
         tags=tuple(tags),
@@ -20,6 +20,7 @@ def entry(id_, tags, category="hair", aliases=(), expand=(), deprecated=False):
         aliases=tuple(aliases),
         expand=tuple(expand),
         deprecated=deprecated,
+        rating=rating,
     )
 
 
@@ -207,6 +208,32 @@ def test_truly_unknown_compound_still_warns_sc0001() -> None:
     )
     assert tags(result) == []
     assert "SC0001" in codes(result.warnings)
+
+
+# --- NSFW rating gating ----------------------------------------------------
+
+
+def test_explicit_entry_hidden_by_default() -> None:
+    knowledge = kb(entry("bar", ["bar tag"], category="body", rating="explicit"))
+    result = resolve_scene(scene_with(clothing=["bar"]), knowledge, default_config())
+    assert tags(result) == []
+    assert "SC0001" in codes(result.warnings)  # gated out -> treated as unknown
+
+
+def test_explicit_entry_included_when_enabled() -> None:
+    knowledge = kb(entry("bar", ["bar tag"], category="body", rating="explicit"))
+    config = Config.from_json({"resolver": {"include_nsfw": True}})
+    result = resolve_scene(scene_with(clothing=["bar"]), knowledge, config)
+    assert tags(result) == ["bar tag"]
+
+
+def test_explicit_expansion_target_gated_out_by_default() -> None:
+    knowledge = kb(
+        entry("coat", ["coat"], category="clothing", expand=["nude"]),
+        entry("nude", ["nude"], category="body", rating="explicit"),
+    )
+    result = resolve_scene(scene_with(clothing=["coat"]), knowledge, default_config())
+    assert tags(result) == ["coat"]  # explicit expansion target dropped
 
 
 # --- unknown / deprecated --------------------------------------------------

@@ -44,6 +44,7 @@ class KnowledgeBaseEntry:
     category: str
     aliases: tuple[str, ...] = ()
     expand: tuple[str, ...] = ()
+    rating: str = "general"
     deprecated: bool = False
     notes: str | None = None
 
@@ -55,6 +56,7 @@ class KnowledgeBaseEntry:
             category=data["category"],
             aliases=tuple(data.get("aliases", ())),
             expand=tuple(data.get("expand", ())),
+            rating=data.get("rating", "general"),
             deprecated=data.get("deprecated", False),
             notes=data.get("notes"),
         )

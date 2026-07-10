@@ -26,6 +26,7 @@ EXAMPLE_CONFIG = {
         "allow_aliases": True,
         "expansion_enabled": True,
         "max_expansion_depth": 8,
+        "include_nsfw": False,
     },
     "validator": {"allow_unknown_fields": False},
     "prompt_builder": {

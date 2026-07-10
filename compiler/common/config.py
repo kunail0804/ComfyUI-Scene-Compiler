@@ -72,6 +72,7 @@ class ResolverConfig:
     allow_aliases: bool = True
     expansion_enabled: bool = True
     max_expansion_depth: int = 8
+    include_nsfw: bool = False
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -80,6 +81,7 @@ class ResolverConfig:
             "allow_aliases": self.allow_aliases,
             "expansion_enabled": self.expansion_enabled,
             "max_expansion_depth": self.max_expansion_depth,
+            "include_nsfw": self.include_nsfw,
         }
 
 
