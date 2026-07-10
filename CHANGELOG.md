@@ -3,6 +3,26 @@
 All notable changes to Scene Compiler are documented here. The project follows
 [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 
+## [1.1.0] — Flat prompt, no categories
+
+A deliberate simplification of the pipeline's back half.
+
+### Changed
+
+- **The Resolver is now the translator from Scene JSON to prompt.** It resolves
+  concepts to tags and joins them into a single flat prompt string, in resolution
+  order (which naturally leads with character/appearance tags). The Resolver node
+  outputs `prompt`, `warnings`, `errors`, and `json` (the traceable resolved tags,
+  to inspect what the translation produced).
+
+### Removed
+
+- **Category Splitter and Prompt Builder stages and nodes** — categories are no
+  longer part of the output; there is one prompt, not one output per category. The
+  `CategoryMap` / `PromptOutput` models and schemas are removed. Node count is now
+  six. The `category` field remains on Knowledge Base entries and resolved tags for
+  traceability in the `json` output.
+
 ## [1.0.0] — Deterministic Compiler Foundation
 
 The first release: a complete, deterministic natural-language-to-prompt compiler

@@ -12,13 +12,13 @@ def _pyproject() -> dict:
     return tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
 
 
-def test_version_is_1_0_0() -> None:
-    assert _pyproject()["project"]["version"] == "1.0.0"
+def test_version_is_1_1_0() -> None:
+    assert _pyproject()["project"]["version"] == "1.1.0"
 
 
-def test_changelog_documents_1_0_0() -> None:
+def test_changelog_documents_current_version() -> None:
     changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    assert "1.0.0" in changelog
+    assert "1.1.0" in changelog
 
 
 def test_definition_of_done_exists() -> None:
@@ -35,8 +35,6 @@ def test_all_schema_files_present() -> None:
         "metadata.schema.json",
         "knowledge_base_entry.schema.json",
         "resolved_tag.schema.json",
-        "category_map.schema.json",
-        "prompt_output.schema.json",
         "configuration.schema.json",
     }
     assert expected <= schema_files

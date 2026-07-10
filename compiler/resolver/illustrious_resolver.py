@@ -90,6 +90,17 @@ def resolve_scene(
     return result
 
 
+def tags_to_prompt(tags: tuple[ResolvedTag, ...], separator: str = ",") -> str:
+    """Join Resolved Tags into a single flat prompt string, in resolution order.
+
+    This is the whole "translator": the Resolver turns a Scene into ordered tags,
+    and this renders them as one prompt. There are no categories — tags appear in
+    resolution (discovery) order, which naturally leads with character/appearance
+    concepts. Deduplication already happened in :func:`resolve_scene`.
+    """
+    return separator.join(resolved.tag for resolved in tags)
+
+
 def _build_normalized_index(
     knowledge_base: KnowledgeBase,
     include_nsfw: bool,

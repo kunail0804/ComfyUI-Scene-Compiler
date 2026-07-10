@@ -18,11 +18,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from compiler.builder.prompt_builder import build_prompts  # noqa: E402
 from compiler.common.config import Config  # noqa: E402
 from compiler.common.knowledge_base import KnowledgeBase, load_knowledge_base  # noqa: E402
-from compiler.resolver.illustrious_resolver import resolve_scene  # noqa: E402
-from compiler.splitter.category_splitter import split_into_categories  # noqa: E402
+from compiler.resolver.illustrious_resolver import resolve_scene, tags_to_prompt  # noqa: E402
 from compiler.validator.scene_validator import validate_scene  # noqa: E402
 from tests.regression.golden_scenes import KB_DIR, SCENES  # noqa: E402
 
@@ -56,8 +54,7 @@ def measure_full_pipeline(kb: KnowledgeBase, scene: dict, iterations: int = 200)
     def run() -> None:
         validated = validate_scene(scene, config)
         resolved = resolve_scene(validated.data, kb, config)
-        categorized = split_into_categories(resolved.data)
-        build_prompts(categorized.data, config)
+        tags_to_prompt(resolved.data, config.prompt_builder.separator)
 
     return _median_seconds(run, iterations)
 

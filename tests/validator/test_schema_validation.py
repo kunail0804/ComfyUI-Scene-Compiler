@@ -62,7 +62,7 @@ def test_unknown_schema_name_raises() -> None:
         validate_document({}, "does_not_exist")
 
 
-def test_all_nine_schemas_are_registered() -> None:
+def test_core_schemas_are_registered() -> None:
     expected = {
         "scene",
         "character",
@@ -71,8 +71,6 @@ def test_all_nine_schemas_are_registered() -> None:
         "metadata",
         "knowledge_base_entry",
         "resolved_tag",
-        "category_map",
-        "prompt_output",
     }
     assert expected.issubset(set(list_schemas()))
 
@@ -223,27 +221,3 @@ def test_resolved_tag_missing_field_fails() -> None:
     doc = valid_resolved_tag()
     del doc["knowledge_base_entry"]
     assert validate_document(doc, "resolved_tag") != []
-
-
-# --- category map ----------------------------------------------------------
-
-
-def test_valid_category_map_passes() -> None:
-    doc = {"eyes": [valid_resolved_tag()], "hair": []}
-    assert validate_document(doc, "category_map") == []
-
-
-def test_category_map_values_must_be_resolved_tag_arrays() -> None:
-    assert validate_document({"eyes": ["not_a_tag_object"]}, "category_map") != []
-
-
-# --- prompt output ---------------------------------------------------------
-
-
-def test_valid_prompt_output_passes() -> None:
-    doc = {"name": "positive", "value": "blue eyes, smile"}
-    assert validate_document(doc, "prompt_output") == []
-
-
-def test_prompt_output_value_must_be_string() -> None:
-    assert validate_document({"name": "positive", "value": 5}, "prompt_output") != []

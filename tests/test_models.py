@@ -12,12 +12,10 @@ import dataclasses
 import pytest
 
 from schemas.models import (
-    CategoryMap,
     Character,
     Concept,
     Interaction,
     Metadata,
-    PromptOutput,
     ResolvedTag,
     Scene,
     SceneObject,
@@ -148,33 +146,6 @@ def test_resolved_tag_roundtrip_and_schema() -> None:
     t = ResolvedTag.from_json(data)
     assert ResolvedTag.from_json(t.to_json()) == t
     assert validate_document(t.to_json(), "resolved_tag") == []
-
-
-# --- CategoryMap ----------------------------------------------------------
-
-
-def test_category_map_roundtrip_and_schema() -> None:
-    tag = {
-        "tag": "blue eyes",
-        "category": "eyes",
-        "source_concept": "blue eyes",
-        "knowledge_base_entry": "blue_eyes",
-    }
-    data = {"eyes": [tag], "hair": []}
-    cm = CategoryMap.from_json(data)
-    assert cm.tags_for("eyes")[0].tag == "blue eyes"
-    assert cm.tags_for("hair") == ()
-    assert CategoryMap.from_json(cm.to_json()) == cm
-    assert validate_document(cm.to_json(), "category_map") == []
-
-
-# --- PromptOutput ----------------------------------------------------------
-
-
-def test_prompt_output_roundtrip_and_schema() -> None:
-    p = PromptOutput.from_json({"name": "positive", "value": "blue eyes, smile"})
-    assert PromptOutput.from_json(p.to_json()) == p
-    assert validate_document(p.to_json(), "prompt_output") == []
 
 
 # --- SceneObject (V1 == Concept) -------------------------------------------

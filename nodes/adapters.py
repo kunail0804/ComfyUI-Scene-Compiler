@@ -52,24 +52,17 @@ def upstream_failure_message(what: str) -> str:
 def render_debug_report(
     *,
     scene: Any = None,
-    resolved_tags: Any = None,
-    category_map: Any = None,
     warnings: str = "",
     errors: str = "",
 ) -> str:
     """Render whichever intermediate states are provided into one report string.
 
-    Read-only: inputs are serialized via their ``to_json`` methods and never
+    Read-only: the Scene is serialized via its ``to_json`` method and never
     modified. Absent (None/empty) inputs are skipped.
     """
     sections: list[str] = []
     if scene is not None:
         sections.append("== Scene JSON ==\n" + json.dumps(scene.to_json(), indent=2))
-    if resolved_tags is not None:
-        payload = [tag.to_json() for tag in resolved_tags]
-        sections.append("== Resolved Tags ==\n" + json.dumps(payload, indent=2))
-    if category_map is not None:
-        sections.append("== Categories ==\n" + json.dumps(category_map.to_json(), indent=2))
     if warnings:
         sections.append("== Warnings ==\n" + warnings)
     if errors:
