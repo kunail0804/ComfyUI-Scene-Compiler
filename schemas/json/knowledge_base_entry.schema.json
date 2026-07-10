@@ -47,6 +47,7 @@
       "type": "array",
       "items": { "type": "string", "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$" }
     },
+    "rating": { "type": "string", "enum": ["general", "explicit"] },
     "deprecated": { "type": "boolean" },
     "notes": { "type": "string" }
   }

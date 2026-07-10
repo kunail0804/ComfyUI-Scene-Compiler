@@ -12,7 +12,8 @@
     "strict_mode": true,
     "allow_aliases": true,
     "expansion_enabled": true,
-    "max_expansion_depth": 8
+    "max_expansion_depth": 8,
+    "include_nsfw": false
   },
   "validator": {
     "allow_unknown_fields": false

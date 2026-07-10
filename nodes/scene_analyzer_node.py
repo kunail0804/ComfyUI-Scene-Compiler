@@ -13,7 +13,7 @@ from compiler.analyzer.backend import OllamaBackend
 from compiler.analyzer.scene_analyzer import analyze
 from compiler.common.config import Config
 
-from .adapters import format_messages, to_raw_json
+from .adapters import format_messages
 
 
 class SceneAnalyzerNode:
@@ -61,5 +61,8 @@ class SceneAnalyzerNode:
             result.data,
             format_messages(result.warnings),
             format_messages(result.errors),
-            to_raw_json(result.data),
+            # The actual raw model text (empty on a terminal backend failure), so
+            # the ``raw`` output reflects what the model returned rather than a
+            # re-serialization of the parsed Scene.
+            result.metadata.get("raw_response", ""),
         )

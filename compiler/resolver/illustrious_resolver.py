@@ -59,7 +59,8 @@ def resolve_scene(
         success, or ``None`` with error messages when an error condition
         (circular expansion SC0003, invalid category SC0008) stops resolution.
     """
-    index = _build_normalized_index(knowledge_base)
+    include_nsfw = config.resolver.include_nsfw
+    index = _build_normalized_index(knowledge_base, include_nsfw)
     resolver = _ConceptResolver(knowledge_base, index, config, logger)
 
     tags: list[ResolvedTag] = []
@@ -91,10 +92,17 @@ def resolve_scene(
 
 def _build_normalized_index(
     knowledge_base: KnowledgeBase,
+    include_nsfw: bool,
 ) -> dict[str, KnowledgeBaseEntry]:
-    """Map every normalized canonical id and alias to its entry (aliases direct)."""
+    """Map every normalized canonical id and alias to its entry (aliases direct).
+
+    Explicit-rated entries are omitted unless ``include_nsfw`` is set, so a gated
+    concept simply has no entry and is reported as unknown (SC0001).
+    """
     index: dict[str, KnowledgeBaseEntry] = {}
     for entry in knowledge_base.by_id.values():
+        if entry.rating == "explicit" and not include_nsfw:
+            continue
         index[normalize_concept(entry.id)] = entry
         for alias in entry.aliases:
             index[normalize_concept(alias)] = entry
@@ -140,12 +148,18 @@ class _ConceptResolver:
         self._allow_aliases = config.resolver.allow_aliases
         self._expansion_enabled = config.resolver.expansion_enabled
         self._max_depth = config.resolver.max_expansion_depth
+        self._include_nsfw = config.resolver.include_nsfw
         self._logger = logger
 
     def resolve(self, concept_name: str) -> _Resolution:
         outcome = _Resolution()
         key = normalize_concept(concept_name)
         entry = self._lookup(key)
+        if entry is None:
+            entry, reduced_key = self._reduce(key)
+        else:
+            reduced_key = None
+
         if entry is None:
             outcome.warnings.append(
                 message(
@@ -158,8 +172,38 @@ class _ConceptResolver:
                 self._logger.verbose("concept_unknown", concept=concept_name, normalized=key)
             return outcome
 
+        if reduced_key is not None:
+            outcome.warnings.append(
+                message(
+                    "SC0019",
+                    (
+                        f"Concept '{concept_name}' was reduced to its head noun "
+                        f"'{reduced_key}' for resolution; leading modifiers were dropped."
+                    ),
+                    concept=concept_name,
+                    reduced_to=reduced_key,
+                )
+            )
+
         self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
         return outcome
+
+    def _reduce(self, key: str) -> tuple[KnowledgeBaseEntry | None, str | None]:
+        """Fall back to the concept's head noun when the full key has no entry (§17.2).
+
+        English noun phrases carry modifiers on the left ("white summer dress"),
+        so progressively dropping leading tokens and looking up the longest
+        remaining suffix recovers the head-noun Knowledge Base Entry ("dress")
+        instead of discarding the whole concept. The lookup stays exact and
+        deterministic; no tag or concept is invented.
+        """
+        tokens = key.split()
+        for start in range(1, len(tokens)):
+            reduced_key = " ".join(tokens[start:])
+            entry = self._lookup(reduced_key)
+            if entry is not None:
+                return entry, reduced_key
+        return None, None
 
     def _lookup(self, key: str) -> KnowledgeBaseEntry | None:
         entry = self._index.get(key)
@@ -226,8 +270,11 @@ class _ConceptResolver:
             return
         for target_id in entry.expand:
             target = self._kb.get(target_id)
-            if target is not None:
-                self._expand(target, source_concept, depth + 1, (*path, entry.id), outcome)
+            if target is None:
+                continue
+            if target.rating == "explicit" and not self._include_nsfw:
+                continue  # gated NSFW expansion target
+            self._expand(target, source_concept, depth + 1, (*path, entry.id), outcome)
 
 
 def _deduplicate(tags: list[ResolvedTag]) -> tuple[list[ResolvedTag], list[Message]]:
