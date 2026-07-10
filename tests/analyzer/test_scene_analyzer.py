@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from compiler.analyzer.backend import (
     BackendResult,
     BackendTimeoutError,
@@ -95,14 +97,14 @@ def test_temperature_escalates_on_retries_only() -> None:
     # bad-JSON run can self-recover without a manual re-run.
     backend = FakeBackend(["not json", "still not json", valid_scene_text()])
     analyze("A girl.", backend, config())
-    assert backend.temperatures == [0.0, 0.2, 0.4]
+    assert backend.temperatures == pytest.approx([0.0, 0.2, 0.4])
 
 
 def test_temperature_escalation_builds_on_configured_base() -> None:
     backend = FakeBackend(["bad", valid_scene_text()])
     cfg = Config.from_json({"analyzer": {"temperature": 0.5}})
     analyze("A girl.", backend, cfg)
-    assert backend.temperatures == [0.5, 0.7]
+    assert backend.temperatures == pytest.approx([0.5, 0.7])
 
 
 def test_temperature_is_capped() -> None:
@@ -110,7 +112,7 @@ def test_temperature_is_capped() -> None:
     cfg = Config.from_json({"analyzer": {"temperature": 0.9, "max_retries": 5}})
     analyze("A girl.", backend, cfg)
     assert max(backend.temperatures) <= 1.0
-    assert backend.temperatures[-1] == 1.0  # escalation is clamped at the cap
+    assert backend.temperatures[-1] == pytest.approx(1.0)  # escalation is clamped at the cap
 
 
 def test_prompt_includes_system_prompt_and_description() -> None:
