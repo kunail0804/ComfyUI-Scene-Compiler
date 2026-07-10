@@ -37,8 +37,6 @@ packages = [
     "compiler.analyzer",
     "compiler.validator",
     "compiler.resolver",
-    "compiler.splitter",
-    "compiler.builder",
     "compiler.common",
     "schemas",
 ]
