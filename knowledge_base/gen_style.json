@@ -1,0 +1,933 @@
+[
+  {
+    "id": "3d",
+    "tags": [
+      "3d"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "abstract",
+    "tags": [
+      "abstract"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "alternate_color",
+    "tags": [
+      "alternate color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "analogous_colors",
+    "tags": [
+      "analogous colors"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "anatomical_nonsense",
+    "tags": [
+      "anatomical nonsense"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "anatomy",
+    "tags": [
+      "anatomy"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "anime_coloring",
+    "tags": [
+      "anime coloring"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "aqua_theme",
+    "tags": [
+      "aqua theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "art_nouveau",
+    "tags": [
+      "art nouveau"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "art_shift",
+    "tags": [
+      "art shift"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "artistic_error",
+    "tags": [
+      "artistic error"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "ascii_art",
+    "tags": [
+      "ascii art"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "bad_perspective",
+    "tags": [
+      "bad perspective"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "bad_proportions",
+    "tags": [
+      "bad proportions"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "black_theme",
+    "tags": [
+      "black theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "blackletter",
+    "tags": [
+      "blackletter"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "blending",
+    "tags": [
+      "blending"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "blue_theme",
+    "tags": [
+      "blue theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "brown_theme",
+    "tags": [
+      "brown theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "brush_stroke",
+    "tags": [
+      "brush stroke"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "cartoonized",
+    "tags": [
+      "cartoonized"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "cel_rendering",
+    "tags": [
+      "cel rendering"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "cel_shading",
+    "tags": [
+      "cel shading"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "chibi",
+    "tags": [
+      "chibi"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "chibi_only",
+    "tags": [
+      "chibi only"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "chibigurumi",
+    "tags": [
+      "chibigurumi"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "color_connection",
+    "tags": [
+      "color connection"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "color_contrast",
+    "tags": [
+      "color contrast"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "color_coordination",
+    "tags": [
+      "color coordination"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "color_guide",
+    "tags": [
+      "color guide"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "color_switch",
+    "tags": [
+      "color switch"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "color_trace",
+    "tags": [
+      "color trace"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "colored_lineart",
+    "tags": [
+      "colored lineart"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "crosshatching",
+    "tags": [
+      "crosshatching"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "cursive",
+    "tags": [
+      "cursive"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "deformed",
+    "tags": [
+      "deformed"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "dithering",
+    "tags": [
+      "dithering"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "double_exposure",
+    "tags": [
+      "double exposure"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "egyptian_art",
+    "tags": [
+      "egyptian art"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "fake_transparency",
+    "tags": [
+      "fake transparency"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "faux_traditional_media",
+    "tags": [
+      "faux traditional media"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "film_grain",
+    "tags": [
+      "film grain"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "fisheye",
+    "tags": [
+      "fisheye"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "flat_color",
+    "tags": [
+      "flat color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "frutiger_aero",
+    "tags": [
+      "frutiger aero"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "glitch",
+    "tags": [
+      "glitch"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "gradient",
+    "tags": [
+      "gradient"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "green_theme",
+    "tags": [
+      "green theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "grey_theme",
+    "tags": [
+      "grey theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "greyscale",
+    "tags": [
+      "greyscale"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "greyscale_with_colored_background",
+    "tags": [
+      "greyscale with colored background"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "halftone",
+    "tags": [
+      "halftone"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "heavy_film_grain",
+    "tags": [
+      "heavy film grain"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "heisei_retro",
+    "tags": [
+      "heisei retro"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "high_contrast",
+    "tags": [
+      "high contrast"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "imageboard_colors",
+    "tags": [
+      "imageboard colors"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "impasto",
+    "tags": [
+      "impasto"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "impressionism",
+    "tags": [
+      "impressionism"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "ink_wash_painting",
+    "tags": [
+      "ink wash painting"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "isometric",
+    "tags": [
+      "isometric"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "kirigami",
+    "tags": [
+      "kirigami"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "ligne_claire",
+    "tags": [
+      "ligne claire"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "limited_palette",
+    "tags": [
+      "limited palette"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "linear_hatching",
+    "tags": [
+      "linear hatching"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "lineart",
+    "tags": [
+      "lineart"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "low_poly",
+    "tags": [
+      "low poly"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "mikumikudance",
+    "tags": [
+      "mikumikudance"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "minimalism",
+    "tags": [
+      "minimalism"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "monochrome",
+    "tags": [
+      "monochrome"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "multiple_monochrome",
+    "tags": [
+      "multiple monochrome"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "multiple_style_parody",
+    "tags": [
+      "multiple style parody"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "muted_color",
+    "tags": [
+      "muted color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "negative",
+    "tags": [
+      "negative"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "negative_space",
+    "tags": [
+      "negative space"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "neon_palette",
+    "tags": [
+      "neon palette"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "nihonga",
+    "tags": [
+      "nihonga"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "no_lineart",
+    "tags": [
+      "no lineart"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "oekaki",
+    "tags": [
+      "oekaki"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "official_alternate_color",
+    "tags": [
+      "official alternate color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "official_alternate_hair_color",
+    "tags": [
+      "official alternate hair color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "official_style",
+    "tags": [
+      "official style"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "oiled",
+    "tags": [
+      "oiled"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "orange_theme",
+    "tags": [
+      "orange theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "ornate",
+    "tags": [
+      "ornate"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "paint_splatter",
+    "tags": [
+      "paint splatter"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "paint_stains",
+    "tags": [
+      "paint stains"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "painted_clothes",
+    "tags": [
+      "painted clothes"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "painterly",
+    "tags": [
+      "painterly"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pale_color",
+    "tags": [
+      "pale color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "palette_swap",
+    "tags": [
+      "palette swap"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "paper_cutout",
+    "tags": [
+      "paper cutout"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "paper_texture",
+    "tags": [
+      "paper texture"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "partially_colored",
+    "tags": [
+      "partially colored"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pastel_colors",
+    "tags": [
+      "pastel colors"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "photo_bashing",
+    "tags": [
+      "photo bashing"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "photorealistic",
+    "tags": [
+      "photorealistic"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pink_theme",
+    "tags": [
+      "pink theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pixel_art",
+    "tags": [
+      "pixel art"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pixel_eyes",
+    "tags": [
+      "pixel eyes"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pixelated",
+    "tags": [
+      "pixelated"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "pixels",
+    "tags": [
+      "pixels"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "purple_theme",
+    "tags": [
+      "purple theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "rainbow_gradient",
+    "tags": [
+      "rainbow gradient"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "rainbow_order",
+    "tags": [
+      "rainbow order"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "realistic",
+    "tags": [
+      "realistic"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "red_theme",
+    "tags": [
+      "red theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "retro_artstyle",
+    "tags": [
+      "retro artstyle"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "rigging",
+    "tags": [
+      "rigging"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "scanlines",
+    "tags": [
+      "scanlines"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "screentones",
+    "tags": [
+      "screentones"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "scribble",
+    "tags": [
+      "scribble"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "sepia",
+    "tags": [
+      "sepia"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "shiny_and_normal",
+    "tags": [
+      "shiny and normal"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "sketch",
+    "tags": [
+      "sketch"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "speedpaint",
+    "tags": [
+      "speedpaint"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "split_theme",
+    "tags": [
+      "split theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "spot_color",
+    "tags": [
+      "spot color"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "sprite",
+    "tags": [
+      "sprite"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "sprite_art",
+    "tags": [
+      "sprite art"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "stick_figure",
+    "tags": [
+      "stick figure"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "stitching",
+    "tags": [
+      "stitching"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "style_parody",
+    "tags": [
+      "style parody"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "surreal",
+    "tags": [
+      "surreal"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "tegaki",
+    "tags": [
+      "tegaki"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "thick_lineart",
+    "tags": [
+      "thick lineart"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "thick_outlines",
+    "tags": [
+      "thick outlines"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "vanishing_point",
+    "tags": [
+      "vanishing point"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "vaporwave",
+    "tags": [
+      "vaporwave"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "vhs_artifacts",
+    "tags": [
+      "vhs artifacts"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "visual_kei",
+    "tags": [
+      "visual kei"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "white_theme",
+    "tags": [
+      "white theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "yellow_theme",
+    "tags": [
+      "yellow theme"
+    ],
+    "category": "style"
+  },
+  {
+    "id": "yume_kawaii",
+    "tags": [
+      "yume kawaii"
+    ],
+    "category": "style"
+  }
+]

@@ -1,0 +1,1675 @@
+[
+  {
+    "id": "aerial_fireworks",
+    "tags": [
+      "aerial fireworks"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "afterimage",
+    "tags": [
+      "afterimage"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "air_current",
+    "tags": [
+      "air current"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "at_field",
+    "tags": [
+      "at field"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "attack_trail",
+    "tags": [
+      "attack trail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "aura",
+    "tags": [
+      "aura"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "aurora",
+    "tags": [
+      "aurora"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bad_reflection",
+    "tags": [
+      "bad reflection"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "battle_damage",
+    "tags": [
+      "battle damage"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "beam",
+    "tags": [
+      "beam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bioluminescence",
+    "tags": [
+      "bioluminescence"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bishie_sparkle",
+    "tags": [
+      "bishie sparkle"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "black_fire",
+    "tags": [
+      "black fire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "black_liquid",
+    "tags": [
+      "black liquid"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "black_sun",
+    "tags": [
+      "black sun"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bloom",
+    "tags": [
+      "bloom"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "blue_light",
+    "tags": [
+      "blue light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "blurry",
+    "tags": [
+      "blurry"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "blurry_edges",
+    "tags": [
+      "blurry edges"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "blurry_foreground",
+    "tags": [
+      "blurry foreground"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bokeh",
+    "tags": [
+      "bokeh"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bouncing_hair",
+    "tags": [
+      "bouncing hair"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "brown_sky",
+    "tags": [
+      "brown sky"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "bubble_background",
+    "tags": [
+      "bubble background"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "buffering",
+    "tags": [
+      "buffering"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "burning",
+    "tags": [
+      "burning"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "camera_flash",
+    "tags": [
+      "camera flash"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "caustics",
+    "tags": [
+      "caustics"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "chiaroscuro",
+    "tags": [
+      "chiaroscuro"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "chromatic_aberration",
+    "tags": [
+      "chromatic aberration"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "color_drain",
+    "tags": [
+      "color drain"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "colored_shadow",
+    "tags": [
+      "colored shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "colored_smoke",
+    "tags": [
+      "colored smoke"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "colorful",
+    "tags": [
+      "colorful"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "condensation",
+    "tags": [
+      "condensation"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "contrail",
+    "tags": [
+      "contrail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "contrast",
+    "tags": [
+      "contrast"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "crack_of_light",
+    "tags": [
+      "crack of light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "crumbling",
+    "tags": [
+      "crumbling"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "damage_numbers",
+    "tags": [
+      "damage numbers"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "dappled_sunlight",
+    "tags": [
+      "dappled sunlight"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "dark",
+    "tags": [
+      "dark"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "dark_aura",
+    "tags": [
+      "dark aura"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "darkness",
+    "tags": [
+      "darkness"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "depth_of_field",
+    "tags": [
+      "depth of field"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "different_shadow",
+    "tags": [
+      "different shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "diffraction_spikes",
+    "tags": [
+      "diffraction spikes"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "digital_dissolve",
+    "tags": [
+      "digital dissolve"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "disintegration",
+    "tags": [
+      "disintegration"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "dissolving",
+    "tags": [
+      "dissolving"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "distortion",
+    "tags": [
+      "distortion"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "drop_shadow",
+    "tags": [
+      "drop shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "dusk",
+    "tags": [
+      "dusk"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "dust_cloud",
+    "tags": [
+      "dust cloud"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "egasumi",
+    "tags": [
+      "egasumi"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "electricity",
+    "tags": [
+      "electricity"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "embers",
+    "tags": [
+      "embers"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "emphasis_lines",
+    "tags": [
+      "emphasis lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "energy",
+    "tags": [
+      "energy"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "energy_ball",
+    "tags": [
+      "energy ball"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "energy_beam",
+    "tags": [
+      "energy beam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "exhaust",
+    "tags": [
+      "exhaust"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "explosion",
+    "tags": [
+      "explosion"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "eye_beam",
+    "tags": [
+      "eye beam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "eye_glitter",
+    "tags": [
+      "eye glitter"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "eye_trail",
+    "tags": [
+      "eye trail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "face_in_shadow",
+    "tags": [
+      "face in shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "fading",
+    "tags": [
+      "fading"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "falling_leaves",
+    "tags": [
+      "falling leaves"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "falling_petals",
+    "tags": [
+      "falling petals"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "fiery_hair",
+    "tags": [
+      "fiery hair"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "fireball",
+    "tags": [
+      "fireball"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "flare",
+    "tags": [
+      "flare"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "flashing",
+    "tags": [
+      "flashing"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "floating_book",
+    "tags": [
+      "floating book"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "floating_scarf",
+    "tags": [
+      "floating scarf"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "floating_sword",
+    "tags": [
+      "floating sword"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "floodlights",
+    "tags": [
+      "floodlights"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "fume",
+    "tags": [
+      "fume"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "galaxy",
+    "tags": [
+      "galaxy"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "gleam",
+    "tags": [
+      "gleam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glint",
+    "tags": [
+      "glint"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glitter",
+    "tags": [
+      "glitter"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing",
+    "tags": [
+      "glowing"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_armor",
+    "tags": [
+      "glowing armor"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_arrow",
+    "tags": [
+      "glowing arrow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_butterfly",
+    "tags": [
+      "glowing butterfly"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_clothes",
+    "tags": [
+      "glowing clothes"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_crystal",
+    "tags": [
+      "glowing crystal"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_earrings",
+    "tags": [
+      "glowing earrings"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_eye",
+    "tags": [
+      "glowing eye"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_feather",
+    "tags": [
+      "glowing feather"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_fist",
+    "tags": [
+      "glowing fist"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_flower",
+    "tags": [
+      "glowing flower"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_hair",
+    "tags": [
+      "glowing hair"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_hand",
+    "tags": [
+      "glowing hand"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_hands",
+    "tags": [
+      "glowing hands"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_headgear",
+    "tags": [
+      "glowing headgear"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_heart",
+    "tags": [
+      "glowing heart"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_hot",
+    "tags": [
+      "glowing hot"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_lines",
+    "tags": [
+      "glowing lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_liquid",
+    "tags": [
+      "glowing liquid"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_markings",
+    "tags": [
+      "glowing markings"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_mouth",
+    "tags": [
+      "glowing mouth"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_petals",
+    "tags": [
+      "glowing petals"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_sword",
+    "tags": [
+      "glowing sword"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "glowing_weapon",
+    "tags": [
+      "glowing weapon"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "golden_hour",
+    "tags": [
+      "golden hour"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "green_fire",
+    "tags": [
+      "green fire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "green_light",
+    "tags": [
+      "green light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "green_outline",
+    "tags": [
+      "green outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "grey_outline",
+    "tags": [
+      "grey outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ground_shatter",
+    "tags": [
+      "ground shatter"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "hair_floating_upwards",
+    "tags": [
+      "hair floating upwards"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "hair_wagging",
+    "tags": [
+      "hair wagging"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "happy_aura",
+    "tags": [
+      "happy aura"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "headlight_beam",
+    "tags": [
+      "headlight beam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "heavy_chromatic_aberration",
+    "tags": [
+      "heavy chromatic aberration"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "heavy_lens_flare",
+    "tags": [
+      "heavy lens flare"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "holoadvent",
+    "tags": [
+      "holoadvent"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ignite_module",
+    "tags": [
+      "ignite module"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "inverted_colors",
+    "tags": [
+      "inverted colors"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "iridescent",
+    "tags": [
+      "iridescent"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "jaggy_lines",
+    "tags": [
+      "jaggy lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "laser",
+    "tags": [
+      "laser"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "laser_pointer_projection",
+    "tags": [
+      "laser pointer projection"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "lens_flare",
+    "tags": [
+      "lens flare"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "level_up",
+    "tags": [
+      "level up"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "lifestream",
+    "tags": [
+      "lifestream"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "light",
+    "tags": [
+      "light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "light_in_heart",
+    "tags": [
+      "light in heart"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "light_particles",
+    "tags": [
+      "light particles"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "light_rays",
+    "tags": [
+      "light rays"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "light_trail",
+    "tags": [
+      "light trail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "lightning_glare",
+    "tags": [
+      "lightning glare"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "lights",
+    "tags": [
+      "lights"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "master_spark",
+    "tags": [
+      "master spark"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "moire",
+    "tags": [
+      "moire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "motion_blur",
+    "tags": [
+      "motion blur"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "motion_lines",
+    "tags": [
+      "motion lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "mouth_beam",
+    "tags": [
+      "mouth beam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "muzzle_flash",
+    "tags": [
+      "muzzle flash"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "neon_lights",
+    "tags": [
+      "neon lights"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "nose_shade",
+    "tags": [
+      "nose shade"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "notice_lines",
+    "tags": [
+      "notice lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "object_floating_above_hand",
+    "tags": [
+      "object floating above hand"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ominous_shadow",
+    "tags": [
+      "ominous shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "optical_illusion",
+    "tags": [
+      "optical illusion"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "orange_outline",
+    "tags": [
+      "orange outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "outer_glow",
+    "tags": [
+      "outer glow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "outline",
+    "tags": [
+      "outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "overexposure",
+    "tags": [
+      "overexposure"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "overhead_line",
+    "tags": [
+      "overhead line"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "partially_shaded_face",
+    "tags": [
+      "partially shaded face"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "penis_shadow",
+    "tags": [
+      "penis shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "petals_on_liquid",
+    "tags": [
+      "petals on liquid"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "pink_fire",
+    "tags": [
+      "pink fire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "pink_light",
+    "tags": [
+      "pink light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "pink_outline",
+    "tags": [
+      "pink outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "plasma",
+    "tags": [
+      "plasma"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "projectile_trail",
+    "tags": [
+      "projectile trail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "psychedelic",
+    "tags": [
+      "psychedelic"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "purple_fire",
+    "tags": [
+      "purple fire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "purple_lightning",
+    "tags": [
+      "purple lightning"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "purple_outline",
+    "tags": [
+      "purple outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "rainbow",
+    "tags": [
+      "rainbow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "rasengan",
+    "tags": [
+      "rasengan"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ray_of_grace",
+    "tags": [
+      "ray of grace"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "red_aura",
+    "tags": [
+      "red aura"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "red_fire",
+    "tags": [
+      "red fire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "red_light",
+    "tags": [
+      "red light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "red_lightning",
+    "tags": [
+      "red lightning"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "red_outline",
+    "tags": [
+      "red outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "red_sun",
+    "tags": [
+      "red sun"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "reflection",
+    "tags": [
+      "reflection"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "reflective_clothes",
+    "tags": [
+      "reflective clothes"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "reflective_surface",
+    "tags": [
+      "reflective surface"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "refraction",
+    "tags": [
+      "refraction"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ripples",
+    "tags": [
+      "ripples"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "saturated",
+    "tags": [
+      "saturated"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "screen_light",
+    "tags": [
+      "screen light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shade",
+    "tags": [
+      "shade"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shadow",
+    "tags": [
+      "shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shattered",
+    "tags": [
+      "shattered"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shining",
+    "tags": [
+      "shining"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shiny",
+    "tags": [
+      "shiny"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shiny_eyes",
+    "tags": [
+      "shiny eyes"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shockwave",
+    "tags": [
+      "shockwave"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "shout_lines",
+    "tags": [
+      "shout lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sidelighting",
+    "tags": [
+      "sidelighting"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "silhouette",
+    "tags": [
+      "silhouette"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "smear_frame",
+    "tags": [
+      "smear frame"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "smoke_heart",
+    "tags": [
+      "smoke heart"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "smoke_trail",
+    "tags": [
+      "smoke trail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "smoking_barrel",
+    "tags": [
+      "smoking barrel"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "soap_bubbles",
+    "tags": [
+      "soap bubbles"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "soft_focus",
+    "tags": [
+      "soft focus"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sound_wave",
+    "tags": [
+      "sound wave"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sparkle",
+    "tags": [
+      "sparkle"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sparkling_aura",
+    "tags": [
+      "sparkling aura"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sparkling_sweat",
+    "tags": [
+      "sparkling sweat"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sparks",
+    "tags": [
+      "sparks"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "speed_lines",
+    "tags": [
+      "speed lines"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "spiral_power",
+    "tags": [
+      "spiral power"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "splatter",
+    "tags": [
+      "splatter"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "spotlight",
+    "tags": [
+      "spotlight"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "squiggle",
+    "tags": [
+      "squiggle"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "stage_lights",
+    "tags": [
+      "stage lights"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "star_trail",
+    "tags": [
+      "star trail"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "static",
+    "tags": [
+      "static"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "steam",
+    "tags": [
+      "steam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "steaming_body",
+    "tags": [
+      "steaming body"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "subsurface_scattering",
+    "tags": [
+      "subsurface scattering"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sun",
+    "tags": [
+      "sun"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sun_glare",
+    "tags": [
+      "sun glare"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sunbeam",
+    "tags": [
+      "sunbeam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "sunburst",
+    "tags": [
+      "sunburst"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "swirl",
+    "tags": [
+      "swirl"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "text_in_eyes",
+    "tags": [
+      "text in eyes"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "through_screen",
+    "tags": [
+      "through screen"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "thunder",
+    "tags": [
+      "thunder"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "translucent",
+    "tags": [
+      "translucent"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "transparent",
+    "tags": [
+      "transparent"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "tree_shade",
+    "tags": [
+      "tree shade"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ultra_beam",
+    "tags": [
+      "ultra beam"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "ultraviolet_light",
+    "tags": [
+      "ultraviolet light"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "underlighting",
+    "tags": [
+      "underlighting"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "unusually_visible",
+    "tags": [
+      "unusually visible"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "vignetting",
+    "tags": [
+      "vignetting"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "visible_air",
+    "tags": [
+      "visible air"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "vortex",
+    "tags": [
+      "vortex"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "water_drop",
+    "tags": [
+      "water drop"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "watercolor_effect",
+    "tags": [
+      "watercolor effect"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "white_fire",
+    "tags": [
+      "white fire"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "white_outline",
+    "tags": [
+      "white outline"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "wind_lift",
+    "tags": [
+      "wind lift"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "window_fog",
+    "tags": [
+      "window fog"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "window_shadow",
+    "tags": [
+      "window shadow"
+    ],
+    "category": "lighting"
+  },
+  {
+    "id": "yellow_outline",
+    "tags": [
+      "yellow outline"
+    ],
+    "category": "lighting"
+  }
+]

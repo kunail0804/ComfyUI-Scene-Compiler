@@ -1,0 +1,737 @@
+[
+  {
+    "id": "1boy",
+    "tags": [
+      "1boy"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "1girl",
+    "tags": [
+      "1girl"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "1other",
+    "tags": [
+      "1other"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "2boys",
+    "tags": [
+      "2boys"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "2girls",
+    "tags": [
+      "2girls"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "2others",
+    "tags": [
+      "2others"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "3boys",
+    "tags": [
+      "3boys"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "3girls",
+    "tags": [
+      "3girls"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "3others",
+    "tags": [
+      "3others"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "4boys",
+    "tags": [
+      "4boys"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "4girls",
+    "tags": [
+      "4girls"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "4others",
+    "tags": [
+      "4others"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "501st_joint_fighter_wing",
+    "tags": [
+      "501st joint fighter wing"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "5boys",
+    "tags": [
+      "5boys"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "5girls",
+    "tags": [
+      "5girls"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "5others",
+    "tags": [
+      "5others"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "absolutely_everyone",
+    "tags": [
+      "absolutely everyone"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "army",
+    "tags": [
+      "army"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "baby",
+    "tags": [
+      "baby"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "banchou",
+    "tags": [
+      "banchou"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "barmaid",
+    "tags": [
+      "barmaid"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "boy_sandwich",
+    "tags": [
+      "boy sandwich"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "butler",
+    "tags": [
+      "butler"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "charisma_guard",
+    "tags": [
+      "charisma guard"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "cheerleader",
+    "tags": [
+      "cheerleader"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "chef",
+    "tags": [
+      "chef"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "chibi_on_shoulder",
+    "tags": [
+      "chibi on shoulder"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "chiester_sisters",
+    "tags": [
+      "chiester sisters"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "cleric",
+    "tags": [
+      "cleric"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "clone_harem",
+    "tags": [
+      "clone harem"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "clown",
+    "tags": [
+      "clown"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "combat_medic",
+    "tags": [
+      "combat medic"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "croupier",
+    "tags": [
+      "croupier"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "death_guard",
+    "tags": [
+      "death guard"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "delinquent",
+    "tags": [
+      "delinquent"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "dj",
+    "tags": [
+      "dj"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "doctor",
+    "tags": [
+      "doctor"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "dogpile",
+    "tags": [
+      "dogpile"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "dollchestra",
+    "tags": [
+      "dollchestra"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "elvaan",
+    "tags": [
+      "elvaan"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "everyone",
+    "tags": [
+      "everyone"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "farmer",
+    "tags": [
+      "farmer"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "firefighter",
+    "tags": [
+      "firefighter"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "friends",
+    "tags": [
+      "friends"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "furry_with_furry",
+    "tags": [
+      "furry with furry"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "geisha",
+    "tags": [
+      "geisha"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "gladiator",
+    "tags": [
+      "gladiator"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "gnome",
+    "tags": [
+      "gnome"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "groom",
+    "tags": [
+      "groom"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "harem",
+    "tags": [
+      "harem"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "heart_arms_duo",
+    "tags": [
+      "heart arms duo"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "japan_national_police",
+    "tags": [
+      "japan national police"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "jester",
+    "tags": [
+      "jester"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "jockey",
+    "tags": [
+      "jockey"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "kessoku_band",
+    "tags": [
+      "kessoku band"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "mafia",
+    "tags": [
+      "mafia"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "magical_boy",
+    "tags": [
+      "magical boy"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "male_maid",
+    "tags": [
+      "male maid"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "mandalorian",
+    "tags": [
+      "mandalorian"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "mesugaki",
+    "tags": [
+      "mesugaki"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "mighty_sailor",
+    "tags": [
+      "mighty sailor"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "miniboy",
+    "tags": [
+      "miniboy"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "mixed_maids",
+    "tags": [
+      "mixed maids"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "monk",
+    "tags": [
+      "monk"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "multiple_others",
+    "tags": [
+      "multiple others"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "multiple_riders",
+    "tags": [
+      "multiple riders"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "mummy",
+    "tags": [
+      "mummy"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "no_humans",
+    "tags": [
+      "no humans"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "otaku",
+    "tags": [
+      "otaku"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "other_with_female",
+    "tags": [
+      "other with female"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "other_with_male",
+    "tags": [
+      "other with male"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "ouendan",
+    "tags": [
+      "ouendan"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "paladin",
+    "tags": [
+      "paladin"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "paparazzi",
+    "tags": [
+      "paparazzi"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "people",
+    "tags": [
+      "people"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "pet",
+    "tags": [
+      "pet"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "pharaoh",
+    "tags": [
+      "pharaoh"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "pilot",
+    "tags": [
+      "pilot"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "player_2",
+    "tags": [
+      "player 2"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "policeman",
+    "tags": [
+      "policeman"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "punk",
+    "tags": [
+      "punk"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "quintuplets",
+    "tags": [
+      "quintuplets"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "referee",
+    "tags": [
+      "referee"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "reporter",
+    "tags": [
+      "reporter"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "security_guard",
+    "tags": [
+      "security guard"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "sextuplets",
+    "tags": [
+      "sextuplets"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "shadaloo_dolls",
+    "tags": [
+      "shadaloo dolls"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "solo",
+    "tags": [
+      "solo"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "space_marine",
+    "tags": [
+      "space marine"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "stormtrooper",
+    "tags": [
+      "stormtrooper"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "straw_hat_pirates",
+    "tags": [
+      "straw hat pirates"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "stripper",
+    "tags": [
+      "stripper"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "sukusuku_hakutaku",
+    "tags": [
+      "sukusuku hakutaku"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "sumo",
+    "tags": [
+      "sumo"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "teacher_and_student",
+    "tags": [
+      "teacher and student"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "toddlercon",
+    "tags": [
+      "toddlercon"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "tour_guide",
+    "tags": [
+      "tour guide"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "traditional_nun",
+    "tags": [
+      "traditional nun"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "utaite",
+    "tags": [
+      "utaite"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "v_sisters",
+    "tags": [
+      "v sisters"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "valkyrie",
+    "tags": [
+      "valkyrie"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "waiter",
+    "tags": [
+      "waiter"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "witch",
+    "tags": [
+      "witch"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "wizard",
+    "tags": [
+      "wizard"
+    ],
+    "category": "character"
+  },
+  {
+    "id": "worldwide_miku",
+    "tags": [
+      "worldwide miku"
+    ],
+    "category": "character"
+  }
+]

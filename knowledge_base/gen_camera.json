@@ -1,0 +1,786 @@
+[
+  {
+    "id": "animal_focus",
+    "tags": [
+      "animal focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "arm_out_of_frame",
+    "tags": [
+      "arm out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "armpit_focus",
+    "tags": [
+      "armpit focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "ass_focus",
+    "tags": [
+      "ass focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "atmospheric_perspective",
+    "tags": [
+      "atmospheric perspective"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "back_focus",
+    "tags": [
+      "back focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "back_peek",
+    "tags": [
+      "back peek"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "behind_another",
+    "tags": [
+      "behind another"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "behind_curtains",
+    "tags": [
+      "behind curtains"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "behind_tree",
+    "tags": [
+      "behind tree"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "black_vs_white",
+    "tags": [
+      "black vs white"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "book_focus",
+    "tags": [
+      "book focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "breast_focus",
+    "tags": [
+      "breast focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "circle_formation",
+    "tags": [
+      "circle formation"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "clothes_focus",
+    "tags": [
+      "clothes focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "column_lineup",
+    "tags": [
+      "column lineup"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "comparison",
+    "tags": [
+      "comparison"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "creature_focus",
+    "tags": [
+      "creature focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "cropped_arm",
+    "tags": [
+      "cropped arm"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "cropped_arms",
+    "tags": [
+      "cropped arms"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "cropped_head",
+    "tags": [
+      "cropped head"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "cropped_legs",
+    "tags": [
+      "cropped legs"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "cropped_shoulders",
+    "tags": [
+      "cropped shoulders"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "cropped_torso",
+    "tags": [
+      "cropped torso"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "crotch_focus",
+    "tags": [
+      "crotch focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "crowded",
+    "tags": [
+      "crowded"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "dollhouse_view",
+    "tags": [
+      "dollhouse view"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "eyes_out_of_frame",
+    "tags": [
+      "eyes out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "eyewear_view",
+    "tags": [
+      "eyewear view"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "feet_only",
+    "tags": [
+      "feet only"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "feet_out_of_frame",
+    "tags": [
+      "feet out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "female_pov",
+    "tags": [
+      "female pov"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "flower_focus",
+    "tags": [
+      "flower focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "food_focus",
+    "tags": [
+      "food focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "foot_focus",
+    "tags": [
+      "foot focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "foot_out_of_frame",
+    "tags": [
+      "foot out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "footwear_focus",
+    "tags": [
+      "footwear focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "forced_perspective",
+    "tags": [
+      "forced perspective"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "foreshortening",
+    "tags": [
+      "foreshortening"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "from_above",
+    "tags": [
+      "from above"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "from_below",
+    "tags": [
+      "from below"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "from_inside",
+    "tags": [
+      "from inside"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "from_outside",
+    "tags": [
+      "from outside"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "group_profile",
+    "tags": [
+      "group profile"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "hair_focus",
+    "tags": [
+      "hair focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "hand_focus",
+    "tags": [
+      "hand focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "head_only",
+    "tags": [
+      "head only"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "head_out_of_frame",
+    "tags": [
+      "head out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "headshot",
+    "tags": [
+      "headshot"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "hip_focus",
+    "tags": [
+      "hip focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "implied_paizuri",
+    "tags": [
+      "implied paizuri"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "implied_pantyshot",
+    "tags": [
+      "implied pantyshot"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "in_bubble",
+    "tags": [
+      "in bubble"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "knees_out_of_frame",
+    "tags": [
+      "knees out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "lap_pov",
+    "tags": [
+      "lap pov"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "leg_focus",
+    "tags": [
+      "leg focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "lower_body",
+    "tags": [
+      "lower body"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "male_focus",
+    "tags": [
+      "male focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "mecha_focus",
+    "tags": [
+      "mecha focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "monster_focus",
+    "tags": [
+      "monster focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "mouth_focus",
+    "tags": [
+      "mouth focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "multiple_views",
+    "tags": [
+      "multiple views"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "navel_focus",
+    "tags": [
+      "navel focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "neck_focus",
+    "tags": [
+      "neck focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "not_present",
+    "tags": [
+      "not present"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "object_focus",
+    "tags": [
+      "object focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "other_focus",
+    "tags": [
+      "other focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "out_of_frame",
+    "tags": [
+      "out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "over_shoulder",
+    "tags": [
+      "over shoulder"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "partially_underwater_shot",
+    "tags": [
+      "partially underwater shot"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pectoral_focus",
+    "tags": [
+      "pectoral focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "penis_out_of_frame",
+    "tags": [
+      "penis out of frame"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "perspective",
+    "tags": [
+      "perspective"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "photobomb",
+    "tags": [
+      "photobomb"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "plant_focus",
+    "tags": [
+      "plant focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pokemon_focus",
+    "tags": [
+      "pokemon focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "portrait",
+    "tags": [
+      "portrait"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov",
+    "tags": [
+      "pov"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_across_bed",
+    "tags": [
+      "pov across bed"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_across_table",
+    "tags": [
+      "pov across table"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_breasts",
+    "tags": [
+      "pov breasts"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_crotch",
+    "tags": [
+      "pov crotch"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_dating",
+    "tags": [
+      "pov dating"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_doorway",
+    "tags": [
+      "pov doorway"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_hands",
+    "tags": [
+      "pov hands"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_legs",
+    "tags": [
+      "pov legs"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pov_peephole",
+    "tags": [
+      "pov peephole"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "profile",
+    "tags": [
+      "profile"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "pussy_focus",
+    "tags": [
+      "pussy focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "reflection_focus",
+    "tags": [
+      "reflection focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "round_image",
+    "tags": [
+      "round image"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "screen_zoom",
+    "tags": [
+      "screen zoom"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "size_comparison",
+    "tags": [
+      "size comparison"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "sky_focus",
+    "tags": [
+      "sky focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "solo_focus",
+    "tags": [
+      "solo focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "split_screen",
+    "tags": [
+      "split screen"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "taker_pov",
+    "tags": [
+      "taker pov"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "thigh_focus",
+    "tags": [
+      "thigh focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "three_quarter_profile",
+    "tags": [
+      "three quarter profile"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "three_quarter_view",
+    "tags": [
+      "three quarter view"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "through_ground",
+    "tags": [
+      "through ground"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "through_wall",
+    "tags": [
+      "through wall"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "through_window",
+    "tags": [
+      "through window"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "turnaround",
+    "tags": [
+      "turnaround"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "under_shot",
+    "tags": [
+      "under shot"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "under_skirt",
+    "tags": [
+      "under skirt"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "vehicle_focus",
+    "tags": [
+      "vehicle focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "very_wide_shot",
+    "tags": [
+      "very wide shot"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "view_between_legs",
+    "tags": [
+      "view between legs"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "weapon_focus",
+    "tags": [
+      "weapon focus"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "zooming_in",
+    "tags": [
+      "zooming in"
+    ],
+    "category": "camera"
+  },
+  {
+    "id": "zooming_out",
+    "tags": [
+      "zooming out"
+    ],
+    "category": "camera"
+  }
+]
