@@ -141,3 +141,25 @@ def test_metadata_reports_attempts() -> None:
     result = analyze("A girl.", backend, config())
     assert result.metadata["attempts"] == 2
     assert result.metadata["retries"] == 1
+
+
+def test_raw_response_captured_on_success() -> None:
+    text = valid_scene_text()
+    backend = FakeBackend([text])
+    result = analyze("A girl.", backend, config())
+    assert result.metadata["raw_response"] == text
+
+
+def test_raw_response_captures_last_failed_text() -> None:
+    # On exhaustion the raw model text of the last attempt is surfaced so the
+    # failure is debuggable even though no Scene was produced.
+    backend = FakeBackend(["garbage output"] * 10)
+    result = analyze("A girl.", backend, config(max_retries=1))
+    assert not result.success
+    assert result.metadata["raw_response"] == "garbage output"
+
+
+def test_raw_response_empty_on_terminal_backend_error() -> None:
+    backend = FakeBackend([BackendTimeoutError("timed out")])
+    result = analyze("A girl.", backend, config())
+    assert result.metadata["raw_response"] == ""

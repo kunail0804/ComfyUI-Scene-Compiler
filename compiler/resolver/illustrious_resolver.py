@@ -147,6 +147,11 @@ class _ConceptResolver:
         key = normalize_concept(concept_name)
         entry = self._lookup(key)
         if entry is None:
+            entry, reduced_key = self._reduce(key)
+        else:
+            reduced_key = None
+
+        if entry is None:
             outcome.warnings.append(
                 message(
                     "SC0001",
@@ -158,8 +163,38 @@ class _ConceptResolver:
                 self._logger.verbose("concept_unknown", concept=concept_name, normalized=key)
             return outcome
 
+        if reduced_key is not None:
+            outcome.warnings.append(
+                message(
+                    "SC0019",
+                    (
+                        f"Concept '{concept_name}' was reduced to its head noun "
+                        f"'{reduced_key}' for resolution; leading modifiers were dropped."
+                    ),
+                    concept=concept_name,
+                    reduced_to=reduced_key,
+                )
+            )
+
         self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
         return outcome
+
+    def _reduce(self, key: str) -> tuple[KnowledgeBaseEntry | None, str | None]:
+        """Fall back to the concept's head noun when the full key has no entry (§17.2).
+
+        English noun phrases carry modifiers on the left ("white summer dress"),
+        so progressively dropping leading tokens and looking up the longest
+        remaining suffix recovers the head-noun Knowledge Base Entry ("dress")
+        instead of discarding the whole concept. The lookup stays exact and
+        deterministic; no tag or concept is invented.
+        """
+        tokens = key.split()
+        for start in range(1, len(tokens)):
+            reduced_key = " ".join(tokens[start:])
+            entry = self._lookup(reduced_key)
+            if entry is not None:
+                return entry, reduced_key
+        return None, None
 
     def _lookup(self, key: str) -> KnowledgeBaseEntry | None:
         entry = self._index.get(key)

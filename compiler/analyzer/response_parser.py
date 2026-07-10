@@ -33,10 +33,17 @@ def parse_scene_response(text: str, logger: StructuredLogger | None = None) -> C
         success, or ``None`` with an SC0011 error when the response is not a
         valid Scene JSON document.
     """
+    unwrapped = _strip_code_fence(text)
     try:
-        data = json.loads(_strip_code_fence(text))
+        data = json.loads(unwrapped)
     except json.JSONDecodeError as exc:
-        return _reject("json_decode", f"Analyzer response is not valid JSON: {exc}", logger)
+        embedded = _extract_json_object(unwrapped)
+        if embedded is None:
+            return _reject("json_decode", f"Analyzer response is not valid JSON: {exc}", logger)
+        try:
+            data = json.loads(embedded)
+        except json.JSONDecodeError:
+            return _reject("json_decode", f"Analyzer response is not valid JSON: {exc}", logger)
 
     if not isinstance(data, dict):
         return _reject(
@@ -74,6 +81,43 @@ def _strip_code_fence(text: str) -> str:
     if lines and lines[-1].strip() == "```":
         lines = lines[:-1]  # drop the closing ``` line
     return "\n".join(lines)
+
+
+def _extract_json_object(text: str) -> str | None:
+    """Return the first balanced top-level JSON object embedded in ``text``.
+
+    Local models often surround the JSON with prose ("Sure! Here is the scene:").
+    Extracting the outermost ``{...}`` is an unwrapping of surrounding non-JSON
+    text, not JSON repair (§12.9): the object's bytes are left unchanged and must
+    still parse and validate. Braces inside JSON strings are ignored so quoted
+    text cannot unbalance the scan. Returns ``None`` when no balanced object is
+    found.
+    """
+    start = text.find("{")
+    if start == -1:
+        return None
+    depth = 0
+    in_string = False
+    escaped = False
+    for index in range(start, len(text)):
+        char = text[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : index + 1]
+    return None
 
 
 def _stamp_metadata(data: dict[str, Any]) -> None:

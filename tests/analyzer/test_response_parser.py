@@ -102,6 +102,21 @@ def test_wrong_type_is_rejected() -> None:
     assert "SC0011" in codes(result.errors)
 
 
+def test_prose_wrapped_json_is_extracted() -> None:
+    # Local models often add prose around the JSON; the object is extracted from
+    # the surrounding text (unwrapping non-JSON, not repairing the JSON itself).
+    text = "Sure! Here is the scene:\n" + scene_response() + "\nHope that helps!"
+    result = parse_scene_response(text)
+    assert result.success
+    assert isinstance(result.data, Scene)
+
+
+def test_prose_without_any_json_object_is_rejected() -> None:
+    result = parse_scene_response("I cannot help with that request.")
+    assert not result.success
+    assert "SC0011" in codes(result.errors)
+
+
 def test_json_fenced_response_is_unwrapped() -> None:
     # Most local models wrap JSON in a ```json fence; unwrapping is not repair.
     result = parse_scene_response("```json\n" + scene_response() + "\n```")

@@ -160,6 +160,55 @@ def test_duplicate_tags_removed_keeping_first() -> None:
     assert "SC0007" in codes(result.warnings)
 
 
+# --- compound concept reduction (head-noun fallback) -----------------------
+
+
+def test_compound_concept_reduces_to_head_noun() -> None:
+    # "white summer dress" is not a KB key, but its head noun "dress" is; the
+    # resolver recovers it instead of dropping the concept entirely.
+    knowledge = kb(entry("dress", ["dress"], category="clothing"))
+    result = resolve_scene(scene_with(clothing=["white summer dress"]), knowledge, default_config())
+    assert tags(result) == ["dress"]
+    assert "SC0019" in codes(result.warnings)
+    assert result.data[0].source_concept == "white summer dress"  # traceability kept
+
+
+def test_reduction_prefers_longest_matching_suffix() -> None:
+    knowledge = kb(
+        entry("pleated_skirt", ["pleated skirt"], category="clothing"),
+        entry("skirt", ["skirt"], category="clothing"),
+    )
+    result = resolve_scene(
+        scene_with(clothing=["black pleated skirt"]), knowledge, default_config()
+    )
+    assert tags(result) == ["pleated skirt"]  # longest suffix wins over bare "skirt"
+
+
+def test_reduction_resolves_through_aliases() -> None:
+    knowledge = kb(entry("suit", ["business suit"], category="clothing", aliases=["business suit"]))
+    result = resolve_scene(
+        scene_with(clothing=["black business suit"]), knowledge, default_config()
+    )
+    assert tags(result) == ["business suit"]
+
+
+def test_reduction_disabled_when_aliases_only_match_and_aliases_off() -> None:
+    # An exact-id concept is unaffected; reduction never invents an alias hit.
+    knowledge = kb(entry("dress", ["dress"], category="clothing"))
+    result = resolve_scene(scene_with(clothing=["dress"]), knowledge, default_config())
+    assert tags(result) == ["dress"]
+    assert "SC0019" not in codes(result.warnings)  # exact match, no reduction
+
+
+def test_truly_unknown_compound_still_warns_sc0001() -> None:
+    knowledge = kb(entry("female", ["1girl"], category="character"))
+    result = resolve_scene(
+        scene_with(clothing=["hologram flux capacitor"]), knowledge, default_config()
+    )
+    assert tags(result) == []
+    assert "SC0001" in codes(result.warnings)
+
+
 # --- unknown / deprecated --------------------------------------------------
 
 

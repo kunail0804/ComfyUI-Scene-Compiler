@@ -57,6 +57,7 @@ def analyze(
     model = config.analyzer.model
     duration = 0.0
     attempts = 0
+    raw_response = ""
 
     for _ in range(max_attempts):
         attempts += 1
@@ -69,6 +70,7 @@ def analyze(
                 model=model,
                 attempts=attempts,
                 duration=duration,
+                raw_response=raw_response,
                 logger=logger,
             )
         except BackendResponseError as exc:
@@ -77,16 +79,29 @@ def analyze(
 
         model = backend_result.model
         duration += backend_result.duration_seconds
+        raw_response = backend_result.text
 
         parsed = parse_scene_response(backend_result.text, logger)
         if parsed.success:
             return _finalize(
-                parsed, model=model, attempts=attempts, duration=duration, logger=logger
+                parsed,
+                model=model,
+                attempts=attempts,
+                duration=duration,
+                raw_response=raw_response,
+                logger=logger,
             )
         last_failure = parsed
 
     # Retries exhausted: return the last bad-response failure (SC0011 / SC0018).
-    return _finalize(last_failure, model=model, attempts=attempts, duration=duration, logger=logger)
+    return _finalize(
+        last_failure,
+        model=model,
+        attempts=attempts,
+        duration=duration,
+        raw_response=raw_response,
+        logger=logger,
+    )
 
 
 def _finalize(
@@ -95,6 +110,7 @@ def _finalize(
     model: str,
     attempts: int,
     duration: float,
+    raw_response: str,
     logger: StructuredLogger | None,
 ) -> CompilerResult:
     """Attach analyzer telemetry to a result and log the outcome."""
@@ -104,6 +120,9 @@ def _finalize(
         "retries": attempts - 1,
         "duration_seconds": duration,
         "valid": result.success,
+        # The last raw model text, so a failed compile is still debuggable; empty
+        # when the backend never returned text (a terminal connection/timeout).
+        "raw_response": raw_response,
     }
     finalized = CompilerResult(
         data=result.data,
