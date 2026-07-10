@@ -31,6 +31,10 @@ Extract camera descriptions only when explicitly present (`Close-up portrait.` �
 
 Extract every explicitly described environmental concept (`Walking in heavy rain.` → environment `rain`; `Standing inside a classroom.` → environment `classroom`).
 
+# Objects
+
+Extract every explicitly described physical object as a plain concept string (`Reading a book.` → objects `book`; `Holding an umbrella.` → objects `umbrella`). Objects are plain strings, never wrapped in an object with `id`/`concept` keys.
+
 # Characters and relationships
 
 Every character becomes an independent Character object; never merge characters. Interactions belong to the scene, not to individual characters (`A girl hugs a boy.` → Character 0 `female`, Character 1 `male`, Interaction `hug`).
@@ -47,7 +51,7 @@ Always return valid JSON with no markdown, explanations, comments, or additional
 
 Return a single JSON object with exactly these top-level keys: `characters`, `interactions`, `objects`, `environment`, `camera`, `lighting`, `metadata`. All keys MUST be present; empty sections are empty arrays (and `metadata` is an object).
 
-Each character has an integer `id` (its 0-based index) and the concept arrays `identity`, `appearance`, `clothing`, `accessories`, `pose`, `expression`, `actions`. Each interaction has `participants` (an array of character ids) and a `concept` string. Concepts are plain strings (semantic concepts, never tags).
+Each character has an integer `id` (its 0-based index) and the concept arrays `identity`, `appearance`, `clothing`, `accessories`, `pose`, `expression`, `actions`. Each interaction has `participants` (an array of character ids) and a `concept` string. The scene-level arrays `objects`, `environment`, `camera`, and `lighting` hold plain concept strings, exactly like the character concept arrays — never objects with `id`/`concept` keys. Concepts are plain strings (semantic concepts, never tags).
 
 Example — input: `A blonde girl wearing a white dress hugs a young man while walking under the rain.`
 
