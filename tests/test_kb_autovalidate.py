@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from compiler.common.kb_autovalidate import (
     DEFAULT_CONFIDENCE_THRESHOLD,
     compute_confidence,
@@ -29,7 +31,7 @@ def codes(decision):
 def test_well_formed_candidate_is_accepted() -> None:
     decision = decide({"id": "pantyhose", "tags": ["pantyhose"], "category": "clothing"})
     assert decision.accepted
-    assert decision.confidence == 1.0
+    assert decision.confidence == pytest.approx(1.0)
     assert decision.reasons == []
 
 
@@ -83,6 +85,6 @@ def test_below_confidence_threshold_is_rejected() -> None:
 
 
 def test_confidence_scoring() -> None:
-    assert compute_confidence({"id": "katana", "category": "objects"}, VOCAB) == 1.0
-    assert compute_confidence({"id": "katana", "category": "bogus"}, VOCAB) == 0.7
-    assert compute_confidence({"id": "unknown", "category": "objects"}, VOCAB) == 0.3
+    assert compute_confidence({"id": "katana", "category": "objects"}, VOCAB) == pytest.approx(1.0)
+    assert compute_confidence({"id": "katana", "category": "bogus"}, VOCAB) == pytest.approx(0.7)
+    assert compute_confidence({"id": "unknown", "category": "objects"}, VOCAB) == pytest.approx(0.3)
