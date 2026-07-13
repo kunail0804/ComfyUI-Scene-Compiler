@@ -208,6 +208,17 @@ def validate_entry(entry: Mapping[str, Any]) -> list[Message]:
     return _schema_messages(entry, entry_id) + _category_messages(entry, entry_id)
 
 
+def validate_cross_entry(entries: Iterable[Mapping[str, Any]]) -> list[Message]:
+    """Cross-entry integrity only (duplicate ids/aliases, expansion targets/cycles).
+
+    Skips the per-entry JSON Schema pass, so it is cheap to run over the whole
+    Knowledge Base repeatedly (e.g. the editor's live validation, #125) while still
+    reusing the authoritative collision/cycle rules.
+    """
+    entries = list(entries)
+    return _duplicate_id_messages(entries) + _alias_messages(entries) + _expansion_messages(entries)
+
+
 def validate_knowledge_base(entries: Iterable[Mapping[str, Any]]) -> list[Message]:
     """Validate a whole Knowledge Base and return every problem found.
 
