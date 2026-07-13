@@ -7,6 +7,14 @@ All notable changes to Scene Compiler are documented here. The project follows
 
 ### Added
 
+- **Performance improvements (epic #38).** Faster load and resolution with no
+  change to deterministic output: the Knowledge Base loads once per process and is
+  reused across node runs; the normalized lookup table is compiled once per KB and
+  reused across resolves (single-scene resolution ~57.6µs → ~17.8µs); incremental
+  per-category lazy file loading is available behind `KnowledgeBaseLoader`; optional
+  parallel per-concept resolution merges back in exact discovery order
+  (deterministic, threshold-gated, sequential by default); and a non-flaky
+  performance regression guard protects against future slowdowns.
 - **Knowledge Base Editor (epic #33).** An optional, off-critical-path web editor
   for curated Knowledge Base entries, served on the ComfyUI server sub-route
   `http://127.0.0.1:8188/scene-compiler/kb` (registered from the package init,
