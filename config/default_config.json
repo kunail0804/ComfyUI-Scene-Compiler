@@ -13,7 +13,8 @@
     "allow_aliases": true,
     "expansion_enabled": true,
     "max_expansion_depth": 8,
-    "include_nsfw": false
+    "include_nsfw": false,
+    "knowledge_base_version": null
   },
   "validator": {
     "allow_unknown_fields": false

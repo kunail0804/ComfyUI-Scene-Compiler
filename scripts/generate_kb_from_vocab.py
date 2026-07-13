@@ -20,12 +20,21 @@ Usage:
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from compiler.common.kb_manifest import write_manifest  # noqa: E402
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _VOCAB = _REPO_ROOT / "data" / "danbooru_vocab.txt"
 _KB_DIR = _REPO_ROOT / "knowledge_base"
 _GEN_PREFIX = "gen_"
+
+# The dataset version stamped into the manifest on each rebuild. Bump this when a
+# regeneration changes the dataset in a way workflows should be able to pin.
+_DATASET_VERSION = "1.0.0"
 
 # Raffle category -> one of the 19 canonical SceneCompiler categories.
 _CATEGORY_MAP = {
@@ -138,8 +147,11 @@ def generate() -> dict[str, int]:
         out.write_text(json.dumps(entries, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         counts[sc_category] = len(entries)
 
+    manifest = write_manifest(_KB_DIR, _DATASET_VERSION, _VOCAB)
+
     total = sum(counts.values())
     print(f"generated {total} entries across {len(counts)} category files")
+    print(f"  stamped manifest version {manifest.version} ({manifest.content_hash[:19]}...)")
     print(f"  skipped {skipped_reserved} (already hand-curated), {skipped_unmapped} (unmapped)")
     for cat, n in sorted(counts.items(), key=lambda x: -x[1]):
         print(f"  {n:6}  gen_{cat}.json")

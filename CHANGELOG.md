@@ -7,6 +7,16 @@ All notable changes to Scene Compiler are documented here. The project follows
 
 ### Added
 
+- **Knowledge Base versioning (epic #36).** A Knowledge Base directory can now
+  ship a `manifest.json` (new `knowledge_base_manifest` schema) recording a
+  dataset `version`, a deterministic `content_hash`, the `source_vocab` digest,
+  and an optional `entry_schema_version`. Workflows can pin a version via the new
+  `resolver.knowledge_base_version` config option (Configuration node + Knowledge
+  Base Loader node `version` input); an unavailable version fails with a clear
+  error. Older datasets are adapted to the current entry schema **in memory** at
+  load time (pinned files are never rewritten); versions too old to adapt error
+  clearly. A missing manifest defaults to an implicit `v1`, so existing installs
+  load unchanged.
 - **Concept fidelity (epic #86).** The compiler no longer silently drops
   meaningful parts of the input:
   - The Resolver now recovers leading modifiers the head-noun reduction drops:

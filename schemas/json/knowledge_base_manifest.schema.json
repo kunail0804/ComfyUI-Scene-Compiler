@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "knowledge_base_manifest",
+  "version": "1.0",
+  "title": "Knowledge Base Manifest",
+  "description": "Metadata for a versioned Knowledge Base dataset. MASTER_SPEC §30.2 (epic #36). Deterministic: content_hash and source_vocab are content digests, so regenerating an unchanged dataset yields a byte-identical manifest.",
+  "type": "object",
+  "required": ["manifest_schema_version", "version", "content_hash"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "version": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)*$" },
+    "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "source_vocab": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "entry_schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" }
+  }
+}
