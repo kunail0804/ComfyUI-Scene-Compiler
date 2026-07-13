@@ -14,12 +14,22 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from compiler.common.knowledge_base import KnowledgeBaseError, load_knowledge_base
+from compiler.common.knowledge_base import (
+    KnowledgeBaseError,
+    KnowledgeBaseLoader,
+)
 
 from .adapters import format_messages
 
 # Package root: the repository directory that ships knowledge_base/, prompts/, ...
 _PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+# Process-wide Knowledge Base cache so the (large) KB loads once per (path, version)
+# and is reused across node executions instead of being re-read on every run (#130).
+# Keyed by the resolved path and pinned version; the ``reload`` widget forces a
+# fresh load when bumped.
+_LOADERS: dict[tuple[str, str], KnowledgeBaseLoader] = {}
+_LAST_RELOAD: dict[tuple[str, str], int] = {}
 
 
 def _resolve_path(path: str) -> Path:
@@ -51,8 +61,20 @@ class KnowledgeBaseLoaderNode:
     def run(self, path: str, reload: int = 0, version: str = "") -> tuple[Any, str, str, str]:
         resolved = _resolve_path(path)
         requested_version = version or None
+        key = (str(resolved), version)
+        loader = _LOADERS.get(key)
+        if loader is None:
+            loader = KnowledgeBaseLoader(resolved, requested_version=requested_version)
+            _LOADERS[key] = loader
+            _LAST_RELOAD[key] = reload
         try:
-            knowledge_base = load_knowledge_base(resolved, requested_version=requested_version)
+            # Bumping the ``reload`` widget forces a fresh read; otherwise the cached
+            # Knowledge Base is reused across runs.
+            if reload != _LAST_RELOAD[key]:
+                _LAST_RELOAD[key] = reload
+                knowledge_base = loader.reload()
+            else:
+                knowledge_base = loader.get()
         except KnowledgeBaseError as error:
             errors = format_messages([error.message, *error.findings])
             return (None, "", errors, f"Failed to load Knowledge Base from: {resolved}")
