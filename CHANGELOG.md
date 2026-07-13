@@ -5,6 +5,20 @@ All notable changes to Scene Compiler are documented here. The project follows
 
 ## [Unreleased] — V2: Semantic Resolution
 
+### Added
+
+- **Concept fidelity (epic #86).** The compiler no longer silently drops
+  meaningful parts of the input:
+  - The Resolver now recovers leading modifiers the head-noun reduction drops:
+    `open white shirt` resolves to both `white shirt` **and** `open shirt` (each
+    dropped modifier is retried as a `<modifier> <head-noun>` compound through the
+    normal KB path — KB-only, deterministic, no bare-word invention).
+  - The Analyzer system prompt now instructs full transcription of list inputs,
+    and a deterministic post-parse check warns (`SC0021`, advisory) when a
+    tag-list input yields fewer concepts than it has items.
+  - A data-driven fidelity regression suite (`tests/regression/test_fidelity.py`)
+    pins both failure modes.
+
 ### Changed
 
 - **`prompt_builder.remove_duplicate_tags` is now wired to real behaviour.** It

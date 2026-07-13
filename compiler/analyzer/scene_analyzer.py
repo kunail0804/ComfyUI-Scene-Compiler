@@ -25,7 +25,24 @@ from compiler.analyzer.response_parser import parse_scene_response
 from compiler.analyzer.system_prompt import resolve_system_prompt
 from compiler.common.config import Config
 from compiler.common.log import StructuredLogger
+from compiler.common.message_codes import message
 from compiler.common.result import CompilerResult
+from schemas.models import Scene
+
+# A raw input is treated as a concept list (rather than prose) only when it has at
+# least this many comma/newline-separated segments and every segment is short
+# (tag-like). This keeps the fidelity check from firing on ordinary sentences.
+_LIST_MIN_ITEMS = 3
+_LIST_MAX_WORDS_PER_ITEM = 3
+_CHARACTER_CONCEPT_FIELDS = (
+    "identity",
+    "appearance",
+    "clothing",
+    "accessories",
+    "pose",
+    "expression",
+    "actions",
+)
 
 # Retry temperature escalation (§12.9). The prompt is reused byte-for-byte on
 # every attempt, so at temperature 0 a bad-JSON attempt would deterministically
@@ -102,6 +119,9 @@ def analyze(
 
         parsed = parse_scene_response(backend_result.text, logger)
         if parsed.success:
+            transcription_warning = _check_list_transcription(description, parsed.data)
+            if transcription_warning is not None:
+                parsed = parsed.add_warning(transcription_warning)
             return _finalize(
                 parsed,
                 model=model,
@@ -120,6 +140,60 @@ def analyze(
         duration=duration,
         raw_response=raw_response,
         logger=logger,
+    )
+
+
+def _list_item_count(description: str) -> int:
+    """Count the items when the raw input is a concept list, else 0 (§30.2, #112).
+
+    A list is comma- or newline-separated tag-like items; ordinary prose (which
+    also contains commas) is excluded by requiring every segment to be short.
+    Returns 0 when the input does not look like a list, so no check is applied.
+    """
+    segments = [
+        segment.strip()
+        for line in description.splitlines()
+        for segment in line.split(",")
+        if segment.strip()
+    ]
+    if len(segments) < _LIST_MIN_ITEMS:
+        return 0
+    if any(len(segment.split()) > _LIST_MAX_WORDS_PER_ITEM for segment in segments):
+        return 0
+    return len(segments)
+
+
+def _count_scene_concepts(scene: Scene) -> int:
+    """Total number of concepts the Analyzer emitted across every Scene field."""
+    total = len(scene.interactions)
+    for character in scene.characters:
+        total += sum(len(getattr(character, field)) for field in _CHARACTER_CONCEPT_FIELDS)
+    for field in ("objects", "environment", "camera", "lighting"):
+        total += len(getattr(scene, field))
+    return total
+
+
+def _check_list_transcription(description: str, scene: Scene):
+    """Warn (SC0021) when a list input produced fewer concepts than it has items.
+
+    Deterministic and advisory only: it never fails the analysis or invents
+    concepts. Returns the warning :class:`Message`, or ``None`` when the input is
+    not a list or every item was transcribed.
+    """
+    item_count = _list_item_count(description)
+    if item_count == 0:
+        return None
+    concept_count = _count_scene_concepts(scene)
+    if concept_count >= item_count:
+        return None
+    return message(
+        "SC0021",
+        (
+            f"List input has {item_count} items but only {concept_count} concepts were "
+            "transcribed; some list items may have been dropped."
+        ),
+        list_items=item_count,
+        concepts=concept_count,
     )
 
 

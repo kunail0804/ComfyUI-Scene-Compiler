@@ -190,3 +190,58 @@ def test_raw_response_empty_on_terminal_backend_error() -> None:
     backend = FakeBackend([BackendTimeoutError("timed out")])
     result = analyze("A girl.", backend, config())
     assert result.metadata["raw_response"] == ""
+
+
+# --- list transcription fidelity (#112) ------------------------------------
+
+
+def scene_text_with_appearance(concepts: list[str]) -> str:
+    return json.dumps(
+        {
+            "characters": [
+                {
+                    "id": 0,
+                    "identity": [],
+                    "appearance": list(concepts),
+                    "clothing": [],
+                    "accessories": [],
+                    "pose": [],
+                    "expression": [],
+                    "actions": [],
+                }
+            ],
+            "interactions": [],
+            "objects": [],
+            "environment": [],
+            "camera": [],
+            "lighting": [],
+            "metadata": {},
+        }
+    )
+
+
+def test_full_list_transcription_emits_no_warning() -> None:
+    items = ["1girl", "blonde hair", "thighhighs", "classroom", "sunset"]
+    backend = FakeBackend([scene_text_with_appearance(items)])
+    result = analyze(", ".join(items), backend, config())
+    assert result.success
+    assert "SC0021" not in codes(result.warnings)  # all 5 items transcribed
+
+
+def test_list_under_transcription_warns_sc0021() -> None:
+    items = ["1girl", "blonde hair", "thighhighs", "classroom", "sunset"]
+    # The model dropped three of the five list items.
+    backend = FakeBackend([scene_text_with_appearance(["1girl", "blonde hair"])])
+    result = analyze(", ".join(items), backend, config())
+    assert result.success
+    assert "SC0021" in codes(result.warnings)
+
+
+def test_prose_with_commas_is_not_treated_as_a_list() -> None:
+    # A sentence has commas but is not a concept list, so no under-transcription
+    # check applies even though it yields few concepts.
+    description = "A girl with blonde hair, wearing thighhighs, stands in a classroom."
+    backend = FakeBackend([scene_text_with_appearance(["blonde hair"])])
+    result = analyze(description, backend, config())
+    assert result.success
+    assert "SC0021" not in codes(result.warnings)
