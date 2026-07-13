@@ -34,6 +34,7 @@ EXAMPLE_CONFIG = {
         "separator": ",",
         "remove_duplicate_tags": True,
     },
+    "semantic": {"enabled": False, "min_similarity": 0.5, "backend": "char_ngram"},
     "debug": {"enabled": False, "level": "basic"},
 }
 
@@ -79,6 +80,20 @@ def test_partial_config_fills_defaults() -> None:
     assert c.analyzer.model == "mistral"
     assert c.analyzer.temperature == pytest.approx(0.0)  # default preserved
     assert c.resolver.max_expansion_depth == 8
+
+
+def test_semantic_defaults_off() -> None:
+    c = Config()
+    assert c.semantic.enabled is False
+    assert c.semantic.min_similarity == pytest.approx(0.5)
+    assert c.semantic.backend == "char_ngram"
+
+
+def test_semantic_section_roundtrips() -> None:
+    c = Config.from_json({"semantic": {"enabled": True, "min_similarity": 0.8}})
+    assert c.semantic.enabled is True
+    assert c.semantic.min_similarity == pytest.approx(0.8)
+    assert c.to_json()["semantic"]["enabled"] is True
 
 
 def test_knowledge_base_version_defaults_to_none_and_is_omitted() -> None:

@@ -17,6 +17,7 @@ from collections.abc import Iterator
 
 from compiler.common.categories import is_valid_category
 from compiler.common.config import Config
+from compiler.common.embedding_index import EmbeddingIndex
 from compiler.common.knowledge_base import KnowledgeBase, KnowledgeBaseEntry
 from compiler.common.log import StructuredLogger
 from compiler.common.message_codes import message
@@ -51,8 +52,14 @@ def resolve_scene(
     knowledge_base: KnowledgeBase,
     config: Config,
     logger: StructuredLogger | None = None,
+    embedding_index: EmbeddingIndex | None = None,
 ) -> CompilerResult:
     """Resolve a validated Scene into an ordered tuple of Resolved Tags.
+
+    When ``config.semantic.enabled`` and an ``embedding_index`` is supplied, a
+    concept that misses deterministic lookup **and** the head-noun reduction may
+    fall back to its nearest Knowledge Base entry (epic #34). Deterministic lookup
+    always wins; with the feature disabled (or no index) behaviour is unchanged.
 
     Returns:
         A CompilerResult whose ``data`` is the tuple of :class:`ResolvedTag` on
@@ -61,7 +68,7 @@ def resolve_scene(
     """
     include_nsfw = config.resolver.include_nsfw
     index = _build_normalized_index(knowledge_base, include_nsfw)
-    resolver = _ConceptResolver(knowledge_base, index, config, logger)
+    resolver = _ConceptResolver(knowledge_base, index, config, logger, embedding_index)
 
     tags: list[ResolvedTag] = []
     warnings: list[Message] = []
@@ -154,6 +161,7 @@ class _ConceptResolver:
         index: dict[str, KnowledgeBaseEntry],
         config: Config,
         logger: StructuredLogger | None,
+        embedding_index: EmbeddingIndex | None = None,
     ) -> None:
         self._kb = knowledge_base
         self._index = index
@@ -162,6 +170,8 @@ class _ConceptResolver:
         self._max_depth = config.resolver.max_expansion_depth
         self._include_nsfw = config.resolver.include_nsfw
         self._logger = logger
+        self._min_similarity = config.semantic.min_similarity
+        self._embedding_index = embedding_index if config.semantic.enabled else None
 
     def resolve(self, concept_name: str) -> _Resolution:
         outcome = _Resolution()
@@ -174,6 +184,8 @@ class _ConceptResolver:
         tokens = key.split()
         entry, reduced_key, start = self._reduce(tokens)
         if entry is None:
+            if self._semantic_fallback(concept_name, outcome):
+                return outcome
             outcome.warnings.append(
                 message(
                     "SC0001",
@@ -201,6 +213,41 @@ class _ConceptResolver:
         self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
         self._recover_modifiers(tokens, start, concept_name, outcome)
         return outcome
+
+    def _semantic_fallback(self, concept_name: str, outcome: _Resolution) -> bool:
+        """Resolve an otherwise-dropped concept via nearest-neighbour (epic #34, #116).
+
+        Runs only when the feature is enabled and an index is present, i.e. after
+        deterministic lookup and the head-noun reduction both miss — deterministic
+        resolution always wins. Accepts the neighbour only when its similarity is at
+        least ``min_similarity`` and it survives NSFW gating; the matched entry is a
+        real Knowledge Base entry, so nothing is invented. Returns True when the
+        concept was resolved (emitting ``SC0020``), False to keep the drop/warn path.
+        """
+        if self._embedding_index is None:
+            return False
+        match = self._embedding_index.nearest(concept_name)
+        if match is None or match.score < self._min_similarity:
+            return False
+        entry = self._kb.get(match.entry_id)
+        if entry is None:
+            return False
+        if entry.rating == "explicit" and not self._include_nsfw:
+            return False  # gated NSFW neighbour: keep the drop/warn path
+        outcome.warnings.append(
+            message(
+                "SC0020",
+                (
+                    f"Concept '{concept_name}' resolved via semantic fallback to "
+                    f"'{entry.id}' (similarity {match.score:.3f})."
+                ),
+                concept=concept_name,
+                entry=entry.id,
+                score=match.score,
+            )
+        )
+        self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
+        return True
 
     def _reduce(self, tokens: list[str]) -> tuple[KnowledgeBaseEntry | None, str | None, int]:
         """Fall back to the concept's head noun when the full key has no entry (§17.2).

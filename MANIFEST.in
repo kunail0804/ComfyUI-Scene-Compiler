@@ -7,3 +7,5 @@ recursive-include prompts *.md
 recursive-include config *.json
 recursive-include examples *.json *.md
 recursive-include docs *.md
+# The embedding index is a runtime artifact for the optional semantic fallback.
+include data/kb_embedding_index.json

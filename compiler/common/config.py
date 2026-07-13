@@ -127,6 +127,29 @@ class PromptBuilderConfig:
 
 
 @dataclass(frozen=True)
+class SemanticConfig:
+    """Semantic/embedding fallback options (epic #34).
+
+    Off by default: when ``enabled`` is false the Resolver behaves exactly as
+    before. When enabled, an unknown concept that misses deterministic lookup may
+    fall back to the nearest Knowledge Base entry in the embedding index, accepted
+    only when similarity is at least ``min_similarity``. The default backend is a
+    deterministic, offline character-n-gram embedding, so results are reproducible.
+    """
+
+    enabled: bool = False
+    min_similarity: float = 0.5
+    backend: str = "char_ngram"
+
+    def to_json(self) -> dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "min_similarity": self.min_similarity,
+            "backend": self.backend,
+        }
+
+
+@dataclass(frozen=True)
 class DebugConfig:
     """Debug/logging options (§23.2)."""
 
@@ -146,6 +169,7 @@ class Config:
     resolver: ResolverConfig = ResolverConfig()
     validator: ValidatorConfig = ValidatorConfig()
     prompt_builder: PromptBuilderConfig = PromptBuilderConfig()
+    semantic: SemanticConfig = SemanticConfig()
     debug: DebugConfig = DebugConfig()
 
     @classmethod
@@ -169,6 +193,7 @@ class Config:
             resolver=_section_from_json(ResolverConfig, data.get("resolver")),
             validator=_section_from_json(ValidatorConfig, data.get("validator")),
             prompt_builder=_section_from_json(PromptBuilderConfig, data.get("prompt_builder")),
+            semantic=_section_from_json(SemanticConfig, data.get("semantic")),
             debug=_section_from_json(DebugConfig, data.get("debug")),
         )
 
@@ -179,6 +204,7 @@ class Config:
             "resolver": self.resolver.to_json(),
             "validator": self.validator.to_json(),
             "prompt_builder": self.prompt_builder.to_json(),
+            "semantic": self.semantic.to_json(),
             "debug": self.debug.to_json(),
         }
 

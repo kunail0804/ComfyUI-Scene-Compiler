@@ -25,6 +25,9 @@ def default_inputs() -> dict:
         "prompt_remove_duplicate_tags": True,
         "debug_enabled": False,
         "debug_level": "basic",
+        "semantic_enabled": False,
+        "semantic_min_similarity": 0.5,
+        "semantic_backend": "char_ngram",
     }
 
 
