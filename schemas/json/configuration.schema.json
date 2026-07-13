@@ -45,7 +45,6 @@
       "properties": {
         "target": { "type": "string" },
         "separator": { "type": "string" },
-        "trim_empty_outputs": { "type": "boolean" },
         "remove_duplicate_tags": { "type": "boolean" }
       }
     },

@@ -32,7 +32,6 @@ EXAMPLE_CONFIG = {
     "prompt_builder": {
         "target": "easy_illustrious",
         "separator": ",",
-        "trim_empty_outputs": True,
         "remove_duplicate_tags": True,
     },
     "debug": {"enabled": False, "level": "basic"},

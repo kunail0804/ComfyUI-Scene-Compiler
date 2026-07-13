@@ -161,6 +161,22 @@ def test_duplicate_tags_removed_keeping_first() -> None:
     assert "SC0007" in codes(result.warnings)
 
 
+def test_duplicate_tags_kept_when_dedup_disabled() -> None:
+    import dataclasses
+
+    knowledge = kb(
+        entry("a", ["shared"]),
+        entry("b", ["shared"]),
+    )
+    config = dataclasses.replace(
+        Config(),
+        prompt_builder=dataclasses.replace(Config().prompt_builder, remove_duplicate_tags=False),
+    )
+    result = resolve_scene(scene_with(identity=["a", "b"]), knowledge, config)
+    assert tags(result) == ["shared", "shared"]  # both kept, no dedup
+    assert "SC0007" not in codes(result.warnings)
+
+
 # --- compound concept reduction (head-noun fallback) -----------------------
 
 
