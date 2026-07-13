@@ -65,7 +65,12 @@ class AnalyzerConfig:
 
 @dataclass(frozen=True)
 class ResolverConfig:
-    """Resolver options (§23.2)."""
+    """Resolver options (§23.2).
+
+    ``knowledge_base_version`` pins the Knowledge Base dataset version to load
+    (matched against the dataset manifest, epic #36). Unset (``None``) means "use
+    whatever is on the configured path", preserving the pre-versioning behaviour.
+    """
 
     knowledge_base: str = "knowledge_base/"
     strict_mode: bool = True
@@ -73,9 +78,10 @@ class ResolverConfig:
     expansion_enabled: bool = True
     max_expansion_depth: int = 8
     include_nsfw: bool = False
+    knowledge_base_version: str | None = None
 
     def to_json(self) -> dict[str, Any]:
-        return {
+        result: dict[str, Any] = {
             "knowledge_base": self.knowledge_base,
             "strict_mode": self.strict_mode,
             "allow_aliases": self.allow_aliases,
@@ -83,6 +89,9 @@ class ResolverConfig:
             "max_expansion_depth": self.max_expansion_depth,
             "include_nsfw": self.include_nsfw,
         }
+        if self.knowledge_base_version is not None:
+            result["knowledge_base_version"] = self.knowledge_base_version
+        return result
 
 
 @dataclass(frozen=True)

@@ -40,13 +40,19 @@ class KnowledgeBaseLoaderNode:
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
             "required": {"path": ("STRING", {"default": "knowledge_base/"})},
-            "optional": {"reload": ("INT", {"default": 0, "min": 0})},
+            # New widgets are appended at the END so saved workflows keep their
+            # positional widget values (ComfyUI stores widgets positionally).
+            "optional": {
+                "reload": ("INT", {"default": 0, "min": 0}),
+                "version": ("STRING", {"default": ""}),
+            },
         }
 
-    def run(self, path: str, reload: int = 0) -> tuple[Any, str, str, str]:
+    def run(self, path: str, reload: int = 0, version: str = "") -> tuple[Any, str, str, str]:
         resolved = _resolve_path(path)
+        requested_version = version or None
         try:
-            knowledge_base = load_knowledge_base(resolved)
+            knowledge_base = load_knowledge_base(resolved, requested_version=requested_version)
         except KnowledgeBaseError as error:
             errors = format_messages([error.message, *error.findings])
             return (None, "", errors, f"Failed to load Knowledge Base from: {resolved}")

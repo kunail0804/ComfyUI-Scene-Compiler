@@ -29,7 +29,8 @@
         "allow_aliases": { "type": "boolean" },
         "expansion_enabled": { "type": "boolean" },
         "max_expansion_depth": { "type": "integer", "minimum": 1 },
-        "include_nsfw": { "type": "boolean" }
+        "include_nsfw": { "type": "boolean" },
+        "knowledge_base_version": { "type": ["string", "null"] }
       }
     },
     "validator": {

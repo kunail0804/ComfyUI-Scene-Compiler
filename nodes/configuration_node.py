@@ -48,8 +48,11 @@ class ConfigurationNode:
                 "debug_enabled": ("BOOLEAN", {"default": False}),
                 "debug_level": (_DEBUG_LEVELS, {"default": "basic"}),
             },
+            # Appended at the END so saved workflows keep their positional widget
+            # values (ComfyUI stores widget values positionally).
             "optional": {
                 "analyzer_system_prompt": ("STRING", {"multiline": True, "default": ""}),
+                "resolver_knowledge_base_version": ("STRING", {"default": ""}),
             },
         }
 
@@ -72,6 +75,7 @@ class ConfigurationNode:
         debug_enabled: bool,
         debug_level: str,
         analyzer_system_prompt: str = "",
+        resolver_knowledge_base_version: str = "",
     ) -> tuple[Any, str]:
         analyzer: dict[str, Any] = {
             "model": analyzer_model,
@@ -91,6 +95,11 @@ class ConfigurationNode:
                 "expansion_enabled": resolver_expansion_enabled,
                 "max_expansion_depth": resolver_max_expansion_depth,
                 "include_nsfw": resolver_include_nsfw,
+                **(
+                    {"knowledge_base_version": resolver_knowledge_base_version}
+                    if resolver_knowledge_base_version
+                    else {}
+                ),
             },
             "validator": {"allow_unknown_fields": validator_allow_unknown_fields},
             "prompt_builder": {

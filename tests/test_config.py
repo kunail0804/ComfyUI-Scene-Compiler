@@ -81,6 +81,18 @@ def test_partial_config_fills_defaults() -> None:
     assert c.resolver.max_expansion_depth == 8
 
 
+def test_knowledge_base_version_defaults_to_none_and_is_omitted() -> None:
+    c = Config()
+    assert c.resolver.knowledge_base_version is None
+    assert "knowledge_base_version" not in c.resolver.to_json()  # omitted when unset
+
+
+def test_knowledge_base_version_roundtrips_when_set() -> None:
+    c = Config.from_json({"resolver": {"knowledge_base_version": "2.0.0"}})
+    assert c.resolver.knowledge_base_version == "2.0.0"
+    assert c.to_json()["resolver"]["knowledge_base_version"] == "2.0.0"
+
+
 def test_load_config_reads_file(tmp_path) -> None:
     path = tmp_path / "config.json"
     path.write_text(json.dumps(EXAMPLE_CONFIG), encoding="utf-8")
