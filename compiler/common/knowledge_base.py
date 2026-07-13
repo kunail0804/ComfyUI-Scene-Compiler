@@ -15,6 +15,7 @@ kept).
 from __future__ import annotations
 
 import json
+import unicodedata
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -26,6 +27,18 @@ from compiler.common.kb_migration import UnsupportedKnowledgeBaseVersion, adapt_
 from compiler.common.kb_validation import validate_knowledge_base
 from compiler.common.log import StructuredLogger
 from compiler.common.result import Message, Severity
+
+
+def normalize_concept(name: str) -> str:
+    """Normalize a concept for lookup (§17.3).
+
+    Applies Unicode (NFKC) normalization and lowercasing, and unifies underscores
+    with spaces before collapsing whitespace, so natural-language concepts
+    ("holding hands"), snake_case ids ("holding_hands"), and spaced aliases all
+    map to the same key.
+    """
+    text = unicodedata.normalize("NFKC", name).replace("_", " ").lower()
+    return " ".join(text.split())
 
 
 class KnowledgeBaseError(Exception):
@@ -77,11 +90,36 @@ class KnowledgeBase:
         self._by_id: Mapping[str, KnowledgeBaseEntry] = MappingProxyType(by_id)
         self._alias_to_id: Mapping[str, str] = MappingProxyType(alias_to_id)
         self._version = version
+        # Normalized id/alias -> entry lookup tables, compiled once per NSFW gating
+        # and reused across resolutions (§30.2, #131). The Knowledge Base is
+        # immutable, so the tables never go stale.
+        self._normalized_index: dict[bool, Mapping[str, KnowledgeBaseEntry]] = {}
 
     @property
     def version(self) -> str:
         """The dataset version from the manifest (implicit ``v1`` when absent)."""
         return self._version
+
+    def normalized_index(self, include_nsfw: bool) -> Mapping[str, KnowledgeBaseEntry]:
+        """Return the compiled normalized-lookup table, building it once per gating.
+
+        Maps every normalized canonical id and alias to its entry (aliases resolve
+        directly). Explicit-rated entries are omitted unless ``include_nsfw`` is
+        set, so a gated concept simply has no entry. The result is cached and reused
+        across resolutions instead of being rebuilt on every ``resolve_scene``.
+        """
+        cached = self._normalized_index.get(include_nsfw)
+        if cached is None:
+            table: dict[str, KnowledgeBaseEntry] = {}
+            for entry in self._by_id.values():
+                if entry.rating == "explicit" and not include_nsfw:
+                    continue
+                table[normalize_concept(entry.id)] = entry
+                for alias in entry.aliases:
+                    table[normalize_concept(alias)] = entry
+            cached = MappingProxyType(table)
+            self._normalized_index[include_nsfw] = cached
+        return cached
 
     @property
     def by_id(self) -> Mapping[str, KnowledgeBaseEntry]:
@@ -238,6 +276,8 @@ class KnowledgeBaseLoader:
         self._logger = logger
         self._requested_version = requested_version
         self._cache: KnowledgeBase | None = None
+        # Per-file lazy cache for category-scoped access (#132).
+        self._file_cache: dict[str, list[dict]] = {}
 
     def get(self) -> KnowledgeBase:
         """Return the cached Knowledge Base, loading it on first use."""
@@ -255,4 +295,31 @@ class KnowledgeBaseLoader:
         """
         kb = load_knowledge_base(self._directory, self._logger, self._requested_version)
         self._cache = kb
+        self._file_cache.clear()
         return kb
+
+    @property
+    def files_read(self) -> set[str]:
+        """Names of the entry files parsed so far via :meth:`category_entries`."""
+        return set(self._file_cache)
+
+    def _read_file(self, path: Path) -> list[dict]:
+        if path.name not in self._file_cache:
+            self._file_cache[path.name] = json.loads(path.read_text(encoding="utf-8"))
+        return self._file_cache[path.name]
+
+    def category_entries(self, category: str) -> list[dict]:
+        """Return the raw entries for one category, parsing only its file(s) (#132).
+
+        Incremental/lazy: instead of eagerly parsing the whole Knowledge Base, this
+        reads only ``<category>.json`` and ``gen_<category>.json`` (whichever exist)
+        on first access and caches them. Full loading via :meth:`get` still sees the
+        complete Knowledge Base. The curated file is listed first so curated entries
+        win on any id collision, matching the additive-merge model.
+        """
+        entries: list[dict] = []
+        for name in (f"{category}.json", f"gen_{category}.json"):
+            path = self._directory / name
+            if path.is_file():
+                entries.extend(self._read_file(path))
+        return entries

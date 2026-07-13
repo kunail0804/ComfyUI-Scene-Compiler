@@ -12,17 +12,25 @@ Knowledge Base Entry.
 
 from __future__ import annotations
 
-import unicodedata
 from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 
 from compiler.common.categories import is_valid_category
 from compiler.common.config import Config
 from compiler.common.embedding_index import EmbeddingIndex
-from compiler.common.knowledge_base import KnowledgeBase, KnowledgeBaseEntry
+from compiler.common.knowledge_base import (
+    KnowledgeBase,
+    KnowledgeBaseEntry,
+    normalize_concept,
+)
 from compiler.common.log import StructuredLogger
 from compiler.common.message_codes import message
 from compiler.common.result import CompilerResult, Message
 from schemas.models import ResolvedTag, Scene
+
+# Re-exported for callers/tests that import it from the resolver (its historical
+# home); the implementation now lives with the Knowledge Base it keys.
+__all__ = ["normalize_concept", "resolve_scene", "tags_to_prompt"]
 
 _CHARACTER_CONCEPT_FIELDS = (
     "identity",
@@ -34,17 +42,11 @@ _CHARACTER_CONCEPT_FIELDS = (
     "actions",
 )
 
-
-def normalize_concept(name: str) -> str:
-    """Normalize a concept for lookup (§17.3).
-
-    Applies Unicode (NFKC) normalization and lowercasing, and unifies underscores
-    with spaces before collapsing whitespace, so natural-language concepts
-    ("holding hands"), snake_case ids ("holding_hands"), and spaced aliases all
-    map to the same key.
-    """
-    text = unicodedata.normalize("NFKC", name).replace("_", " ").lower()
-    return " ".join(text.split())
+# Scenes with at least this many concepts resolve their concepts on a thread pool
+# (#133). Small scenes stay sequential to avoid pool overhead; the default is high
+# enough that ordinary scenes are unaffected. Each concept resolves independently
+# against the read-only index, so results merge back in exact discovery order.
+_DEFAULT_PARALLEL_THRESHOLD = 64
 
 
 def resolve_scene(
@@ -53,6 +55,7 @@ def resolve_scene(
     config: Config,
     logger: StructuredLogger | None = None,
     embedding_index: EmbeddingIndex | None = None,
+    parallel_threshold: int = _DEFAULT_PARALLEL_THRESHOLD,
 ) -> CompilerResult:
     """Resolve a validated Scene into an ordered tuple of Resolved Tags.
 
@@ -61,21 +64,35 @@ def resolve_scene(
     fall back to its nearest Knowledge Base entry (epic #34). Deterministic lookup
     always wins; with the feature disabled (or no index) behaviour is unchanged.
 
+    Large scenes (at least ``parallel_threshold`` concepts, when it is positive)
+    resolve their independent concepts on a thread pool and merge the results back
+    in exact discovery order, so the output is identical to sequential resolution
+    regardless of thread scheduling (#133). Pass ``0`` to force sequential.
+
     Returns:
         A CompilerResult whose ``data`` is the tuple of :class:`ResolvedTag` on
         success, or ``None`` with error messages when an error condition
         (circular expansion SC0003, invalid category SC0008) stops resolution.
     """
     include_nsfw = config.resolver.include_nsfw
-    index = _build_normalized_index(knowledge_base, include_nsfw)
+    index = knowledge_base.normalized_index(include_nsfw)
     resolver = _ConceptResolver(knowledge_base, index, config, logger, embedding_index)
 
     tags: list[ResolvedTag] = []
     warnings: list[Message] = []
     errors: list[Message] = []
 
-    for concept_name in _iter_scene_concepts(scene):
-        resolved = resolver.resolve(concept_name)
+    concepts = list(_iter_scene_concepts(scene))
+    if 0 < parallel_threshold <= len(concepts):
+        # Concept resolution is a pure read over the immutable index (no shared
+        # mutable state), and ``map`` preserves input order, so parallelizing is
+        # deterministic.
+        with ThreadPoolExecutor() as executor:
+            resolutions = list(executor.map(resolver.resolve, concepts))
+    else:
+        resolutions = [resolver.resolve(concept_name) for concept_name in concepts]
+
+    for resolved in resolutions:
         tags.extend(resolved.tags)
         warnings.extend(resolved.warnings)
         errors.extend(resolved.errors)
@@ -107,25 +124,6 @@ def tags_to_prompt(tags: tuple[ResolvedTag, ...], separator: str = ",") -> str:
     concepts. Deduplication already happened in :func:`resolve_scene`.
     """
     return separator.join(resolved.tag for resolved in tags)
-
-
-def _build_normalized_index(
-    knowledge_base: KnowledgeBase,
-    include_nsfw: bool,
-) -> dict[str, KnowledgeBaseEntry]:
-    """Map every normalized canonical id and alias to its entry (aliases direct).
-
-    Explicit-rated entries are omitted unless ``include_nsfw`` is set, so a gated
-    concept simply has no entry and is reported as unknown (SC0001).
-    """
-    index: dict[str, KnowledgeBaseEntry] = {}
-    for entry in knowledge_base.by_id.values():
-        if entry.rating == "explicit" and not include_nsfw:
-            continue
-        index[normalize_concept(entry.id)] = entry
-        for alias in entry.aliases:
-            index[normalize_concept(alias)] = entry
-    return index
 
 
 def _iter_scene_concepts(scene: Scene) -> Iterator[str]:
