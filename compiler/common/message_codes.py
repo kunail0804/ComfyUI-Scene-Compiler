@@ -50,6 +50,7 @@ _EXTENSIONS: dict[str, CodeSpec] = {
     "SC0017": CodeSpec(Severity.WARNING, "Interaction Dropped"),
     "SC0018": CodeSpec(Severity.ERROR, "Analyzer Unexpected Response"),
     "SC0019": CodeSpec(Severity.WARNING, "Concept Reduced"),
+    "SC0021": CodeSpec(Severity.WARNING, "List Under-Transcription"),
 }
 
 CODES: dict[str, CodeSpec] = {**_APPENDIX_B, **_EXTENSIONS}

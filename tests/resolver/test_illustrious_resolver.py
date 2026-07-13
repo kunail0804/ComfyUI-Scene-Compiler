@@ -209,6 +209,53 @@ def test_reduction_resolves_through_aliases() -> None:
     assert tags(result) == ["business suit"]
 
 
+def test_dropped_modifier_recovered_as_standalone_tag() -> None:
+    # "open white shirt" reduces to the head-noun entry "white shirt"; the dropped
+    # modifier "open" is recovered via the combination "open shirt" (#111).
+    knowledge = kb(
+        entry("white_shirt", ["white shirt"], category="clothing", aliases=["white shirt"]),
+        entry("open_shirt", ["open shirt"], category="clothing", aliases=["open shirt"]),
+    )
+    result = resolve_scene(scene_with(clothing=["open white shirt"]), knowledge, default_config())
+    assert tags(result) == ["white shirt", "open shirt"]  # head noun + recovered modifier
+    assert "SC0019" in codes(result.warnings)
+
+
+def test_multiple_dropped_modifiers_recovered_in_discovery_order() -> None:
+    knowledge = kb(
+        entry("dress", ["dress"], category="clothing"),
+        entry("open_dress", ["open dress"], category="clothing", aliases=["open dress"]),
+        entry("frilled_dress", ["frilled dress"], category="clothing", aliases=["frilled dress"]),
+    )
+    result = resolve_scene(
+        scene_with(clothing=["open frilled short dress"]), knowledge, default_config()
+    )
+    # No suffix but bare "dress" matches (start=3), so open/frilled/short are all
+    # dropped; the "<modifier> dress" compounds recover open and frilled in order.
+    assert tags(result) == ["dress", "open dress", "frilled dress"]
+
+
+def test_bare_modifier_is_not_recovered_without_head_compound() -> None:
+    # A dropped modifier that is a KB tag on its own but forms no "<modifier> <head>"
+    # compound is NOT recovered — this keeps recovery high-precision and output
+    # stable (e.g. "hologram jacket" must not sprout a bare "hologram" tag).
+    knowledge = kb(
+        entry("jacket", ["jacket"], category="clothing"),
+        entry("hologram", ["hologram"], category="objects"),
+    )
+    result = resolve_scene(scene_with(clothing=["hologram jacket"]), knowledge, default_config())
+    assert tags(result) == ["jacket"]  # no "hologram jacket" compound exists
+
+
+def test_unresolvable_modifier_is_not_invented() -> None:
+    # A dropped modifier that matches no KB entry adds nothing (no invention).
+    knowledge = kb(entry("dress", ["dress"], category="clothing"))
+    result = resolve_scene(
+        scene_with(clothing=["ephemeral summer dress"]), knowledge, default_config()
+    )
+    assert tags(result) == ["dress"]  # only the head noun, modifier stays dropped
+
+
 def test_reduction_disabled_when_aliases_only_match_and_aliases_off() -> None:
     # An exact-id concept is unaffected; reduction never invents an alias hit.
     knowledge = kb(entry("dress", ["dress"], category="clothing"))

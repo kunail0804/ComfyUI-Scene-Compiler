@@ -167,11 +167,12 @@ class _ConceptResolver:
         outcome = _Resolution()
         key = normalize_concept(concept_name)
         entry = self._lookup(key)
-        if entry is None:
-            entry, reduced_key = self._reduce(key)
-        else:
-            reduced_key = None
+        if entry is not None:
+            self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
+            return outcome
 
+        tokens = key.split()
+        entry, reduced_key, start = self._reduce(tokens)
         if entry is None:
             outcome.warnings.append(
                 message(
@@ -184,38 +185,68 @@ class _ConceptResolver:
                 self._logger.verbose("concept_unknown", concept=concept_name, normalized=key)
             return outcome
 
-        if reduced_key is not None:
-            outcome.warnings.append(
-                message(
-                    "SC0019",
-                    (
-                        f"Concept '{concept_name}' was reduced to its head noun "
-                        f"'{reduced_key}' for resolution; leading modifiers were dropped."
-                    ),
-                    concept=concept_name,
-                    reduced_to=reduced_key,
-                )
+        outcome.warnings.append(
+            message(
+                "SC0019",
+                (
+                    f"Concept '{concept_name}' was reduced to its head noun "
+                    f"'{reduced_key}' for resolution; leading modifiers were retried "
+                    "as standalone concepts."
+                ),
+                concept=concept_name,
+                reduced_to=reduced_key,
             )
+        )
 
         self._expand(entry, concept_name, depth=0, path=(), outcome=outcome)
+        self._recover_modifiers(tokens, start, concept_name, outcome)
         return outcome
 
-    def _reduce(self, key: str) -> tuple[KnowledgeBaseEntry | None, str | None]:
+    def _reduce(self, tokens: list[str]) -> tuple[KnowledgeBaseEntry | None, str | None, int]:
         """Fall back to the concept's head noun when the full key has no entry (§17.2).
 
         English noun phrases carry modifiers on the left ("white summer dress"),
         so progressively dropping leading tokens and looking up the longest
         remaining suffix recovers the head-noun Knowledge Base Entry ("dress")
         instead of discarding the whole concept. The lookup stays exact and
-        deterministic; no tag or concept is invented.
+        deterministic; no tag or concept is invented. Returns the index of the
+        first surviving token so the dropped leading modifiers can be recovered.
         """
-        tokens = key.split()
         for start in range(1, len(tokens)):
             reduced_key = " ".join(tokens[start:])
             entry = self._lookup(reduced_key)
             if entry is not None:
-                return entry, reduced_key
-        return None, None
+                return entry, reduced_key, start
+        return None, None, 0
+
+    def _recover_modifiers(
+        self,
+        tokens: list[str],
+        start: int,
+        source_concept: str,
+        outcome: _Resolution,
+    ) -> None:
+        """Retry each leading modifier the head-noun reduction dropped (§30.2, #111).
+
+        A dropped modifier is often part of a valid compound tag ("open" in
+        "open white shirt" → "open shirt"), so each dropped token is retried
+        *combined with the phrase's head noun* through the direct resolution path
+        (normalize → alias → canonical → expansion). Recovered tags are emitted in
+        discovery (left-to-right) order.
+
+        Only the ``<modifier> <head-noun>`` compound is tried — never the bare
+        modifier on its own. Bare single words ("white", "hologram") are almost
+        always generic tags whose recovery would flood the prompt with noise and
+        silently change existing output; the compound form is a high-precision,
+        deterministic recovery. Reduction is not re-applied, so no head noun is
+        re-derived and the result stays KB-only.
+        """
+        head = tokens[-1]
+        for index in range(start):
+            candidate = f"{tokens[index]} {head}"
+            entry = self._lookup(candidate)
+            if entry is not None:
+                self._expand(entry, source_concept, depth=0, path=(), outcome=outcome)
 
     def _lookup(self, key: str) -> KnowledgeBaseEntry | None:
         entry = self._index.get(key)

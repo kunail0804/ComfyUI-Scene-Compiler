@@ -39,6 +39,10 @@ Extract every explicitly described physical object as a plain concept string (`R
 
 Every character becomes an independent Character object; never merge characters. Interactions belong to the scene, not to individual characters (`A girl hugs a boy.` → Character 0 `female`, Character 1 `male`, Interaction `hug`).
 
+# List inputs
+
+When the input is a list of concepts (comma-separated, newline-separated, or bulleted — e.g. `1girl, blonde hair, thighhighs, classroom, sunset`), transcribe EVERY item. Map each item to the appropriate Scene field (identity, appearance, clothing, accessories, pose, expression, actions, or the scene-level `objects`/`environment`/`camera`/`lighting`). Do not drop, merge, deduplicate, or summarize items away: a list of N items must yield N concepts in the Scene JSON. Preserve an item's original wording when its field is unclear rather than discarding it.
+
 # Unknown and missing information
 
 If a concept cannot be categorized confidently, preserve the original wording; never invent another concept. Never complete missing information.
