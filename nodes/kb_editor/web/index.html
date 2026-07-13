@@ -26,13 +26,16 @@
       #status.err { color: #d33; }
       .checkbox { display: flex; align-items: center; gap: 8px; }
       .checkbox input { width: auto; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     </style>
   </head>
   <body>
     <aside id="sidebar">
       <div id="controls">
         <strong>Knowledge Base Editor</strong>
+        <label class="sr-only" for="search">Search entries</label>
         <input id="search" type="search" placeholder="Search id / alias / tag…" />
+        <label class="sr-only" for="filter">Filter by category</label>
         <select id="filter"><option value="">All categories</option></select>
         <button id="new">+ New entry</button>
       </div>
@@ -173,7 +176,10 @@
         newEntry(); await load();
       };
 
-      load().catch((err) => { el("status").className = "err"; el("status").textContent = String(err); });
+      (async () => {
+        try { await load(); }
+        catch (err) { el("status").className = "err"; el("status").textContent = String(err); }
+      })();
     </script>
   </body>
 </html>
