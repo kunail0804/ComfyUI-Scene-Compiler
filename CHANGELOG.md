@@ -7,6 +7,16 @@ All notable changes to Scene Compiler are documented here. The project follows
 
 ### Added
 
+- **Knowledge Base Editor (epic #33).** An optional, off-critical-path web editor
+  for curated Knowledge Base entries, served on the ComfyUI server sub-route
+  `http://127.0.0.1:8188/scene-compiler/kb` (registered from the package init,
+  guarded so it no-ops without ComfyUI). CRUD + a `validate` endpoint reuse the
+  authoritative `kb_validation` rules (single source of truth) against the
+  candidate **and** the resulting whole-KB state (id/alias collisions, cycles), so
+  invalid entries cannot be saved. Saves are **atomic** (temp + fsync + rename) and
+  **format-safe**: only the edited entry changes, key order and trailing newline
+  preserved, curated-vs-generated split respected. The compiler never depends on
+  the editor.
 - **Semantic & embedding fallback (epic #34).** An **opt-in** nearest-neighbour
   fallback for the Resolver, off by default (`semantic.enabled`). When enabled, a
   concept that misses both deterministic lookup and the head-noun reduction falls

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scene Compiler — Knowledge Base Editor</title>
+    <style>
+      :root { color-scheme: light dark; --gap: 12px; }
+      * { box-sizing: border-box; }
+      body { font-family: system-ui, sans-serif; margin: 0; display: flex; height: 100vh; }
+      #sidebar { width: 320px; border-right: 1px solid #8884; display: flex; flex-direction: column; }
+      #controls { padding: var(--gap); display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #8884; }
+      #list { overflow-y: auto; flex: 1; }
+      .row { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #8882; font-size: 14px; }
+      .row:hover, .row.active { background: #8883; }
+      .row .cat { color: #888; font-size: 12px; }
+      main { flex: 1; padding: 24px; overflow-y: auto; max-width: 640px; }
+      label { display: block; margin: 12px 0 4px; font-weight: 600; font-size: 13px; }
+      input, select, textarea, button { font: inherit; padding: 6px 8px; width: 100%; }
+      .field.error input, .field.error select, .field.error textarea { outline: 2px solid #d33; }
+      .msg { color: #d33; font-size: 12px; margin-top: 4px; white-space: pre-wrap; }
+      .actions { margin-top: 20px; display: flex; gap: 8px; }
+      .actions button { width: auto; padding: 8px 16px; cursor: pointer; }
+      #status { margin-top: 12px; font-size: 13px; }
+      #status.ok { color: #2a2; }
+      #status.err { color: #d33; }
+      .checkbox { display: flex; align-items: center; gap: 8px; }
+      .checkbox input { width: auto; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    </style>
+  </head>
+  <body>
+    <aside id="sidebar">
+      <div id="controls">
+        <strong>Knowledge Base Editor</strong>
+        <label class="sr-only" for="search">Search entries</label>
+        <input id="search" type="search" placeholder="Search id / alias / tag…" />
+        <label class="sr-only" for="filter">Filter by category</label>
+        <select id="filter"><option value="">All categories</option></select>
+        <button id="new">+ New entry</button>
+      </div>
+      <div id="list"></div>
+    </aside>
+    <main>
+      <form id="form" autocomplete="off">
+        <div class="field" data-field="id">
+          <label for="f_id">id</label><input id="f_id" name="id" placeholder="snake_case_id" />
+          <div class="msg"></div>
+        </div>
+        <div class="field" data-field="aliases">
+          <label for="f_aliases">aliases (comma-separated)</label><input id="f_aliases" name="aliases" />
+          <div class="msg"></div>
+        </div>
+        <div class="field" data-field="tags">
+          <label for="f_tags">tags (comma-separated)</label><input id="f_tags" name="tags" />
+          <div class="msg"></div>
+        </div>
+        <div class="field" data-field="category">
+          <label for="f_category">category</label><select id="f_category" name="category"></select>
+          <div class="msg"></div>
+        </div>
+        <div class="field" data-field="expand">
+          <label for="f_expand">expand (comma-separated ids)</label><input id="f_expand" name="expand" />
+          <div class="msg"></div>
+        </div>
+        <div class="field" data-field="rating">
+          <label for="f_rating">rating</label>
+          <select id="f_rating" name="rating"><option value="general">general</option><option value="explicit">explicit</option></select>
+          <div class="msg"></div>
+        </div>
+        <div class="field checkbox" data-field="deprecated">
+          <input type="checkbox" name="deprecated" id="deprecated" /><label for="deprecated" style="margin:0">deprecated</label>
+        </div>
+        <div class="field" data-field="notes">
+          <label for="f_notes">notes</label><textarea id="f_notes" name="notes" rows="2"></textarea>
+          <div class="msg"></div>
+        </div>
+        <div class="actions">
+          <button type="submit" id="save">Save</button>
+          <button type="button" id="delete">Delete</button>
+        </div>
+        <div id="status"></div>
+      </form>
+    </main>
+    <script>
+      const CATEGORIES = ["character","appearance","hair","face","eyes","expression","body","clothing","accessories","pose","action","interaction","objects","environment","camera","lighting","style","quality","miscellaneous"];
+      const api = (p, opts) => fetch("api/" + p, opts).then(r => r.json().then(j => ({ status: r.status, body: j })));
+      let entries = [], current = null;
+
+      const el = (id) => document.getElementById(id);
+      for (const c of CATEGORIES) {
+        el("filter").insertAdjacentHTML("beforeend", `<option>${c}</option>`);
+        el("form").category.insertAdjacentHTML("beforeend", `<option>${c}</option>`);
+      }
+
+      function renderList() {
+        const q = el("search").value.toLowerCase(), cat = el("filter").value;
+        el("list").innerHTML = "";
+        for (const e of entries) {
+          const hay = [e.id, ...(e.aliases||[]), ...(e.tags||[])].join(" ").toLowerCase();
+          if (q && !hay.includes(q)) continue;
+          if (cat && e.category !== cat) continue;
+          const div = document.createElement("div");
+          div.className = "row" + (current && current.id === e.id ? " active" : "");
+          div.innerHTML = `${e.id} <span class="cat">${e.category}</span>`;
+          div.onclick = () => select(e);
+          el("list").appendChild(div);
+        }
+      }
+
+      const csv = (v) => (v || "").split(",").map(s => s.trim()).filter(Boolean);
+      function formEntry() {
+        const f = el("form"), e = { id: f.id.value.trim(), tags: csv(f.tags.value), category: f.category.value };
+        if (csv(f.aliases.value).length) e.aliases = csv(f.aliases.value);
+        if (csv(f.expand.value).length) e.expand = csv(f.expand.value);
+        if (f.rating.value === "explicit") e.rating = "explicit";
+        if (f.deprecated.checked) e.deprecated = true;
+        if (f.notes.value.trim()) e.notes = f.notes.value.trim();
+        return e;
+      }
+
+      function select(e) {
+        current = e; const f = el("form");
+        f.id.value = e.id; f.tags.value = (e.tags||[]).join(", ");
+        f.aliases.value = (e.aliases||[]).join(", "); f.expand.value = (e.expand||[]).join(", ");
+        f.category.value = e.category; f.rating.value = e.rating || "general";
+        f.deprecated.checked = !!e.deprecated; f.notes.value = e.notes || "";
+        renderList(); validate();
+      }
+
+      function newEntry() { current = null; el("form").reset(); el("status").textContent = ""; renderList(); }
+
+      function showErrors(errors) {
+        document.querySelectorAll(".field").forEach(fld => { fld.classList.remove("error"); fld.querySelector(".msg") && (fld.querySelector(".msg").textContent = ""); });
+        for (const err of errors) {
+          const fld = document.querySelector(`.field[data-field="${err.field}"]`) || document.querySelector('.field[data-field="id"]');
+          fld.classList.add("error");
+          const msg = fld.querySelector(".msg");
+          if (msg) msg.textContent += `${err.code}: ${err.message}\n`;
+        }
+        el("save").disabled = errors.length > 0;
+        return errors.length === 0;
+      }
+
+      let timer;
+      function validate() {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+          const body = { entry: formEntry(), original_id: current ? current.id : null };
+          const { body: res } = await api("validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+          showErrors(res.errors || []);
+        }, 200);
+      }
+
+      async function load() {
+        const { body } = await api("entries");
+        entries = body.entries || []; renderList();
+      }
+
+      el("form").addEventListener("input", validate);
+      el("search").oninput = renderList; el("filter").onchange = renderList; el("new").onclick = newEntry;
+
+      el("form").onsubmit = async (ev) => {
+        ev.preventDefault();
+        const entry = formEntry();
+        const method = current ? "PUT" : "POST";
+        const path = current ? "entries/" + encodeURIComponent(current.id) : "entries";
+        const { status, body } = await api(path, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ entry }) });
+        if (status === 200) { el("status").className = "ok"; el("status").textContent = "Saved."; await load(); select(entry); }
+        else { showErrors(body.errors || []); el("status").className = "err"; el("status").textContent = "Not saved — fix validation errors."; }
+      };
+
+      el("delete").onclick = async () => {
+        if (!current || !confirm(`Delete '${current.id}'?`)) return;
+        await api("entries/" + encodeURIComponent(current.id), { method: "DELETE" });
+        newEntry(); await load();
+      };
+
+      (async () => {
+        try { await load(); }
+        catch (err) { el("status").className = "err"; el("status").textContent = String(err); }
+      })();
+    </script>
+  </body>
+</html>
