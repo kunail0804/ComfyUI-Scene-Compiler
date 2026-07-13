@@ -25,4 +25,14 @@ except ImportError:
     # package that is on sys.path.
     from nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
 
+# Register the optional Knowledge Base Editor web routes on the ComfyUI server.
+# Guarded so it is a harmless no-op when ComfyUI/PromptServer is absent (tests,
+# standalone imports); the compiler never depends on the editor.
+try:
+    from nodes.kb_editor.routes import register_routes
+
+    register_routes()
+except Exception:  # pragma: no cover - defensive: never break node loading
+    pass
+
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
