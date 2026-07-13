@@ -7,6 +7,16 @@ All notable changes to Scene Compiler are documented here. The project follows
 
 ### Added
 
+- **Automatic Knowledge Base builder & validation tooling (epic #35).** A single,
+  fully-automated pipeline (`scripts/build_knowledge_base.py`, zero human input)
+  regenerates the generated KB deterministically from committed snapshots: generate
+  candidates → ingest Danbooru aliases/implications (`data/danbooru_aliases.txt`,
+  `data/danbooru_implications.txt`) → auto-validate (structural rules + confidence,
+  no approval gate) → conflict-scan → write. Synonyms now reach their canonical
+  (`long black stockings` → `thighhighs`). New standalone tools:
+  `scripts/detect_kb_conflicts.py` (CI-gateable conflict scan) and
+  `scripts/coverage_benchmark.py` (KB coverage report). See
+  `docs/knowledge_base_build.md`.
 - **Knowledge Base versioning (epic #36).** A Knowledge Base directory can now
   ship a `manifest.json` (new `knowledge_base_manifest` schema) recording a
   dataset `version`, a deterministic `content_hash`, the `source_vocab` digest,

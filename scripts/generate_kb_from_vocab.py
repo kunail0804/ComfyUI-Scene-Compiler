@@ -29,6 +29,8 @@ from compiler.common.kb_manifest import write_manifest  # noqa: E402
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _VOCAB = _REPO_ROOT / "data" / "danbooru_vocab.txt"
+_ALIASES = _REPO_ROOT / "data" / "danbooru_aliases.txt"
+_IMPLICATIONS = _REPO_ROOT / "data" / "danbooru_implications.txt"
 _KB_DIR = _REPO_ROOT / "knowledge_base"
 _GEN_PREFIX = "gen_"
 
@@ -96,12 +98,52 @@ def _load_hand_reserved() -> set[str]:
     """Collect every id and alias from the hand-curated (non-generated) KB files."""
     reserved: set[str] = set()
     for path in sorted(_KB_DIR.glob("*.json")):
-        if path.name.startswith(_GEN_PREFIX):
+        if path.name.startswith(_GEN_PREFIX) or path.name == "manifest.json":
             continue
         for entry in json.loads(path.read_text(encoding="utf-8")):
             reserved.add(entry["id"])
             reserved.update(entry.get("aliases", ()))
     return reserved
+
+
+def _load_curated_ids() -> set[str]:
+    """Canonical ids from the hand-curated files (valid expansion targets)."""
+    ids: set[str] = set()
+    for path in sorted(_KB_DIR.glob("*.json")):
+        if path.name.startswith(_GEN_PREFIX) or path.name == "manifest.json":
+            continue
+        for entry in json.loads(path.read_text(encoding="utf-8")):
+            ids.add(entry["id"])
+    return ids
+
+
+def _read_tsv_pairs(path: Path) -> list[tuple[str, str]]:
+    """Read ``a<TAB>b`` lines (deterministic order); empty when the file is absent."""
+    if not path.is_file():
+        return []
+    pairs: list[tuple[str, str]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        left, right = line.split("\t", 1)
+        pairs.append((left.strip(), right.strip()))
+    return pairs
+
+
+def _load_aliases_by_canonical() -> dict[str, list[str]]:
+    """Danbooru aliases grouped by canonical id: ``canonical -> [alias, ...]``."""
+    by_canonical: dict[str, list[str]] = {}
+    for alias, canonical in _read_tsv_pairs(_ALIASES):
+        by_canonical.setdefault(canonical, []).append(alias)
+    return by_canonical
+
+
+def _load_implications() -> dict[str, list[str]]:
+    """Danbooru implications grouped by antecedent: ``antecedent -> [consequent, ...]``."""
+    by_antecedent: dict[str, list[str]] = {}
+    for antecedent, consequent in _read_tsv_pairs(_IMPLICATIONS):
+        by_antecedent.setdefault(antecedent, []).append(consequent)
+    return by_antecedent
 
 
 def _read_vocab() -> list[tuple[str, str]]:
@@ -114,18 +156,61 @@ def _read_vocab() -> list[tuple[str, str]]:
     return pairs
 
 
-def generate() -> dict[str, int]:
+def _ingest_aliases_and_implications(
+    by_category: dict[str, list[dict]],
+    reserved: set[str],
+    curated_ids: set[str],
+) -> None:
+    """Attach Danbooru aliases/implications to the generated entries (issue #118).
+
+    - Aliases whose canonical is a generated entry are attached to it, so synonyms
+      resolve (``tights`` → ``pantyhose``). Aliases colliding with a curated
+      id/alias or any generated id are skipped (curated always wins; no chains).
+    - Implications whose antecedent is a generated entry become ``expand`` targets
+      when the consequent exists (curated id or generated id). This is additive and
+      deterministic; nothing is invented (data comes only from the committed
+      Danbooru snapshots). Aliases whose canonical is a *curated* entry are owned by
+      the curated files and left untouched here.
+    """
+    generated_ids = {entry["id"] for entries in by_category.values() for entry in entries}
+    known_targets = curated_ids | generated_ids
+    aliases_by_canonical = _load_aliases_by_canonical()
+    implications = _load_implications()
+
+    for entries in by_category.values():
+        for entry in entries:
+            entry_id = entry["id"]
+
+            new_aliases = sorted(
+                alias
+                for alias in aliases_by_canonical.get(entry_id, ())
+                if alias not in reserved and alias not in generated_ids and alias != entry_id
+            )
+            if new_aliases:
+                entry["aliases"] = new_aliases
+
+            new_expand = sorted(
+                target
+                for target in implications.get(entry_id, ())
+                if target in known_targets and target != entry_id
+            )
+            if new_expand:
+                entry["expand"] = new_expand
+
+
+def build_generated_entries() -> dict[str, list[dict]]:
+    """Build the generated entries (with alias/implication ingestion), sorted.
+
+    Pure and side-effect-free: it reads the committed snapshots and returns the
+    ``category -> [entry, ...]`` mapping without touching disk, so the pipeline
+    (#122) can validate the candidates before anything is written.
+    """
     reserved = _load_hand_reserved()
     by_category: dict[str, list[dict]] = {}
-    skipped_reserved = skipped_unmapped = 0
 
     for raffle_category, tag in _read_vocab():
         sc_category = _CATEGORY_MAP.get(raffle_category)
-        if sc_category is None:
-            skipped_unmapped += 1
-            continue
-        if tag in reserved:
-            skipped_reserved += 1
+        if sc_category is None or tag in reserved:
             continue
         entry = {
             "id": tag,
@@ -136,23 +221,33 @@ def generate() -> dict[str, int]:
             entry["rating"] = "explicit"
         by_category.setdefault(sc_category, []).append(entry)
 
+    _ingest_aliases_and_implications(by_category, reserved, _load_curated_ids())
+    for entries in by_category.values():
+        entries.sort(key=lambda e: e["id"])
+    return by_category
+
+
+def write_generated(by_category: dict[str, list[dict]]) -> dict[str, int]:
+    """Write the generated entry files and stamp the manifest deterministically."""
     # Remove any stale generated files before writing the fresh set.
     for path in _KB_DIR.glob(f"{_GEN_PREFIX}*.json"):
         path.unlink()
 
     counts: dict[str, int] = {}
     for sc_category, entries in sorted(by_category.items()):
-        entries.sort(key=lambda e: e["id"])
         out = _KB_DIR / f"{_GEN_PREFIX}{sc_category}.json"
         out.write_text(json.dumps(entries, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         counts[sc_category] = len(entries)
 
-    manifest = write_manifest(_KB_DIR, _DATASET_VERSION, _VOCAB)
+    write_manifest(_KB_DIR, _DATASET_VERSION, _VOCAB)
+    return counts
 
+
+def generate() -> dict[str, int]:
+    by_category = build_generated_entries()
+    counts = write_generated(by_category)
     total = sum(counts.values())
     print(f"generated {total} entries across {len(counts)} category files")
-    print(f"  stamped manifest version {manifest.version} ({manifest.content_hash[:19]}...)")
-    print(f"  skipped {skipped_reserved} (already hand-curated), {skipped_unmapped} (unmapped)")
     for cat, n in sorted(counts.items(), key=lambda x: -x[1]):
         print(f"  {n:6}  gen_{cat}.json")
     return counts

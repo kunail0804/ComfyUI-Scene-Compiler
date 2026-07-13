@@ -1,0 +1,26 @@
+{
+  "coverage_rate": 0.9032,
+  "covered": 28,
+  "hit_rate": {
+    "dropped": 3,
+    "exact": 25,
+    "fallback": 0,
+    "head_noun": 3
+  },
+  "per_category": {
+    "action": 1,
+    "body": 1,
+    "camera": 1,
+    "character": 1,
+    "clothing": 8,
+    "environment": 4,
+    "expression": 2,
+    "eyes": 1,
+    "hair": 1,
+    "interaction": 1,
+    "lighting": 2,
+    "objects": 3,
+    "pose": 2
+  },
+  "total": 31
+}

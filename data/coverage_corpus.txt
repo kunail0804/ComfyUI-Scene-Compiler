@@ -1,0 +1,34 @@
+# Representative concept phrases for the KB coverage benchmark (issue #121).
+# One phrase per line; blank lines and lines starting with '#' are ignored.
+# A deterministic, curated corpus spanning categories and resolution paths.
+1girl
+long hair
+blue eyes
+smile
+blush
+school uniform
+thighhighs
+stockings
+jacket
+open white shirt
+white summer dress
+black pleated skirt
+sitting
+standing
+walking
+holding hands
+sword
+book
+umbrella
+classroom
+forest
+castle
+beach
+sunset
+moonlight
+close-up
+wide shot
+cat ears
+armor
+quantum flux inverter
+eldritch nonexistent artifact

@@ -14179,7 +14179,10 @@
     "tags": [
       "katana"
     ],
-    "category": "objects"
+    "category": "objects",
+    "expand": [
+      "weapon"
+    ]
   },
   {
     "id": "kayari_buta",

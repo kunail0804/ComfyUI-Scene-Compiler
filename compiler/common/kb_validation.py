@@ -197,6 +197,17 @@ def _find_cycles(graph: Mapping[str, list[str]], ids: set[str]) -> list[list[str
     return cycles
 
 
+def validate_entry(entry: Mapping[str, Any]) -> list[Message]:
+    """Validate a single entry's structure (schema + category), no cross-entry rules.
+
+    Reuses the same schema/category checks as :func:`validate_knowledge_base` so
+    per-entry tooling (e.g. the automatic candidate validator, #119) stays in sync
+    with the authoritative rules instead of duplicating them.
+    """
+    entry_id = entry.get("id", "<unknown>")
+    return _schema_messages(entry, entry_id) + _category_messages(entry, entry_id)
+
+
 def validate_knowledge_base(entries: Iterable[Mapping[str, Any]]) -> list[Message]:
     """Validate a whole Knowledge Base and return every problem found.
 
