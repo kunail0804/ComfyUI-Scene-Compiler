@@ -41,35 +41,35 @@
     <main>
       <form id="form" autocomplete="off">
         <div class="field" data-field="id">
-          <label>id</label><input name="id" placeholder="snake_case_id" />
+          <label for="f_id">id</label><input id="f_id" name="id" placeholder="snake_case_id" />
           <div class="msg"></div>
         </div>
         <div class="field" data-field="aliases">
-          <label>aliases (comma-separated)</label><input name="aliases" />
+          <label for="f_aliases">aliases (comma-separated)</label><input id="f_aliases" name="aliases" />
           <div class="msg"></div>
         </div>
         <div class="field" data-field="tags">
-          <label>tags (comma-separated)</label><input name="tags" />
+          <label for="f_tags">tags (comma-separated)</label><input id="f_tags" name="tags" />
           <div class="msg"></div>
         </div>
         <div class="field" data-field="category">
-          <label>category</label><select name="category"></select>
+          <label for="f_category">category</label><select id="f_category" name="category"></select>
           <div class="msg"></div>
         </div>
         <div class="field" data-field="expand">
-          <label>expand (comma-separated ids)</label><input name="expand" />
+          <label for="f_expand">expand (comma-separated ids)</label><input id="f_expand" name="expand" />
           <div class="msg"></div>
         </div>
         <div class="field" data-field="rating">
-          <label>rating</label>
-          <select name="rating"><option value="general">general</option><option value="explicit">explicit</option></select>
+          <label for="f_rating">rating</label>
+          <select id="f_rating" name="rating"><option value="general">general</option><option value="explicit">explicit</option></select>
           <div class="msg"></div>
         </div>
         <div class="field checkbox" data-field="deprecated">
           <input type="checkbox" name="deprecated" id="deprecated" /><label for="deprecated" style="margin:0">deprecated</label>
         </div>
         <div class="field" data-field="notes">
-          <label>notes</label><textarea name="notes" rows="2"></textarea>
+          <label for="f_notes">notes</label><textarea id="f_notes" name="notes" rows="2"></textarea>
           <div class="msg"></div>
         </div>
         <div class="actions">
@@ -173,7 +173,7 @@
         newEntry(); await load();
       };
 
-      load();
+      load().catch((err) => { el("status").className = "err"; el("status").textContent = String(err); });
     </script>
   </body>
 </html>
