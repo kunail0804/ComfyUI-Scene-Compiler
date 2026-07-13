@@ -49,6 +49,15 @@
         "remove_duplicate_tags": { "type": "boolean" }
       }
     },
+    "semantic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "min_similarity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "backend": { "type": "string" }
+      }
+    },
     "debug": {
       "type": "object",
       "additionalProperties": false,

@@ -50,6 +50,7 @@ _EXTENSIONS: dict[str, CodeSpec] = {
     "SC0017": CodeSpec(Severity.WARNING, "Interaction Dropped"),
     "SC0018": CodeSpec(Severity.ERROR, "Analyzer Unexpected Response"),
     "SC0019": CodeSpec(Severity.WARNING, "Concept Reduced"),
+    "SC0020": CodeSpec(Severity.WARNING, "Semantic Fallback"),
     "SC0021": CodeSpec(Severity.WARNING, "List Under-Transcription"),
     "SC0022": CodeSpec(Severity.WARNING, "Candidate Rejected"),
 }

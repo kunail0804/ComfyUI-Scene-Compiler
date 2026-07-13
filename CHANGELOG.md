@@ -7,6 +7,16 @@ All notable changes to Scene Compiler are documented here. The project follows
 
 ### Added
 
+- **Semantic & embedding fallback (epic #34).** An **opt-in** nearest-neighbour
+  fallback for the Resolver, off by default (`semantic.enabled`). When enabled, a
+  concept that misses both deterministic lookup and the head-noun reduction falls
+  back to its nearest Knowledge Base entry in a committed embedding index
+  (`data/kb_embedding_index.json`), accepted only above `semantic.min_similarity`
+  and emitting `SC0020`. The default embedding backend is a deterministic, offline,
+  dependency-free character-n-gram model. Guarantees: deterministic lookup always
+  wins, the fallback can only return an existing KB entry (never invents a tag),
+  and identical input yields identical output. Config surfaced on the Configuration
+  node. Build the index with `scripts/build_embedding_index.py`.
 - **Automatic Knowledge Base builder & validation tooling (epic #35).** A single,
   fully-automated pipeline (`scripts/build_knowledge_base.py`, zero human input)
   regenerates the generated KB deterministically from committed snapshots: generate

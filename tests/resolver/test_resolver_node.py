@@ -64,7 +64,7 @@ def test_resolves_to_flat_prompt_with_real_resolver() -> None:
 
 
 def test_delegates_and_surfaces_messages(monkeypatch) -> None:
-    def fake_resolve(scene_arg, knowledge_base, config):
+    def fake_resolve(scene_arg, knowledge_base, config, embedding_index=None):
         return CompilerResult(data=()).add_warning(message("SC0001", "unknown 'x'"))
 
     monkeypatch.setattr(node_module, "resolve_scene", fake_resolve)
@@ -76,7 +76,7 @@ def test_delegates_and_surfaces_messages(monkeypatch) -> None:
 def test_default_config_used_when_absent(monkeypatch) -> None:
     captured = {}
 
-    def fake_resolve(scene_arg, knowledge_base, config):
+    def fake_resolve(scene_arg, knowledge_base, config, embedding_index=None):
         captured["config"] = config
         return CompilerResult(data=())
 

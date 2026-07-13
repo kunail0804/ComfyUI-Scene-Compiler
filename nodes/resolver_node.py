@@ -12,6 +12,7 @@ from __future__ import annotations
 from typing import Any
 
 from compiler.common.config import Config
+from compiler.common.embedding_index import load_default_index
 from compiler.resolver.illustrious_resolver import resolve_scene, tags_to_prompt
 
 from .adapters import format_messages, to_raw_json, upstream_failure_message
@@ -44,7 +45,10 @@ class ResolverNode:
         if scene is None or knowledge_base is None:
             return ("", "", upstream_failure_message("scene or knowledge base"), "")
         config = config or Config()
-        result = resolve_scene(scene, knowledge_base, config)
+        # The (optional) semantic fallback reuses the shipped embedding index,
+        # loaded once and cached; disabled configs never touch it.
+        embedding_index = load_default_index() if config.semantic.enabled else None
+        result = resolve_scene(scene, knowledge_base, config, embedding_index=embedding_index)
         separator = config.prompt_builder.separator
         prompt = "" if result.data is None else tags_to_prompt(result.data, separator)
         return (

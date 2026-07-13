@@ -44,6 +44,7 @@ constant before running) and are occasional dev steps, not part of runtime or CI
 
 ## Related tools
 
+- `python scripts/build_embedding_index.py` — rebuild the committed semantic-fallback embedding index (`data/kb_embedding_index.json`) from the current KB.
 - `python scripts/detect_kb_conflicts.py knowledge_base/` — standalone conflict scan (CI-gateable).
 - `python scripts/coverage_benchmark.py` — Knowledge Base coverage report.
 - `python scripts/validate_knowledge_base.py knowledge_base/` — full KB validation.

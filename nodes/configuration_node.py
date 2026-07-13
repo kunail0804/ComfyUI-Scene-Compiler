@@ -53,6 +53,12 @@ class ConfigurationNode:
             "optional": {
                 "analyzer_system_prompt": ("STRING", {"multiline": True, "default": ""}),
                 "resolver_knowledge_base_version": ("STRING", {"default": ""}),
+                "semantic_enabled": ("BOOLEAN", {"default": False}),
+                "semantic_min_similarity": (
+                    "FLOAT",
+                    {"default": 0.5, "min": 0.0, "max": 1.0, "step": 0.05},
+                ),
+                "semantic_backend": ("STRING", {"default": "char_ngram"}),
             },
         }
 
@@ -76,6 +82,9 @@ class ConfigurationNode:
         debug_level: str,
         analyzer_system_prompt: str = "",
         resolver_knowledge_base_version: str = "",
+        semantic_enabled: bool = False,
+        semantic_min_similarity: float = 0.5,
+        semantic_backend: str = "char_ngram",
     ) -> tuple[Any, str]:
         analyzer: dict[str, Any] = {
             "model": analyzer_model,
@@ -102,6 +111,11 @@ class ConfigurationNode:
                 ),
             },
             "validator": {"allow_unknown_fields": validator_allow_unknown_fields},
+            "semantic": {
+                "enabled": semantic_enabled,
+                "min_similarity": semantic_min_similarity,
+                "backend": semantic_backend,
+            },
             "prompt_builder": {
                 "target": prompt_target,
                 "separator": prompt_separator,
