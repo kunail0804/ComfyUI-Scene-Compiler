@@ -1,0 +1,4 @@
+elbow_gloves	gloves
+katana	weapon
+mini_hat	hat
+thigh_boots	boots

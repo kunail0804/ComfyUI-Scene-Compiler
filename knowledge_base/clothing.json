@@ -25,7 +25,7 @@
   { "id": "shoes", "tags": ["shoes"], "category": "clothing" },
   { "id": "gloves", "tags": ["gloves"], "category": "clothing" },
   { "id": "socks", "tags": ["socks"], "category": "clothing" },
-  { "id": "thighhighs", "aliases": ["thigh highs"], "tags": ["thighhighs"], "category": "clothing" },
+  { "id": "thighhighs", "aliases": ["thigh highs", "stockings"], "tags": ["thighhighs"], "category": "clothing" },
 
   { "id": "hat", "tags": ["hat"], "category": "accessories" },
   { "id": "glasses", "aliases": ["eyeglasses", "spectacles"], "tags": ["glasses"], "category": "accessories" },

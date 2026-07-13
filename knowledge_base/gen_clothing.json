@@ -9824,7 +9824,10 @@
     "tags": [
       "elbow gloves"
     ],
-    "category": "clothing"
+    "category": "clothing",
+    "expand": [
+      "gloves"
+    ]
   },
   {
     "id": "elbow_pads",
@@ -18886,7 +18889,10 @@
     "tags": [
       "mini hat"
     ],
-    "category": "clothing"
+    "category": "clothing",
+    "expand": [
+      "hat"
+    ]
   },
   {
     "id": "mini_santa_hat",
@@ -22164,7 +22170,10 @@
     "tags": [
       "pantyhose"
     ],
-    "category": "clothing"
+    "category": "clothing",
+    "aliases": [
+      "tights"
+    ]
   },
   {
     "id": "pantyhose_around_one_leg",
@@ -32568,7 +32577,10 @@
     "tags": [
       "thigh boots"
     ],
-    "category": "clothing"
+    "category": "clothing",
+    "expand": [
+      "boots"
+    ]
   },
   {
     "id": "thigh_bow",
