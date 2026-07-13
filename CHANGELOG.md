@@ -3,6 +3,20 @@
 All notable changes to Scene Compiler are documented here. The project follows
 [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 
+## [Unreleased] — V2: Semantic Resolution
+
+### Changed
+
+- **`prompt_builder.remove_duplicate_tags` is now wired to real behaviour.** It
+  gates the Resolver's post-expansion tag deduplication (`SC0007`); it defaults to
+  `true`, so output is unchanged unless explicitly disabled.
+
+### Removed
+
+- **`prompt_builder.trim_empty_outputs` config option** — inert since the V1.1
+  removal of categories (there are no empty outputs to trim). Removed from the
+  config dataclass, JSON Schema, Configuration node, and `default_config.json`.
+
 ## [1.1.0] — Flat prompt, no categories
 
 A deliberate simplification of the pipeline's back half.

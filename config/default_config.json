@@ -21,7 +21,6 @@
   "prompt_builder": {
     "target": "easy_illustrious",
     "separator": ",",
-    "trim_empty_outputs": true,
     "remove_duplicate_tags": true
   },
   "debug": {

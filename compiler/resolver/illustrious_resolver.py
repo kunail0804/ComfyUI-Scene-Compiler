@@ -79,14 +79,15 @@ def resolve_scene(
             result = result.add_error(error)
         return result
 
-    deduped, dedup_warnings = _deduplicate(tags)
-    warnings.extend(dedup_warnings)
+    if config.prompt_builder.remove_duplicate_tags:
+        tags, dedup_warnings = _deduplicate(tags)
+        warnings.extend(dedup_warnings)
 
-    result = CompilerResult(data=tuple(deduped))
+    result = CompilerResult(data=tuple(tags))
     for warning in warnings:
         result = result.add_warning(warning)
     if logger is not None:
-        logger.basic("scene_resolved", tags=len(deduped), warnings=len(warnings))
+        logger.basic("scene_resolved", tags=len(tags), warnings=len(warnings))
     return result
 
 

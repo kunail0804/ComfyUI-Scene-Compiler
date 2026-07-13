@@ -44,7 +44,6 @@ class ConfigurationNode:
                 "validator_allow_unknown_fields": ("BOOLEAN", {"default": False}),
                 "prompt_target": ("STRING", {"default": "easy_illustrious"}),
                 "prompt_separator": ("STRING", {"default": ","}),
-                "prompt_trim_empty_outputs": ("BOOLEAN", {"default": True}),
                 "prompt_remove_duplicate_tags": ("BOOLEAN", {"default": True}),
                 "debug_enabled": ("BOOLEAN", {"default": False}),
                 "debug_level": (_DEBUG_LEVELS, {"default": "basic"}),
@@ -69,7 +68,6 @@ class ConfigurationNode:
         validator_allow_unknown_fields: bool,
         prompt_target: str,
         prompt_separator: str,
-        prompt_trim_empty_outputs: bool,
         prompt_remove_duplicate_tags: bool,
         debug_enabled: bool,
         debug_level: str,
@@ -98,7 +96,6 @@ class ConfigurationNode:
             "prompt_builder": {
                 "target": prompt_target,
                 "separator": prompt_separator,
-                "trim_empty_outputs": prompt_trim_empty_outputs,
                 "remove_duplicate_tags": prompt_remove_duplicate_tags,
             },
             "debug": {"enabled": debug_enabled, "level": debug_level},

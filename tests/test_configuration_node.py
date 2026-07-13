@@ -22,7 +22,6 @@ def default_inputs() -> dict:
         "validator_allow_unknown_fields": False,
         "prompt_target": "easy_illustrious",
         "prompt_separator": ",",
-        "prompt_trim_empty_outputs": True,
         "prompt_remove_duplicate_tags": True,
         "debug_enabled": False,
         "debug_level": "basic",

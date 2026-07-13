@@ -97,18 +97,22 @@ class ValidatorConfig:
 
 @dataclass(frozen=True)
 class PromptBuilderConfig:
-    """Prompt Builder options (§23.2)."""
+    """Prompt-rendering options (§23.2).
+
+    ``separator`` joins the resolved tags into the flat prompt;
+    ``remove_duplicate_tags`` gates the post-expansion tag deduplication in the
+    Resolver (SC0007). ``trim_empty_outputs`` was removed in V2: after the V1.1
+    drop of categories there are no empty outputs to trim.
+    """
 
     target: str = "easy_illustrious"
     separator: str = ","
-    trim_empty_outputs: bool = True
     remove_duplicate_tags: bool = True
 
     def to_json(self) -> dict[str, Any]:
         return {
             "target": self.target,
             "separator": self.separator,
-            "trim_empty_outputs": self.trim_empty_outputs,
             "remove_duplicate_tags": self.remove_duplicate_tags,
         }
 
