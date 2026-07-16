@@ -18,7 +18,7 @@ default `knowledge_base/` works regardless of ComfyUI's working directory.
 
 | Node | Inputs | Outputs |
 |---|---|---|
-| **Scene Analyzer** | `natural_language` (STRING), `model_name` (STRING), `temperature` (FLOAT), `timeout` (INT), `system_prompt` (STRING, optional) | `scene` (SCENE), `warnings` (STRING), `errors` (STRING) |
+| **Scene Analyzer** | `natural_language` (STRING), `config` (COMPILER_CONFIG, optional — supplies model/temperature/retries/timeout), `system_prompt` (STRING, optional override) | `scene` (SCENE), `warnings` (STRING), `errors` (STRING) |
 | **Scene Validator** | `scene` (SCENE), `config` (COMPILER_CONFIG, optional) | `scene` (SCENE), `warnings` (STRING), `errors` (STRING) |
 | **Resolver** | `scene` (SCENE), `knowledge_base` (KNOWLEDGE_BASE), `config` (COMPILER_CONFIG, optional) | `resolved_tags` (RESOLVED_TAGS), `warnings` (STRING), `errors` (STRING) |
 | **Category Splitter** | `resolved_tags` (RESOLVED_TAGS) | `category_map` (CATEGORY_MAP), `warnings` (STRING), `errors` (STRING) |
@@ -32,12 +32,13 @@ prompt strings are produced by the **Prompt Builder**.
 | Node | Inputs | Outputs |
 |---|---|---|
 | **Configuration** | one input per configuration option (analyzer, resolver, validator, prompt builder, debug) | `config` (COMPILER_CONFIG), `errors` (STRING) |
-| **Knowledge Base Loader** | `path` (STRING), `reload` (INT, optional) | `knowledge_base` (KNOWLEDGE_BASE), `warnings` (STRING), `errors` (STRING) |
+| **Knowledge Base Loader** | `path` (STRING), `reload` (INT, optional), `version` (STRING, optional), `config` (COMPILER_CONFIG, optional — its KB path/version win) | `knowledge_base` (KNOWLEDGE_BASE), `warnings` (STRING), `errors` (STRING) |
 | **Debug Viewer** | `scene` (SCENE, optional), `resolved_tags` (RESOLVED_TAGS, optional), `category_map` (CATEGORY_MAP, optional), `warnings` (STRING, optional), `errors` (STRING, optional) | `report` (STRING) |
 
 - The **Configuration** node's `config` output feeds the optional `config` input of
-  the Validator, Resolver, and Prompt Builder, so behaviour changes without
-  rewiring.
+  the Scene Analyzer, Validator, Resolver, and Knowledge Base Loader, so behaviour
+  (including the analyzer model and the Knowledge Base path/version) changes in one
+  place without rewiring.
 - The **Knowledge Base Loader** reloads only when `reload` changes (no automatic
   file watching).
 - The **Debug Viewer** is read-only; connect any intermediate state to inspect it.

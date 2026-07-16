@@ -28,37 +28,165 @@ class ConfigurationNode:
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
             "required": {
-                "analyzer_model": ("STRING", {"default": "llama3"}),
+                "analyzer_model": (
+                    "STRING",
+                    {
+                        "default": "llama3",
+                        "tooltip": "Ollama model the Scene Analyzer uses to read the description.",
+                    },
+                ),
                 "analyzer_temperature": (
                     "FLOAT",
-                    {"default": 0.0, "min": 0.0, "max": 2.0, "step": 0.1},
+                    {
+                        "default": 0.0,
+                        "min": 0.0,
+                        "max": 2.0,
+                        "step": 0.1,
+                        "tooltip": "Analyzer sampling temperature. 0 = most repeatable.",
+                    },
                 ),
-                "analyzer_max_retries": ("INT", {"default": 3, "min": 0, "max": 10}),
-                "analyzer_timeout": ("INT", {"default": 300, "min": 1, "max": 3600}),
-                "knowledge_base": ("STRING", {"default": "knowledge_base/"}),
-                "resolver_strict_mode": ("BOOLEAN", {"default": True}),
-                "resolver_allow_aliases": ("BOOLEAN", {"default": True}),
-                "resolver_expansion_enabled": ("BOOLEAN", {"default": True}),
-                "resolver_max_expansion_depth": ("INT", {"default": 8, "min": 1, "max": 32}),
-                "resolver_include_nsfw": ("BOOLEAN", {"default": False}),
-                "validator_allow_unknown_fields": ("BOOLEAN", {"default": False}),
-                "prompt_target": ("STRING", {"default": "easy_illustrious"}),
-                "prompt_separator": ("STRING", {"default": ","}),
-                "prompt_remove_duplicate_tags": ("BOOLEAN", {"default": True}),
-                "debug_enabled": ("BOOLEAN", {"default": False}),
-                "debug_level": (_DEBUG_LEVELS, {"default": "basic"}),
+                "analyzer_max_retries": (
+                    "INT",
+                    {
+                        "default": 3,
+                        "min": 0,
+                        "max": 10,
+                        "tooltip": "How many times to re-ask when the model returns bad JSON.",
+                    },
+                ),
+                "analyzer_timeout": (
+                    "INT",
+                    {
+                        "default": 300,
+                        "min": 1,
+                        "max": 3600,
+                        "tooltip": (
+                            "Seconds to wait for the model. 300 s is generous so a model that "
+                            "cold-loads into VRAM on the first call does not time out."
+                        ),
+                    },
+                ),
+                "knowledge_base": (
+                    "STRING",
+                    {
+                        "default": "knowledge_base/",
+                        "tooltip": (
+                            "Knowledge Base directory. Relative paths resolve against the node "
+                            "package. This is the authoritative path when this Configuration is "
+                            "wired into the Knowledge Base Loader."
+                        ),
+                    },
+                ),
+                "resolver_strict_mode": (
+                    "BOOLEAN",
+                    {"default": True, "tooltip": "Report unknown concepts instead of guessing."},
+                ),
+                "resolver_allow_aliases": (
+                    "BOOLEAN",
+                    {"default": True, "tooltip": "Resolve aliases to their canonical entry."},
+                ),
+                "resolver_expansion_enabled": (
+                    "BOOLEAN",
+                    {"default": True, "tooltip": "Auto-add tags from an entry's expansion list."},
+                ),
+                "resolver_max_expansion_depth": (
+                    "INT",
+                    {
+                        "default": 8,
+                        "min": 1,
+                        "max": 32,
+                        "tooltip": "How deep expansion may recurse before stopping.",
+                    },
+                ),
+                "resolver_include_nsfw": (
+                    "BOOLEAN",
+                    {
+                        "default": False,
+                        "tooltip": "Include explicit-rated Knowledge Base entries. Off = SFW only.",
+                    },
+                ),
+                "validator_allow_unknown_fields": (
+                    "BOOLEAN",
+                    {
+                        "default": False,
+                        "tooltip": "Keep unrecognized Scene JSON fields instead of stripping them.",
+                    },
+                ),
+                "prompt_target": (
+                    "STRING",
+                    {
+                        "default": "easy_illustrious",
+                        "tooltip": "Reserved prompt-format label. Currently informational.",
+                    },
+                ),
+                "prompt_separator": (
+                    "STRING",
+                    {
+                        "default": ",",
+                        "tooltip": "String used to join the resolved tags into the final prompt.",
+                    },
+                ),
+                "prompt_remove_duplicate_tags": (
+                    "BOOLEAN",
+                    {
+                        "default": True,
+                        "tooltip": "Drop duplicate tags after expansion (warns SC0007).",
+                    },
+                ),
+                "debug_enabled": (
+                    "BOOLEAN",
+                    {"default": False, "tooltip": "Enable extra diagnostic logging."},
+                ),
+                "debug_level": (
+                    _DEBUG_LEVELS,
+                    {"default": "basic", "tooltip": "Verbosity of debug logging when enabled."},
+                ),
             },
             # Appended at the END so saved workflows keep their positional widget
             # values (ComfyUI stores widget values positionally).
             "optional": {
-                "analyzer_system_prompt": ("STRING", {"multiline": True, "default": ""}),
-                "resolver_knowledge_base_version": ("STRING", {"default": ""}),
-                "semantic_enabled": ("BOOLEAN", {"default": False}),
+                "analyzer_system_prompt": (
+                    "STRING",
+                    {
+                        "multiline": True,
+                        "default": "",
+                        "tooltip": "Advanced: override the analyzer system prompt.",
+                    },
+                ),
+                "resolver_knowledge_base_version": (
+                    "STRING",
+                    {
+                        "default": "",
+                        "tooltip": "Pin a KB dataset version. Empty = unpinned.",
+                    },
+                ),
+                "semantic_enabled": (
+                    "BOOLEAN",
+                    {
+                        "default": False,
+                        "tooltip": (
+                            "Opt-in nearest-neighbour fallback for concepts that miss "
+                            "deterministic lookup. Off by default; deterministic lookup wins."
+                        ),
+                    },
+                ),
                 "semantic_min_similarity": (
                     "FLOAT",
-                    {"default": 0.5, "min": 0.0, "max": 1.0, "step": 0.05},
+                    {
+                        "default": 0.5,
+                        "min": 0.0,
+                        "max": 1.0,
+                        "step": 0.05,
+                        "tooltip": "Minimum similarity to accept a semantic-fallback match.",
+                    },
                 ),
-                "semantic_backend": ("STRING", {"default": "char_ngram"}),
+                "semantic_backend": (
+                    "STRING",
+                    {
+                        "default": "char_ngram",
+                        "tooltip": "Embedding backend for the semantic fallback (offline).",
+                    },
+                ),
             },
         }
 

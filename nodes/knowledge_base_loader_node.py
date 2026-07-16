@@ -14,6 +14,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from compiler.common.config import Config
 from compiler.common.knowledge_base import (
     KnowledgeBaseError,
     KnowledgeBaseLoader,
@@ -49,16 +50,65 @@ class KnowledgeBaseLoaderNode:
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
-            "required": {"path": ("STRING", {"default": "knowledge_base/"})},
+            "required": {
+                "path": (
+                    "STRING",
+                    {
+                        "default": "knowledge_base/",
+                        "tooltip": (
+                            "Knowledge Base directory. Relative paths resolve against the "
+                            "node package, so the default works from any ComfyUI launch "
+                            "directory. Overridden by a connected Configuration node."
+                        ),
+                    },
+                )
+            },
             # New widgets are appended at the END so saved workflows keep their
             # positional widget values (ComfyUI stores widgets positionally).
             "optional": {
-                "reload": ("INT", {"default": 0, "min": 0}),
-                "version": ("STRING", {"default": ""}),
+                "reload": (
+                    "INT",
+                    {
+                        "default": 0,
+                        "min": 0,
+                        "tooltip": "Bump to force a fresh read of the Knowledge Base from disk.",
+                    },
+                ),
+                "version": (
+                    "STRING",
+                    {
+                        "default": "",
+                        "tooltip": (
+                            "Optional Knowledge Base dataset version to pin (matched against "
+                            "the dataset manifest). Empty means use whatever is on the path. "
+                            "Overridden by a connected Configuration node."
+                        ),
+                    },
+                ),
+                "config": (
+                    "COMPILER_CONFIG",
+                    {
+                        "tooltip": (
+                            "Optional Configuration node. When connected, its Knowledge Base "
+                            "path and version take precedence over the widgets above."
+                        )
+                    },
+                ),
             },
         }
 
-    def run(self, path: str, reload: int = 0, version: str = "") -> tuple[Any, str, str, str]:
+    def run(
+        self,
+        path: str,
+        reload: int = 0,
+        version: str = "",
+        config: Config | None = None,
+    ) -> tuple[Any, str, str, str]:
+        # The Configuration node is the single source of truth when wired: its
+        # Knowledge Base path/version win over this node's own widgets.
+        if config is not None:
+            path = config.resolver.knowledge_base
+            version = config.resolver.knowledge_base_version or ""
         resolved = _resolve_path(path)
         requested_version = version or None
         key = (str(resolved), version)

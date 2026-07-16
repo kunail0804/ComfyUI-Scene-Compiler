@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 
 import nodes
+from compiler.common.config import Config
 from compiler.common.knowledge_base import KnowledgeBase
 from nodes.knowledge_base_loader_node import KnowledgeBaseLoaderNode
 
@@ -58,6 +59,19 @@ def test_reload_input_is_accepted(tmp_path) -> None:
     path = write_kb(tmp_path, [{"id": "long_hair", "tags": ["long hair"], "category": "hair"}])
     kb, _, _, _ = KnowledgeBaseLoaderNode().run(path, reload=5)
     assert isinstance(kb, KnowledgeBase)
+
+
+def test_config_path_overrides_the_widget(tmp_path) -> None:
+    # A connected Configuration node is the single source of truth: its Knowledge
+    # Base path wins over the node's own ``path`` widget.
+    config_path = write_kb(
+        tmp_path, [{"id": "long_hair", "tags": ["long hair"], "category": "hair"}]
+    )
+    config = Config.from_json({"resolver": {"knowledge_base": config_path}})
+    kb, warnings, errors, *_ = KnowledgeBaseLoaderNode().run("does/not/exist", config=config)
+    assert isinstance(kb, KnowledgeBase)
+    assert kb.get("long_hair") is not None
+    assert (warnings, errors) == ("", "")
 
 
 def test_registered_for_comfyui() -> None:

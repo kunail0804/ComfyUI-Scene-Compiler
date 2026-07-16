@@ -30,10 +30,23 @@ class ResolverNode:
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
             "required": {
-                "scene": ("SCENE",),
-                "knowledge_base": ("KNOWLEDGE_BASE",),
+                "scene": ("SCENE", {"tooltip": "Validated Scene JSON from the Scene Validator."}),
+                "knowledge_base": (
+                    "KNOWLEDGE_BASE",
+                    {"tooltip": "Loaded Knowledge Base from the Knowledge Base Loader."},
+                ),
             },
-            "optional": {"config": ("COMPILER_CONFIG",)},
+            "optional": {
+                "config": (
+                    "COMPILER_CONFIG",
+                    {
+                        "tooltip": (
+                            "Optional Configuration node. Supplies resolver options, the prompt "
+                            "separator, duplicate handling and the opt-in semantic fallback."
+                        )
+                    },
+                )
+            },
         }
 
     def run(
