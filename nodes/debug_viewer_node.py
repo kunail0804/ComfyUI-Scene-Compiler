@@ -26,9 +26,18 @@ class DebugViewerNode:
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
             "optional": {
-                "scene": ("SCENE",),
-                "warnings": ("STRING", {"default": "", "forceInput": True}),
-                "errors": ("STRING", {"default": "", "forceInput": True}),
+                "scene": (
+                    "SCENE",
+                    {"tooltip": "Scene JSON to inspect (Analyzer/Validator output)."},
+                ),
+                "warnings": (
+                    "STRING",
+                    {"default": "", "forceInput": True, "tooltip": "A stage's warnings output."},
+                ),
+                "errors": (
+                    "STRING",
+                    {"default": "", "forceInput": True, "tooltip": "A stage's errors output."},
+                ),
             }
         }
 

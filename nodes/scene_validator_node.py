@@ -26,8 +26,15 @@ class SceneValidatorNode:
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
-            "required": {"scene": ("SCENE",)},
-            "optional": {"config": ("COMPILER_CONFIG",)},
+            "required": {
+                "scene": ("SCENE", {"tooltip": "Raw Scene JSON from the Scene Analyzer."}),
+            },
+            "optional": {
+                "config": (
+                    "COMPILER_CONFIG",
+                    {"tooltip": "Optional Configuration node; supplies the unknown-field policy."},
+                )
+            },
         }
 
     def run(self, scene: Any, config: Config | None = None) -> tuple[Any, str, str, str]:
