@@ -3,6 +3,43 @@
 All notable changes to Scene Compiler are documented here. The project follows
 [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 
+## [2.1.0] — 2026-07-16 — Node consolidation & configuration cleanup
+
+A usability pass over the ComfyUI nodes: fewer nodes, fewer knobs, plainer tooltips.
+The deterministic compiler core is unchanged.
+
+### Changed
+
+- **The Knowledge Base Loader node is folded into the Configuration node.** The
+  Knowledge Base directory used to be entered in two places (the Configuration
+  node's path and the loader node's path). The Configuration node now loads the
+  Knowledge Base itself and emits it on a new `knowledge_base` output (wired into
+  the Resolver), with a `knowledge_base_reload` counter to force a fresh read. Its
+  return is now `(config, knowledge_base, warnings, errors)`. Shared load-once
+  caching moved to `nodes/kb_loading.py`.
+- **The Configuration node is trimmed to the settings a user needs to touch**, and
+  every node tooltip is rewritten in plain language. Removed inputs:
+  `knowledge_base` (the Knowledge Base ships in the package, so its path is fixed),
+  `prompt_target` (reserved for V3), `prompt_separator` (fixed to `,` this version),
+  and `analyzer_system_prompt`. `prompt_target`/`prompt_separator` keep their
+  compiler defaults — they are just no longer exposed.
+- **The Scene Analyzer's `system_prompt` input is removed.** A user-authored system
+  prompt is not UX-friendly; the built-in analyzer prompt is always used.
+
+### Removed
+
+- The **Knowledge Base Loader** node (`SceneCompilerKnowledgeBaseLoader`); load the
+  Knowledge Base via the Configuration node's `knowledge_base` output.
+
+### Breaking
+
+- The Knowledge Base Loader node is removed, and the Configuration node's
+  `knowledge_base` / `prompt_target` / `prompt_separator` / `analyzer_system_prompt`
+  inputs and the Scene Analyzer's `system_prompt` input are removed. Workflows saved
+  against 2.0.0 must be rewired: take the Knowledge Base from the Configuration
+  node's `knowledge_base` output, and re-add the Configuration/Analyzer nodes so the
+  new widget layout is picked up. Re-importing the shipped example workflow does this.
+
 ## [2.0.0] — 2026-07-16 — V2: Semantic Resolution
 
 ### Added
