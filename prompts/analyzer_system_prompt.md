@@ -33,7 +33,25 @@ Extract every explicitly described environmental concept (`Walking in heavy rain
 
 # Objects
 
-Extract every explicitly described physical object as a plain concept string (`Reading a book.` → objects `book`; `Holding an umbrella.` → objects `umbrella`). Objects are plain strings, never wrapped in an object with `id`/`concept` keys.
+Extract every explicitly described physical object as a plain concept string (`Reading a book.` → objects `book`; `Holding an umbrella.` → objects `umbrella`). Objects are plain strings, never wrapped in an object with `id`/`concept` keys. When an object is held, worn, or positioned by a character, also extract the relationship (see *Relations, positions, and holding*).
+
+# Relations, positions, and holding
+
+Spatial, postural, and possessive relationships carry meaning and MUST be preserved as their own concepts — never collapse a described relationship to the bare noun. Keep the relationship using natural relational wording:
+
+- Holding / carrying / gripping an object → add a `holding <object>` concept to that character's `actions`, in addition to the object itself. `A girl with a bunch of money in her hand.` → Character 0 `female` + action `holding money`; objects `money`. Do NOT reduce this to just `money`.
+- Body-part positions → keep the position: `Her hand on her hip.` → pose `hand on own hip`; `A lollipop in her mouth.` → action `lollipop in mouth` (or the closest relational concept), objects `lollipop`. Do not drop `in her hand`, `on her head`, `over her shoulder`, `in her mouth`, `behind her back`, and similar.
+- Where the object sits relative to the scene → keep it: `A cat on the table.` → objects `cat`, `table` (preserve `on the table` if a relational concept fits).
+
+When unsure which field a relational concept belongs to, place it in `actions` (or `pose` for body positions) and preserve the original wording rather than discarding the relationship.
+
+# Conjunctions and enumerations
+
+Treat every item joined by `and`, `with`, `as well as`, `plus`, or commas as a **separate** concept. The second and later items are as important as the first and MUST NOT be dropped or summarized away. `Holding a sword and a shield.` → objects `sword`, `shield`; actions `holding sword`, `holding shield`. `A girl with glasses and a hat.` → accessories `glasses`, `hat`. Re-read each clause and confirm every noun and every relationship it contains survived into the Scene JSON.
+
+# Completeness (including explicit content)
+
+Extract with the same full fidelity regardless of subject matter. Adult, suggestive, or NSFW descriptions are analyzed exactly like any other: never abbreviate, soften, censor, generalize, or omit described concepts, relationships, or positions. Faithful transcription of what the text says is the only goal; a missing or vaguer concept is a failure.
 
 # Characters and relationships
 
