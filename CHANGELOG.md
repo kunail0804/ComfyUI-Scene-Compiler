@@ -3,7 +3,7 @@
 All notable changes to Scene Compiler are documented here. The project follows
 [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 
-## [Unreleased] — V2: Semantic Resolution
+## [2.0.0] — 2026-07-16 — V2: Semantic Resolution
 
 ### Added
 
@@ -64,20 +64,50 @@ All notable changes to Scene Compiler are documented here. The project follows
   - The Analyzer system prompt now instructs full transcription of list inputs,
     and a deterministic post-parse check warns (`SC0021`, advisory) when a
     tag-list input yields fewer concepts than it has items.
+  - The Analyzer system prompt now preserves spatial/postural/possessive
+    relationships instead of collapsing them to the bare noun — a held object also
+    yields a `holding <object>` concept (`money in her hand` → `holding money` +
+    `money`), body positions survive (`hand on own hip`, `... in mouth`), every
+    conjunct of an "X and Y" enumeration is kept, and explicit/NSFW input gets the
+    same full fidelity.
   - A data-driven fidelity regression suite (`tests/regression/test_fidelity.py`)
-    pins both failure modes.
+    pins the modifier, list, relational, and conjunction failure modes.
 
 ### Changed
 
 - **`prompt_builder.remove_duplicate_tags` is now wired to real behaviour.** It
   gates the Resolver's post-expansion tag deduplication (`SC0007`); it defaults to
   `true`, so output is unchanged unless explicitly disabled.
+- **Analyzer settings are centralized on the Configuration node.** The Scene
+  Analyzer node previously carried its own `model_name`/`temperature`/`timeout`
+  widgets and ignored the Configuration node entirely, so the model was set in two
+  disconnected places. It now takes an optional `config` input and those duplicated
+  widgets are removed; without a Configuration node the defaults apply (llama3,
+  temperature 0) with a 300 s cold-load-friendly timeout. The Knowledge Base Loader
+  likewise accepts an optional `config` whose path/version take precedence. Every
+  node input now carries a tooltip.
+
+### Fixed
+
+- **Example workflow widget drift.** The shipped example workflow carried stale
+  positional widget values from before `trim_empty_outputs` was removed, so ComfyUI
+  mapped a leftover boolean into `debug_level` (a spurious `false`) and, in older
+  saved workflows, into `prompt_separator` (`true` instead of `,`). The workflow is
+  rebuilt against the current node signatures, and a new test asserts every example
+  node's saved widget count matches the node so this drift fails CI.
 
 ### Removed
 
 - **`prompt_builder.trim_empty_outputs` config option** — inert since the V1.1
   removal of categories (there are no empty outputs to trim). Removed from the
   config dataclass, JSON Schema, Configuration node, and `default_config.json`.
+
+### Breaking
+
+- The Scene Analyzer node's `model_name`/`temperature`/`timeout` widgets and the
+  `prompt_builder.trim_empty_outputs` config option were removed. Workflows saved
+  against V1 that set these will lose those widget values — delete and re-add the
+  affected nodes, or re-import the shipped example workflow.
 
 ## [1.1.0] — Flat prompt, no categories
 
