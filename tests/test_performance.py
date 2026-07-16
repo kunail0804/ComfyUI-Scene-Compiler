@@ -103,8 +103,8 @@ def test_pipeline_does_not_reload_knowledge_base(monkeypatch) -> None:
     assert calls["n"] == 0  # compilation reuses the passed Knowledge Base
 
 
-def test_loader_node_reuses_cached_kb_across_runs(tmp_path, monkeypatch) -> None:
-    from nodes import knowledge_base_loader_node as loader_node
+def test_kb_loading_reuses_cached_kb_across_runs(tmp_path, monkeypatch) -> None:
+    from nodes import kb_loading
 
     (tmp_path / "hair.json").write_text(
         '[{"id": "long_hair", "tags": ["long hair"], "category": "hair"}]', encoding="utf-8"
@@ -118,16 +118,15 @@ def test_loader_node_reuses_cached_kb_across_runs(tmp_path, monkeypatch) -> None
 
     monkeypatch.setattr(kb_module, "load_knowledge_base", counting_load)
     # Isolate the process-wide cache for this test.
-    monkeypatch.setattr(loader_node, "_LOADERS", {})
-    monkeypatch.setattr(loader_node, "_LAST_RELOAD", {})
+    monkeypatch.setattr(kb_loading, "_LOADERS", {})
+    monkeypatch.setattr(kb_loading, "_LAST_RELOAD", {})
 
-    node = loader_node.KnowledgeBaseLoaderNode()
-    kb1 = node.run(str(tmp_path))[0]
-    kb2 = node.run(str(tmp_path))[0]
-    assert kb1 is kb2  # same cached object reused across run() calls
+    kb1 = kb_loading.load_cached_knowledge_base(str(tmp_path))[0]
+    kb2 = kb_loading.load_cached_knowledge_base(str(tmp_path))[0]
+    assert kb1 is kb2  # same cached object reused across calls
     assert calls["n"] == 1  # loaded once
 
-    kb3 = node.run(str(tmp_path), reload=1)[0]  # bumping reload forces a fresh read
+    kb3 = kb_loading.load_cached_knowledge_base(str(tmp_path), reload=1)[0]  # forces a fresh read
     assert calls["n"] == 2
     assert kb3 is not kb1
 

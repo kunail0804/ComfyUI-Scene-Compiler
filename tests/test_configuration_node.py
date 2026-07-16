@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import nodes
 from compiler.common.config import Config
+from compiler.common.knowledge_base import KnowledgeBase
 from nodes.configuration_node import ConfigurationNode
 
 
@@ -32,19 +33,29 @@ def default_inputs() -> dict:
 
 
 def test_node_metadata() -> None:
-    assert ConfigurationNode.RETURN_TYPES == ("COMPILER_CONFIG", "STRING")
-    assert ConfigurationNode.RETURN_NAMES == ("config", "errors")
+    assert ConfigurationNode.RETURN_TYPES == (
+        "COMPILER_CONFIG",
+        "KNOWLEDGE_BASE",
+        "STRING",
+        "STRING",
+    )
+    assert ConfigurationNode.RETURN_NAMES == ("config", "knowledge_base", "warnings", "errors")
     required = ConfigurationNode.INPUT_TYPES()["required"]
     assert "analyzer_model" in required
     assert "debug_level" in required
-    assert "analyzer_system_prompt" in ConfigurationNode.INPUT_TYPES()["optional"]
+    optional = ConfigurationNode.INPUT_TYPES()["optional"]
+    assert "analyzer_system_prompt" in optional
+    assert "knowledge_base_reload" in optional
 
 
-def test_default_inputs_produce_default_config() -> None:
-    config, errors = ConfigurationNode().run(**default_inputs())
+def test_default_inputs_produce_default_config_and_load_the_kb() -> None:
+    config, kb, warnings, errors = ConfigurationNode().run(**default_inputs())
     assert isinstance(config, Config)
     assert config == Config()
-    assert errors == ""
+    # The node now also loads the shipped reference Knowledge Base.
+    assert isinstance(kb, KnowledgeBase)
+    assert len(kb) > 100
+    assert (warnings, errors) == ("", "")
 
 
 def test_inputs_flow_into_config() -> None:
@@ -56,7 +67,7 @@ def test_inputs_flow_into_config() -> None:
     inputs["prompt_separator"] = " | "
     inputs["debug_enabled"] = True
     inputs["debug_level"] = "verbose"
-    config, _ = ConfigurationNode().run(**inputs)
+    config, _kb, _warnings, _errors = ConfigurationNode().run(**inputs)
     assert config.analyzer.model == "mistral"
     assert config.resolver.max_expansion_depth == 4
     assert config.resolver.include_nsfw is True
@@ -66,13 +77,24 @@ def test_inputs_flow_into_config() -> None:
     assert config.debug.level == "verbose"
 
 
+def test_invalid_knowledge_base_path_surfaces_error_but_keeps_config() -> None:
+    inputs = default_inputs()
+    inputs["knowledge_base"] = "does/not/exist/"
+    config, kb, warnings, errors = ConfigurationNode().run(**inputs)
+    # The config is still emitted (the Analyzer/Validator do not need the KB); the
+    # empty/missing Knowledge Base is surfaced as a warning.
+    assert isinstance(config, Config)
+    assert len(kb) == 0
+    assert "empty" in warnings.lower()
+
+
 def test_system_prompt_override_is_applied() -> None:
-    config, _ = ConfigurationNode().run(**default_inputs(), analyzer_system_prompt="CUSTOM")
+    config, *_ = ConfigurationNode().run(**default_inputs(), analyzer_system_prompt="CUSTOM")
     assert config.analyzer.system_prompt == "CUSTOM"
 
 
 def test_empty_system_prompt_is_omitted() -> None:
-    config, _ = ConfigurationNode().run(**default_inputs(), analyzer_system_prompt="")
+    config, *_ = ConfigurationNode().run(**default_inputs(), analyzer_system_prompt="")
     assert config.analyzer.system_prompt is None
 
 
@@ -81,7 +103,7 @@ def test_debug_level_options_match_config_schema() -> None:
     for level in options:
         inputs = default_inputs()
         inputs["debug_level"] = level
-        config, errors = ConfigurationNode().run(**inputs)
+        config, _kb, _warnings, errors = ConfigurationNode().run(**inputs)
         assert isinstance(config, Config)
         assert errors == ""
 

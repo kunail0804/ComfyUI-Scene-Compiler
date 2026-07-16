@@ -31,16 +31,16 @@ prompt strings are produced by the **Prompt Builder**.
 
 | Node | Inputs | Outputs |
 |---|---|---|
-| **Configuration** | one input per configuration option (analyzer, resolver, validator, prompt builder, debug) | `config` (COMPILER_CONFIG), `errors` (STRING) |
-| **Knowledge Base Loader** | `path` (STRING), `reload` (INT, optional), `version` (STRING, optional), `config` (COMPILER_CONFIG, optional — its KB path/version win) | `knowledge_base` (KNOWLEDGE_BASE), `warnings` (STRING), `errors` (STRING) |
+| **Configuration** | one input per configuration option (analyzer, resolver, validator, prompt builder, semantic, debug), plus the Knowledge Base `knowledge_base` path, `resolver_knowledge_base_version`, and `knowledge_base_reload` | `config` (COMPILER_CONFIG), `knowledge_base` (KNOWLEDGE_BASE), `warnings` (STRING), `errors` (STRING) |
 | **Debug Viewer** | `scene` (SCENE, optional), `resolved_tags` (RESOLVED_TAGS, optional), `category_map` (CATEGORY_MAP, optional), `warnings` (STRING, optional), `errors` (STRING, optional) | `report` (STRING) |
 
-- The **Configuration** node's `config` output feeds the optional `config` input of
-  the Scene Analyzer, Validator, Resolver, and Knowledge Base Loader, so behaviour
-  (including the analyzer model and the Knowledge Base path/version) changes in one
-  place without rewiring.
-- The **Knowledge Base Loader** reloads only when `reload` changes (no automatic
-  file watching).
+- The **Configuration** node is the single place for compiler settings. Its `config`
+  output feeds the optional `config` input of the Scene Analyzer, Validator, and
+  Resolver, and it also **loads the Knowledge Base** from the configured path/version
+  and emits it on its `knowledge_base` output (wired into the Resolver's
+  `knowledge_base` input) — so the Knowledge Base directory is entered in one place.
+  There is no separate Knowledge Base Loader node. Bump `knowledge_base_reload` to
+  force a fresh read (no automatic file watching).
 - The **Debug Viewer** is read-only; connect any intermediate state to inspect it.
 
 A ready-to-use workflow wiring all of these is in

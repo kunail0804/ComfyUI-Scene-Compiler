@@ -1,8 +1,10 @@
 """ComfyUI node for the compiler Configuration (MASTER_SPEC §20, §23).
 
-A thin interface: it collects the configuration options as node inputs and emits
-a single COMPILER_CONFIG that the other nodes consume, so behaviour can change
-without editing the workflow. No compiler logic; it never imports ComfyUI.
+A thin interface: it collects the configuration options as node inputs and emits a
+single COMPILER_CONFIG that the other nodes consume, so behaviour can change without
+editing the workflow. It also loads the Knowledge Base from the configured path and
+emits it for the Resolver, so the Knowledge Base directory is entered in exactly one
+place (there is no separate Knowledge Base Loader node). It never imports ComfyUI.
 """
 
 from __future__ import annotations
@@ -12,17 +14,18 @@ from typing import Any
 from compiler.common.config import Config, ConfigError
 
 from .adapters import format_messages
+from .kb_loading import load_cached_knowledge_base
 
 _DEBUG_LEVELS = ["none", "basic", "verbose", "developer"]
 
 
 class ConfigurationNode:
-    """Centralizes compiler configuration and emits it for the other nodes."""
+    """Centralizes compiler configuration and loads the Knowledge Base for the pipeline."""
 
     CATEGORY = "Scene Compiler"
     FUNCTION = "run"
-    RETURN_TYPES = ("COMPILER_CONFIG", "STRING")
-    RETURN_NAMES = ("config", "errors")
+    RETURN_TYPES = ("COMPILER_CONFIG", "KNOWLEDGE_BASE", "STRING", "STRING")
+    RETURN_NAMES = ("config", "knowledge_base", "warnings", "errors")
 
     @classmethod
     def INPUT_TYPES(cls) -> dict[str, Any]:
@@ -187,6 +190,14 @@ class ConfigurationNode:
                         "tooltip": "Embedding backend for the semantic fallback (offline).",
                     },
                 ),
+                "knowledge_base_reload": (
+                    "INT",
+                    {
+                        "default": 0,
+                        "min": 0,
+                        "tooltip": "Bump to force a fresh read of the Knowledge Base from disk.",
+                    },
+                ),
             },
         }
 
@@ -213,7 +224,8 @@ class ConfigurationNode:
         semantic_enabled: bool = False,
         semantic_min_similarity: float = 0.5,
         semantic_backend: str = "char_ngram",
-    ) -> tuple[Any, str]:
+        knowledge_base_reload: int = 0,
+    ) -> tuple[Any, Any, str, str]:
         analyzer: dict[str, Any] = {
             "model": analyzer_model,
             "temperature": analyzer_temperature,
@@ -255,5 +267,13 @@ class ConfigurationNode:
         try:
             config = Config.from_json(document)
         except ConfigError as error:
-            return (None, format_messages([error.message]))
-        return (config, "")
+            return (None, None, "", format_messages([error.message]))
+
+        # Load the Knowledge Base from the configured path/version and emit it for
+        # the Resolver, so the Knowledge Base directory is entered in one place.
+        kb, warnings, errors, _raw = load_cached_knowledge_base(
+            knowledge_base,
+            resolver_knowledge_base_version,
+            knowledge_base_reload,
+        )
+        return (config, kb, warnings, errors)
