@@ -4,7 +4,8 @@
 Turn a plain-language scene description into structured, category-separated
 Illustrious tags — without an LLM inventing anything.
 
-> **Status:** Version 1 in development. This repository is spec-driven; the
+> **Status:** Version 2 (Semantic Resolution) complete on `main`; the deterministic
+> Version 1 pipeline shipped in v1.0.0 / v1.1.0. This repository is spec-driven; the
 > full design is documented in [`MASTER_SPEC.md`](../MASTER_SPEC.md) and in the
 > [Wiki](../../wiki). Follow the [Roadmap](../../wiki/Roadmap) and
 > [issues](../../issues) for progress.
@@ -50,6 +51,11 @@ invented) and stays fully traceable:
 Natural Language → Scene JSON → Knowledge Base Entry → Resolved Tag → Prompt
 ```
 
+Version 2 adds an **opt-in** semantic (nearest-neighbour) fallback for concepts that
+miss deterministic lookup. It is off by default, deterministic when enabled, and can
+only return an entry that already exists in the Knowledge Base — so it never invents a
+tag. Deterministic lookup always wins.
+
 ---
 
 ## Key principles
@@ -86,11 +92,18 @@ fixed workflow — every node can be used independently.
 - **Knowledge Base Loader** — load the active Knowledge Base, with manual reload for development.
 - **Configuration Node** — centralize compiler settings without editing workflows.
 
+### Knowledge Base Editor (optional web tool)
+
+Version 2 adds an optional browser editor for curated Knowledge Base entries, served
+by ComfyUI at `http://127.0.0.1:8188/scene-compiler/kb`. It offers create/edit/delete
+with live validation and atomic, format-safe saves. It is entirely off the compile
+critical path — the compiler never depends on it.
+
 ---
 
 ## Installation
 
-> Not yet released. These are the intended install steps for Version 1.
+> Install manually from Git today; a ComfyUI Manager listing is planned.
 
 **Via ComfyUI Manager** (recommended once published): search for *Scene Compiler*.
 
@@ -145,11 +158,13 @@ The complete normative specification is [`MASTER_SPEC.md`](../MASTER_SPEC.md).
 
 ## Roadmap
 
-- **Version 1 — Deterministic Compiler Foundation** *(in progress)*: the complete
-  deterministic pipeline for Illustrious, plus Ollama integration, Knowledge Base,
-  Debug Viewer, and regression tests.
-- **Version 2 — Semantic Resolution**: Knowledge Base editor, semantic/embedding
-  fallback search, localization, performance — determinism preserved.
+- **Version 1 — Deterministic Compiler Foundation** *(done — v1.0.0 / v1.1.0)*: the
+  complete deterministic pipeline for Illustrious, plus Ollama integration, Knowledge
+  Base, Debug Viewer, and regression tests.
+- **Version 2 — Semantic Resolution** *(done on `main`)*: opt-in semantic/embedding
+  fallback search, Knowledge Base editor, automatic Knowledge Base builder, Knowledge
+  Base versioning, concept fidelity, and performance — determinism preserved.
+  (Analyzer localization was dropped as unnecessary.)
 - **Version 3 — Extensible Compiler Platform**: multi-model Resolvers, a plugin
   system, multiple Analyzer backends, and a standalone Compiler SDK.
 - **Version 4 — Consolidation**: tidy-up and a single unified node that runs the
