@@ -4,12 +4,11 @@ A thin interface: it adapts ComfyUI inputs to the Analyzer module and surfaces t
 CompilerResult's data, warnings, and errors. It contains no compiler logic and
 never imports ComfyUI.
 
-Analyzer settings (model, temperature, retries, timeout, system prompt) live on
-the **Configuration** node and reach this node through the optional ``config``
-input, so a setting like the model name is entered in exactly one place. Without a
-Configuration node the built-in defaults apply (llama3, temperature 0), with a
-generous 300 s timeout so a local Ollama model that cold-loads into VRAM on the
-first call does not time out.
+Analyzer settings (model, temperature, retries, timeout) live on the **Configuration**
+node and reach this node through its optional ``config`` input, so they are entered in
+one place. Without a Configuration node the built-in defaults apply (llama3,
+temperature 0) with a generous 300 s timeout, because a local Ollama model cold-loads
+into VRAM on the first call and a shorter timeout often fails on first use.
 """
 
 from __future__ import annotations
@@ -44,7 +43,7 @@ class SceneAnalyzerNode:
                     {
                         "multiline": True,
                         "default": "",
-                        "tooltip": "The scene description to analyze, in plain language.",
+                        "tooltip": "Describe your scene in plain language.",
                     },
                 ),
             },
@@ -53,21 +52,9 @@ class SceneAnalyzerNode:
                     "COMPILER_CONFIG",
                     {
                         "tooltip": (
-                            "Optional Configuration node. Supplies the analyzer model, "
-                            "temperature, retries and timeout. If left unconnected, the "
-                            "defaults apply (llama3, temperature 0, 300 s timeout)."
+                            "Optional: connect a Configuration node to set the model and other "
+                            "options. Without it, sensible defaults are used."
                         )
-                    },
-                ),
-                "system_prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "default": "",
-                        "tooltip": (
-                            "Advanced: override the analyzer system prompt. Leave empty to "
-                            "use the built-in prompt (or the one from the Configuration node)."
-                        ),
                     },
                 ),
             },
@@ -77,9 +64,10 @@ class SceneAnalyzerNode:
         self,
         natural_language: str,
         config: Config | None = None,
-        system_prompt: str = "",
     ) -> tuple[Any, str, str, str]:
-        config = self._resolve_config(config, system_prompt)
+        if config is None:
+            # No Configuration node: use defaults with a cold-load-friendly timeout.
+            config = Config.from_json({"analyzer": {"timeout": _DEFAULT_TIMEOUT}})
         backend = OllamaBackend.from_config(config)
         result = analyze(natural_language, backend, config)
         return (
@@ -91,22 +79,3 @@ class SceneAnalyzerNode:
             # re-serialization of the parsed Scene.
             result.metadata.get("raw_response", ""),
         )
-
-    @staticmethod
-    def _resolve_config(config: Config | None, system_prompt: str) -> Config:
-        """Pick the effective config, applying the optional system-prompt override.
-
-        No Configuration node: build a default config with a cold-load-friendly
-        timeout. A non-empty ``system_prompt`` widget always wins over whatever the
-        Configuration node carries.
-        """
-        if config is None:
-            analyzer: dict[str, Any] = {"timeout": _DEFAULT_TIMEOUT}
-            if system_prompt:
-                analyzer["system_prompt"] = system_prompt
-            return Config.from_json({"analyzer": analyzer})
-        if system_prompt:
-            document = config.to_json()
-            document.setdefault("analyzer", {})["system_prompt"] = system_prompt
-            return Config.from_json(document)
-        return config

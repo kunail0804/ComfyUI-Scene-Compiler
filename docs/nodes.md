@@ -18,7 +18,7 @@ default `knowledge_base/` works regardless of ComfyUI's working directory.
 
 | Node | Inputs | Outputs |
 |---|---|---|
-| **Scene Analyzer** | `natural_language` (STRING), `config` (COMPILER_CONFIG, optional — supplies model/temperature/retries/timeout), `system_prompt` (STRING, optional override) | `scene` (SCENE), `warnings` (STRING), `errors` (STRING) |
+| **Scene Analyzer** | `natural_language` (STRING), `config` (COMPILER_CONFIG, optional — supplies model/temperature/retries/timeout) | `scene` (SCENE), `warnings` (STRING), `errors` (STRING) |
 | **Scene Validator** | `scene` (SCENE), `config` (COMPILER_CONFIG, optional) | `scene` (SCENE), `warnings` (STRING), `errors` (STRING) |
 | **Resolver** | `scene` (SCENE), `knowledge_base` (KNOWLEDGE_BASE), `config` (COMPILER_CONFIG, optional) | `resolved_tags` (RESOLVED_TAGS), `warnings` (STRING), `errors` (STRING) |
 | **Category Splitter** | `resolved_tags` (RESOLVED_TAGS) | `category_map` (CATEGORY_MAP), `warnings` (STRING), `errors` (STRING) |
@@ -31,7 +31,7 @@ prompt strings are produced by the **Prompt Builder**.
 
 | Node | Inputs | Outputs |
 |---|---|---|
-| **Configuration** | one input per configuration option (analyzer, resolver, validator, prompt builder, semantic, debug), plus the Knowledge Base `knowledge_base` path, `resolver_knowledge_base_version`, and `knowledge_base_reload` | `config` (COMPILER_CONFIG), `knowledge_base` (KNOWLEDGE_BASE), `warnings` (STRING), `errors` (STRING) |
+| **Configuration** | the settings a user needs to touch: analyzer (model, temperature, retries, timeout), resolver (strict mode, aliases, expansion, depth, `include_nsfw`, optional `resolver_knowledge_base_version`), validator (`allow_unknown_fields`), `prompt_remove_duplicate_tags`, the opt-in semantic-fallback settings, debug, and `knowledge_base_reload`. The Knowledge Base path is fixed (not user-facing); `prompt_target`/`prompt_separator` are not exposed (fixed defaults). | `config` (COMPILER_CONFIG), `knowledge_base` (KNOWLEDGE_BASE), `warnings` (STRING), `errors` (STRING) |
 | **Debug Viewer** | `scene` (SCENE, optional), `resolved_tags` (RESOLVED_TAGS, optional), `category_map` (CATEGORY_MAP, optional), `warnings` (STRING, optional), `errors` (STRING, optional) | `report` (STRING) |
 
 - The **Configuration** node is the single place for compiler settings. Its `config`

@@ -14,15 +14,12 @@ def default_inputs() -> dict:
         "analyzer_temperature": 0.0,
         "analyzer_max_retries": 3,
         "analyzer_timeout": 60,
-        "knowledge_base": "knowledge_base/",
         "resolver_strict_mode": True,
         "resolver_allow_aliases": True,
         "resolver_expansion_enabled": True,
         "resolver_max_expansion_depth": 8,
         "resolver_include_nsfw": False,
         "validator_allow_unknown_fields": False,
-        "prompt_target": "easy_illustrious",
-        "prompt_separator": ",",
         "prompt_remove_duplicate_tags": True,
         "debug_enabled": False,
         "debug_level": "basic",
@@ -43,8 +40,13 @@ def test_node_metadata() -> None:
     required = ConfigurationNode.INPUT_TYPES()["required"]
     assert "analyzer_model" in required
     assert "debug_level" in required
+    # Removed, leaner inputs: no user-facing KB path, prompt target/separator, or
+    # analyzer system-prompt override.
     optional = ConfigurationNode.INPUT_TYPES()["optional"]
-    assert "analyzer_system_prompt" in optional
+    assert "knowledge_base" not in required
+    assert "prompt_target" not in required
+    assert "prompt_separator" not in required
+    assert "analyzer_system_prompt" not in optional
     assert "knowledge_base_reload" in optional
 
 
@@ -52,7 +54,7 @@ def test_default_inputs_produce_default_config_and_load_the_kb() -> None:
     config, kb, warnings, errors = ConfigurationNode().run(**default_inputs())
     assert isinstance(config, Config)
     assert config == Config()
-    # The node now also loads the shipped reference Knowledge Base.
+    # The node loads the shipped reference Knowledge Base from its fixed path.
     assert isinstance(kb, KnowledgeBase)
     assert len(kb) > 100
     assert (warnings, errors) == ("", "")
@@ -64,7 +66,7 @@ def test_inputs_flow_into_config() -> None:
     inputs["resolver_max_expansion_depth"] = 4
     inputs["resolver_include_nsfw"] = True
     inputs["validator_allow_unknown_fields"] = True
-    inputs["prompt_separator"] = " | "
+    inputs["prompt_remove_duplicate_tags"] = False
     inputs["debug_enabled"] = True
     inputs["debug_level"] = "verbose"
     config, _kb, _warnings, _errors = ConfigurationNode().run(**inputs)
@@ -72,30 +74,16 @@ def test_inputs_flow_into_config() -> None:
     assert config.resolver.max_expansion_depth == 4
     assert config.resolver.include_nsfw is True
     assert config.validator.allow_unknown_fields is True
-    assert config.prompt_builder.separator == " | "
+    assert config.prompt_builder.remove_duplicate_tags is False
     assert config.debug.enabled is True
     assert config.debug.level == "verbose"
 
 
-def test_invalid_knowledge_base_path_surfaces_error_but_keeps_config() -> None:
-    inputs = default_inputs()
-    inputs["knowledge_base"] = "does/not/exist/"
-    config, kb, warnings, errors = ConfigurationNode().run(**inputs)
-    # The config is still emitted (the Analyzer/Validator do not need the KB); the
-    # empty/missing Knowledge Base is surfaced as a warning.
-    assert isinstance(config, Config)
-    assert len(kb) == 0
-    assert "empty" in warnings.lower()
-
-
-def test_system_prompt_override_is_applied() -> None:
-    config, *_ = ConfigurationNode().run(**default_inputs(), analyzer_system_prompt="CUSTOM")
-    assert config.analyzer.system_prompt == "CUSTOM"
-
-
-def test_empty_system_prompt_is_omitted() -> None:
-    config, *_ = ConfigurationNode().run(**default_inputs(), analyzer_system_prompt="")
-    assert config.analyzer.system_prompt is None
+def test_prompt_target_and_separator_keep_their_defaults() -> None:
+    # These are no longer user-facing; the compiler defaults still apply.
+    config, *_ = ConfigurationNode().run(**default_inputs())
+    assert config.prompt_builder.target == "easy_illustrious"
+    assert config.prompt_builder.separator == ","
 
 
 def test_debug_level_options_match_config_schema() -> None:
