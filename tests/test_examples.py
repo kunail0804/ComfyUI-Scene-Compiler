@@ -49,7 +49,6 @@ def test_workflow_is_valid_json_referencing_registered_nodes() -> None:
     # The full pipeline is present.
     for required in (
         "SceneCompilerConfiguration",
-        "SceneCompilerKnowledgeBaseLoader",
         "SceneCompilerAnalyzer",
         "SceneCompilerValidator",
         "SceneCompilerResolver",

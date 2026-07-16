@@ -82,15 +82,14 @@ fixed workflow — every node can be used independently.
 
 | Node | Input | Output |
 |---|---|---|
-| **Scene Analyzer** | Natural language, model, temperature, timeout | Scene JSON (+ warnings, errors, raw) |
-| **Scene Validator** | Scene JSON | Validated Scene JSON (+ warnings, errors, raw) |
-| **Resolver** | Scene JSON, Knowledge Base | Prompt (+ warnings, errors, json) |
+| **Scene Analyzer** | Natural language, Config (optional) | Scene JSON (+ warnings, errors, raw) |
+| **Scene Validator** | Scene JSON, Config (optional) | Validated Scene JSON (+ warnings, errors, raw) |
+| **Resolver** | Scene JSON, Knowledge Base, Config (optional) | Prompt (+ warnings, errors, json) |
 
 ### Support nodes
 
 - **Debug Viewer** — inspect any intermediate state (Scene JSON, Resolved Tags, categories, warnings, errors).
-- **Knowledge Base Loader** — load the active Knowledge Base, with manual reload for development.
-- **Configuration Node** — centralize compiler settings without editing workflows.
+- **Configuration Node** — the single place for compiler settings; it also loads the Knowledge Base from the configured path and emits it (as a `knowledge_base` output) for the Resolver, so there is no separate loader node.
 
 ### Knowledge Base Editor (optional web tool)
 
