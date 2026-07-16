@@ -1,10 +1,9 @@
 """ComfyUI node for the compiler Configuration (MASTER_SPEC §20, §23).
 
-A thin interface: it collects the configuration options as node inputs and emits a
-single COMPILER_CONFIG that the other nodes consume, so behaviour can change without
-editing the workflow. It also loads the Knowledge Base from the configured path and
-emits it for the Resolver, so the Knowledge Base directory is entered in exactly one
-place (there is no separate Knowledge Base Loader node). It never imports ComfyUI.
+A thin interface: it collects the settings a user actually needs to touch and emits
+a single COMPILER_CONFIG the other nodes consume, so behaviour can change without
+editing the workflow. It also loads the Knowledge Base and emits it for the Resolver,
+so the pipeline needs no separate loader node. It never imports ComfyUI.
 """
 
 from __future__ import annotations
@@ -18,9 +17,13 @@ from .kb_loading import load_cached_knowledge_base
 
 _DEBUG_LEVELS = ["none", "basic", "verbose", "developer"]
 
+# The Knowledge Base ships inside the package, so its path is fixed rather than a
+# user-facing setting.
+_KNOWLEDGE_BASE_PATH = "knowledge_base/"
+
 
 class ConfigurationNode:
-    """Centralizes compiler configuration and loads the Knowledge Base for the pipeline."""
+    """Centralizes compiler settings and loads the Knowledge Base for the pipeline."""
 
     CATEGORY = "Scene Compiler"
     FUNCTION = "run"
@@ -35,7 +38,7 @@ class ConfigurationNode:
                     "STRING",
                     {
                         "default": "llama3",
-                        "tooltip": "Ollama model the Scene Analyzer uses to read the description.",
+                        "tooltip": "Which local Ollama model reads your description (e.g. llama3).",
                     },
                 ),
                 "analyzer_temperature": (
@@ -45,7 +48,7 @@ class ConfigurationNode:
                         "min": 0.0,
                         "max": 2.0,
                         "step": 0.1,
-                        "tooltip": "Analyzer sampling temperature. 0 = most repeatable.",
+                        "tooltip": "How freely the model interprets. 0 = most consistent.",
                     },
                 ),
                 "analyzer_max_retries": (
@@ -54,7 +57,7 @@ class ConfigurationNode:
                         "default": 3,
                         "min": 0,
                         "max": 10,
-                        "tooltip": "How many times to re-ask when the model returns bad JSON.",
+                        "tooltip": "How many times to retry if the model returns a bad answer.",
                     },
                 ),
                 "analyzer_timeout": (
@@ -64,33 +67,31 @@ class ConfigurationNode:
                         "min": 1,
                         "max": 3600,
                         "tooltip": (
-                            "Seconds to wait for the model. 300 s is generous so a model that "
-                            "cold-loads into VRAM on the first call does not time out."
-                        ),
-                    },
-                ),
-                "knowledge_base": (
-                    "STRING",
-                    {
-                        "default": "knowledge_base/",
-                        "tooltip": (
-                            "Knowledge Base directory. Relative paths resolve against the node "
-                            "package. This is the authoritative path when this Configuration is "
-                            "wired into the Knowledge Base Loader."
+                            "How long to wait for the model, in seconds. The default is generous "
+                            "so the first run (while the model loads) doesn't time out."
                         ),
                     },
                 ),
                 "resolver_strict_mode": (
                     "BOOLEAN",
-                    {"default": True, "tooltip": "Report unknown concepts instead of guessing."},
+                    {
+                        "default": True,
+                        "tooltip": "Report concepts not in the Knowledge Base instead of guessing.",
+                    },
                 ),
                 "resolver_allow_aliases": (
                     "BOOLEAN",
-                    {"default": True, "tooltip": "Resolve aliases to their canonical entry."},
+                    {
+                        "default": True,
+                        "tooltip": "Map synonyms to the same tag (e.g. 'girl' = 'female').",
+                    },
                 ),
                 "resolver_expansion_enabled": (
                     "BOOLEAN",
-                    {"default": True, "tooltip": "Auto-add tags from an entry's expansion list."},
+                    {
+                        "default": True,
+                        "tooltip": "Automatically add related tags (e.g. an outfit's parts).",
+                    },
                 ),
                 "resolver_max_expansion_depth": (
                     "INT",
@@ -98,69 +99,47 @@ class ConfigurationNode:
                         "default": 8,
                         "min": 1,
                         "max": 32,
-                        "tooltip": "How deep expansion may recurse before stopping.",
+                        "tooltip": "How far related tags are followed. Higher adds more tags.",
                     },
                 ),
                 "resolver_include_nsfw": (
                     "BOOLEAN",
                     {
                         "default": False,
-                        "tooltip": "Include explicit-rated Knowledge Base entries. Off = SFW only.",
+                        "tooltip": "Allow explicit (NSFW) tags. Off keeps results safe-for-work.",
                     },
                 ),
                 "validator_allow_unknown_fields": (
                     "BOOLEAN",
                     {
                         "default": False,
-                        "tooltip": "Keep unrecognized Scene JSON fields instead of stripping them.",
-                    },
-                ),
-                "prompt_target": (
-                    "STRING",
-                    {
-                        "default": "easy_illustrious",
-                        "tooltip": "Reserved prompt-format label. Currently informational.",
-                    },
-                ),
-                "prompt_separator": (
-                    "STRING",
-                    {
-                        "default": ",",
-                        "tooltip": "String used to join the resolved tags into the final prompt.",
+                        "tooltip": "Keep unexpected fields in the scene data. Usually leave off.",
                     },
                 ),
                 "prompt_remove_duplicate_tags": (
                     "BOOLEAN",
                     {
                         "default": True,
-                        "tooltip": "Drop duplicate tags after expansion (warns SC0007).",
+                        "tooltip": "Remove repeated tags from the final prompt. Recommended on.",
                     },
                 ),
                 "debug_enabled": (
                     "BOOLEAN",
-                    {"default": False, "tooltip": "Enable extra diagnostic logging."},
+                    {"default": False, "tooltip": "Turn on extra logging to troubleshoot."},
                 ),
                 "debug_level": (
                     _DEBUG_LEVELS,
-                    {"default": "basic", "tooltip": "Verbosity of debug logging when enabled."},
+                    {"default": "basic", "tooltip": "How much detail the logs include."},
                 ),
             },
             # Appended at the END so saved workflows keep their positional widget
             # values (ComfyUI stores widget values positionally).
             "optional": {
-                "analyzer_system_prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "default": "",
-                        "tooltip": "Advanced: override the analyzer system prompt.",
-                    },
-                ),
                 "resolver_knowledge_base_version": (
                     "STRING",
                     {
                         "default": "",
-                        "tooltip": "Pin a KB dataset version. Empty = unpinned.",
+                        "tooltip": "Advanced: pin a Knowledge Base version. Empty = default.",
                     },
                 ),
                 "semantic_enabled": (
@@ -168,8 +147,8 @@ class ConfigurationNode:
                     {
                         "default": False,
                         "tooltip": (
-                            "Opt-in nearest-neighbour fallback for concepts that miss "
-                            "deterministic lookup. Off by default; deterministic lookup wins."
+                            "Find the closest known tag when a concept isn't recognized. Off by "
+                            "default; it never invents tags."
                         ),
                     },
                 ),
@@ -180,14 +159,14 @@ class ConfigurationNode:
                         "min": 0.0,
                         "max": 1.0,
                         "step": 0.05,
-                        "tooltip": "Minimum similarity to accept a semantic-fallback match.",
+                        "tooltip": "How close a match must be for the closest-tag search.",
                     },
                 ),
                 "semantic_backend": (
                     "STRING",
                     {
                         "default": "char_ngram",
-                        "tooltip": "Embedding backend for the semantic fallback (offline).",
+                        "tooltip": "Advanced: which method the closest-tag search uses.",
                     },
                 ),
                 "knowledge_base_reload": (
@@ -195,7 +174,7 @@ class ConfigurationNode:
                     {
                         "default": 0,
                         "min": 0,
-                        "tooltip": "Bump to force a fresh read of the Knowledge Base from disk.",
+                        "tooltip": "Bump this if you edited the Knowledge Base, to reload it.",
                     },
                 ),
             },
@@ -207,38 +186,29 @@ class ConfigurationNode:
         analyzer_temperature: float,
         analyzer_max_retries: int,
         analyzer_timeout: int,
-        knowledge_base: str,
         resolver_strict_mode: bool,
         resolver_allow_aliases: bool,
         resolver_expansion_enabled: bool,
         resolver_max_expansion_depth: int,
         resolver_include_nsfw: bool,
         validator_allow_unknown_fields: bool,
-        prompt_target: str,
-        prompt_separator: str,
         prompt_remove_duplicate_tags: bool,
         debug_enabled: bool,
         debug_level: str,
-        analyzer_system_prompt: str = "",
         resolver_knowledge_base_version: str = "",
         semantic_enabled: bool = False,
         semantic_min_similarity: float = 0.5,
         semantic_backend: str = "char_ngram",
         knowledge_base_reload: int = 0,
     ) -> tuple[Any, Any, str, str]:
-        analyzer: dict[str, Any] = {
-            "model": analyzer_model,
-            "temperature": analyzer_temperature,
-            "max_retries": analyzer_max_retries,
-            "timeout": analyzer_timeout,
-        }
-        if analyzer_system_prompt:
-            analyzer["system_prompt"] = analyzer_system_prompt
-
         document = {
-            "analyzer": analyzer,
+            "analyzer": {
+                "model": analyzer_model,
+                "temperature": analyzer_temperature,
+                "max_retries": analyzer_max_retries,
+                "timeout": analyzer_timeout,
+            },
             "resolver": {
-                "knowledge_base": knowledge_base,
                 "strict_mode": resolver_strict_mode,
                 "allow_aliases": resolver_allow_aliases,
                 "expansion_enabled": resolver_expansion_enabled,
@@ -256,11 +226,7 @@ class ConfigurationNode:
                 "min_similarity": semantic_min_similarity,
                 "backend": semantic_backend,
             },
-            "prompt_builder": {
-                "target": prompt_target,
-                "separator": prompt_separator,
-                "remove_duplicate_tags": prompt_remove_duplicate_tags,
-            },
+            "prompt_builder": {"remove_duplicate_tags": prompt_remove_duplicate_tags},
             "debug": {"enabled": debug_enabled, "level": debug_level},
         }
 
@@ -269,10 +235,10 @@ class ConfigurationNode:
         except ConfigError as error:
             return (None, None, "", format_messages([error.message]))
 
-        # Load the Knowledge Base from the configured path/version and emit it for
-        # the Resolver, so the Knowledge Base directory is entered in one place.
+        # Load the shipped Knowledge Base and emit it for the Resolver, so the
+        # Knowledge Base is loaded in one place with no separate loader node.
         kb, warnings, errors, _raw = load_cached_knowledge_base(
-            knowledge_base,
+            _KNOWLEDGE_BASE_PATH,
             resolver_knowledge_base_version,
             knowledge_base_reload,
         )

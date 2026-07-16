@@ -27,12 +27,12 @@ class SceneValidatorNode:
     def INPUT_TYPES(cls) -> dict[str, Any]:
         return {
             "required": {
-                "scene": ("SCENE", {"tooltip": "Raw Scene JSON from the Scene Analyzer."}),
+                "scene": ("SCENE", {"tooltip": "The scene data from the Scene Analyzer."}),
             },
             "optional": {
                 "config": (
                     "COMPILER_CONFIG",
-                    {"tooltip": "Optional Configuration node; supplies the unknown-field policy."},
+                    {"tooltip": "Optional: connect a Configuration node."},
                 )
             },
         }

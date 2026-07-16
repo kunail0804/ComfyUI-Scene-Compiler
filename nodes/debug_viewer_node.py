@@ -28,15 +28,23 @@ class DebugViewerNode:
             "optional": {
                 "scene": (
                     "SCENE",
-                    {"tooltip": "Scene JSON to inspect (Analyzer/Validator output)."},
+                    {"tooltip": "Any scene data to inspect (from the Analyzer or Validator)."},
                 ),
                 "warnings": (
                     "STRING",
-                    {"default": "", "forceInput": True, "tooltip": "A stage's warnings output."},
+                    {
+                        "default": "",
+                        "forceInput": True,
+                        "tooltip": "A stage's warnings output to view.",
+                    },
                 ),
                 "errors": (
                     "STRING",
-                    {"default": "", "forceInput": True, "tooltip": "A stage's errors output."},
+                    {
+                        "default": "",
+                        "forceInput": True,
+                        "tooltip": "A stage's errors output to view.",
+                    },
                 ),
             }
         }

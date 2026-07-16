@@ -12,10 +12,10 @@ from nodes.scene_analyzer_node import SceneAnalyzerNode
 
 def test_input_types_structure() -> None:
     inputs = SceneAnalyzerNode.INPUT_TYPES()
-    # Analyzer settings now live on the Configuration node; only the per-run text
-    # and the optional config/override remain.
+    # Analyzer settings live on the Configuration node; only the per-run text and
+    # the optional config connection remain.
     assert set(inputs["required"]) == {"natural_language"}
-    assert set(inputs["optional"]) == {"config", "system_prompt"}
+    assert set(inputs["optional"]) == {"config"}
 
 
 def test_node_metadata() -> None:
@@ -70,33 +70,6 @@ def test_no_messages_yield_empty_strings(monkeypatch) -> None:
     monkeypatch.setattr(node_module, "analyze", lambda d, b, c: CompilerResult(data="S"))
     scene, warnings, errors, *_ = SceneAnalyzerNode().run("x")
     assert (warnings, errors) == ("", "")
-
-
-def test_system_prompt_override_without_config(monkeypatch) -> None:
-    captured = {}
-
-    def fake_analyze(description, backend, config):
-        captured["system_prompt"] = config.analyzer.system_prompt
-        return CompilerResult(data="S")
-
-    monkeypatch.setattr(node_module, "analyze", fake_analyze)
-    SceneAnalyzerNode().run("x", system_prompt="CUSTOM")
-    assert captured["system_prompt"] == "CUSTOM"
-
-
-def test_system_prompt_override_wins_over_config(monkeypatch) -> None:
-    captured = {}
-
-    def fake_analyze(description, backend, config):
-        captured["system_prompt"] = config.analyzer.system_prompt
-        captured["model"] = config.analyzer.model
-        return CompilerResult(data="S")
-
-    monkeypatch.setattr(node_module, "analyze", fake_analyze)
-    config = Config.from_json({"analyzer": {"model": "mistral", "system_prompt": "FROM_CONFIG"}})
-    SceneAnalyzerNode().run("x", config=config, system_prompt="OVERRIDE")
-    assert captured["system_prompt"] == "OVERRIDE"
-    assert captured["model"] == "mistral"
 
 
 def test_registered_for_comfyui() -> None:

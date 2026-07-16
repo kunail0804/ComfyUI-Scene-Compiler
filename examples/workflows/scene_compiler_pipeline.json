@@ -19,8 +19,8 @@
       ],
       "properties": { "Node name for S&R": "SceneCompilerConfiguration" },
       "widgets_values": [
-        "llama3", 0.0, 3, 300, "knowledge_base/", true, true, true, 8, false, false,
-        "easy_illustrious", ",", true, false, "basic", "", "", false, 0.5, "char_ngram", 0
+        "llama3", 0.0, 3, 300, true, true, true, 8, false, false, true, false, "basic",
+        "", false, 0.5, "char_ngram", 0
       ]
     },
     {
@@ -42,8 +42,7 @@
       ],
       "properties": { "Node name for S&R": "SceneCompilerAnalyzer" },
       "widgets_values": [
-        "A blonde girl wearing a dress smiles in a classroom at sunset.",
-        ""
+        "A blonde girl wearing a dress smiles in a classroom at sunset."
       ]
     },
     {
