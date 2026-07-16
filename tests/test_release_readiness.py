@@ -12,13 +12,13 @@ def _pyproject() -> dict:
     return tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
 
 
-def test_version_is_2_0_0() -> None:
-    assert _pyproject()["project"]["version"] == "2.0.0"
+def test_version_is_2_1_0() -> None:
+    assert _pyproject()["project"]["version"] == "2.1.0"
 
 
 def test_changelog_documents_current_version() -> None:
     changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    assert "2.0.0" in changelog
+    assert "2.1.0" in changelog
 
 
 def test_definition_of_done_exists() -> None:

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "comfyui-scene-compiler"
-version = "2.0.0"
+version = "2.1.0"
 description = "Deterministic natural-language-to-prompt compiler for ComfyUI (Illustrious)."
 readme = "README.md"
 requires-python = ">=3.11"
