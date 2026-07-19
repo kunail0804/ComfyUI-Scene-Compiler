@@ -1,14 +1,12 @@
 # ComfyUI Scene Compiler
 
 **A deterministic prompt compiler for ComfyUI.**
-Turn a plain-language scene description into structured, category-separated
-Illustrious tags — without an LLM inventing anything.
+Turn a plain-language scene description into a clean, valid Illustrious tag
+prompt — without an LLM inventing anything.
 
-> **Status:** Version 2 (Semantic Resolution) complete on `main`; the deterministic
-> Version 1 pipeline shipped in v1.0.0 / v1.1.0. This repository is spec-driven; the
-> full design is documented in [`MASTER_SPEC.md`](../MASTER_SPEC.md) and in the
-> [Wiki](../../wiki). Follow the [Roadmap](../../wiki/Roadmap) and
-> [issues](../../issues) for progress.
+> **Status:** Version 2 released (`v2.1.0`). The deterministic Version 1 pipeline
+> shipped in v1.0.0 / v1.1.0. Full documentation lives in the [Wiki](../../wiki);
+> see the [Roadmap](../../wiki/Roadmap) and [issues](../../issues) for what's next.
 
 ---
 
@@ -33,70 +31,137 @@ deterministic and traceable.
 
 ```
 Natural Language
-  → Scene Analyzer      → Scene JSON
-  → Scene Validator     → Validated Scene JSON
-  → Resolver            → Prompt
+  → Scene Analyzer   → Scene JSON
+  → Scene Validator  → Validated Scene JSON
+  → Resolver         → Prompt
 ```
 
-The Resolver both resolves concepts to Knowledge Base tags and translates them
-into a single flat prompt string (in resolution order). There are no categories.
-
 Only the **Scene Analyzer** uses an LLM, and only to understand language — never
-to produce tags. Every generated tag is looked up deterministically in a
-data-only **Knowledge Base** (Version 1 ships a large Knowledge Base generated
-from a real Danbooru tag vocabulary, so the tags are always valid and never
-invented) and stays fully traceable:
+to produce tags. Every generated tag is looked up in a data-only **Knowledge
+Base** built from a real Danbooru tag vocabulary, so tags are always valid and
+never invented. The Resolver both resolves concepts to tags and joins them into a
+single flat prompt string, in resolution order. Every tag stays traceable:
 
 ```
 Natural Language → Scene JSON → Knowledge Base Entry → Resolved Tag → Prompt
 ```
 
-Version 2 adds an **opt-in** semantic (nearest-neighbour) fallback for concepts that
-miss deterministic lookup. It is off by default, deterministic when enabled, and can
-only return an entry that already exists in the Knowledge Base — so it never invents a
-tag. Deterministic lookup always wins.
+---
+
+## What Version 2 changed
+
+Version 1 proved the compiler works. Version 2 is about making it **know more and
+ask less** — without giving up a single guarantee.
+
+### Know more
+
+The V1 compiler was honest but narrow: a concept missing from the Knowledge Base
+was simply dropped, and the Knowledge Base only grew by hand.
+
+- **The Knowledge Base grows itself.** A fully automated pipeline regenerates it
+  from committed Danbooru snapshots — generate candidates, ingest aliases and
+  implications, auto-validate, scan for conflicts, write. There is **no approval
+  gate**: an automation that stops to ask a human is an automation that doesn't run.
+- **Near-misses are caught, not dropped.** An **opt-in** semantic (nearest-neighbour)
+  fallback resolves concepts that miss exact lookup. It is off by default,
+  deterministic when enabled, and can only return an entry that *already exists* in
+  the Knowledge Base — so it can never invent a tag. Deterministic lookup always wins.
+- **Detail stops leaking.** The compiler used to silently discard parts of what you
+  wrote. Now modifiers survive (`open white shirt` → `white shirt` **and**
+  `open shirt`), every item of a list is transcribed, and relationships are kept
+  rather than flattened to a noun (`money in her hand` → `holding money`, not just
+  `money`). The same fidelity applies to explicit content — nothing is quietly
+  softened or skipped.
+
+### Ask less
+
+V1 exposed almost every internal as a node or a widget. That is honest, but it
+pushes the compiler's internal shape onto the user.
+
+- **Configuration lives in one place.** All settings are on the **Configuration**
+  node; the stage nodes take a single optional `config` connection. The analyzer
+  model used to be set in two disconnected places — now it's set once.
+- **Fewer nodes.** Stages that carried no real decisions were folded away: the
+  Category Splitter and Prompt Builder collapsed into the Resolver (V1.1), and the
+  Knowledge Base Loader collapsed into the Configuration node (V2.1). Eight nodes
+  became five.
+- **Don't ask what the system already knows.** The Knowledge Base ships inside the
+  package, so its path is no longer a question. Options that aren't ready or aren't
+  really user-facing (prompt target, separator, hand-written system prompts) are not
+  exposed — they keep working defaults instead.
+- **Plain language.** Every input has a tooltip written for a user, not for a compiler
+  engineer.
+
+### What did not change
+
+Determinism. Every V2 addition is opt-in, bounded to the existing Knowledge Base,
+and reproducible: the same Scene JSON, Knowledge Base, and configuration always
+compile to the same prompt. Knowledge stays data, never code. Nothing is invented.
 
 ---
 
 ## Key principles
 
-- **Determinism first** — the compiler core is deterministic: a given Scene JSON + Knowledge Base + config always produces the same output, with no random seeds. (The one non-deterministic step is the LLM understanding the language up front; everything after it is reproducible.)
+- **Determinism first** — a given Scene JSON + Knowledge Base + config always produces the same output, with no random seeds. (The one non-deterministic step is the LLM understanding the language up front; everything after it is reproducible.)
 - **No hallucinations** — if it isn't in the description, it isn't in the output. Unknown concepts are reported, never guessed.
 - **Knowledge is data** — every concept→tag mapping lives in the Knowledge Base, never in code.
+- **Fidelity** — described detail must survive to the prompt, or be reported. Silence is a bug.
 - **Traceability** — every tag can be explained back to the sentence it came from.
-- **Separation of concerns** — each stage does exactly one job and can be tested on its own.
-- **Nodes are interfaces** — ComfyUI nodes are thin wrappers; all logic lives in the compiler package.
+- **Automation without gates** — the pipeline runs end to end with zero required human input.
+- **Nodes are interfaces** — ComfyUI nodes are thin wrappers; all logic lives in the compiler package, and settings live on one node.
 
-Version 1 targets the **Illustrious** model family only. The architecture is
-model-independent so future versions can add Pony, Flux, NoobAI, and others
+Version 2 targets the **Illustrious** model family. The architecture is
+model-independent, so future versions can add Pony, Flux, NoobAI, and others
 without changing the compiler core.
 
 ---
 
 ## Nodes
 
-Scene Compiler ships as a ComfyUI custom-node package. It is a toolbox, not a
-fixed workflow — every node can be used independently.
+Scene Compiler ships as a ComfyUI custom-node package of **five** nodes. It is a
+toolbox, not a fixed workflow — every node can be used independently.
 
 ### Pipeline nodes
 
-| Node | Input | Output |
+| Node | Inputs | Outputs |
 |---|---|---|
-| **Scene Analyzer** | Natural language, Config (optional) | Scene JSON (+ warnings, errors, raw) |
-| **Scene Validator** | Scene JSON, Config (optional) | Validated Scene JSON (+ warnings, errors, raw) |
-| **Resolver** | Scene JSON, Knowledge Base, Config (optional) | Prompt (+ warnings, errors, json) |
+| **Scene Analyzer** | `natural_language`, `config` *(optional)* | `scene`, `warnings`, `errors`, `raw` |
+| **Scene Validator** | `scene`, `config` *(optional)* | `scene`, `warnings`, `errors`, `raw` |
+| **Resolver** | `scene`, `knowledge_base`, `config` *(optional)* | `prompt`, `warnings`, `errors`, `json` |
+
+The Resolver is the final stage: it resolves concepts to Knowledge Base tags and
+joins them into one flat `prompt` string. Its `json` output carries the traceable
+resolved tags so a translation problem is inspectable.
 
 ### Support nodes
 
-- **Debug Viewer** — inspect any intermediate state (Scene JSON, Resolved Tags, categories, warnings, errors).
-- **Configuration Node** — the single place for compiler settings; it also loads the Knowledge Base from the configured path and emits it (as a `knowledge_base` output) for the Resolver, so there is no separate loader node.
+| Node | Inputs | Outputs |
+|---|---|---|
+| **Configuration** | all compiler settings (see below) | `config`, `knowledge_base`, `warnings`, `errors` |
+| **Debug Viewer** | `scene`, `warnings`, `errors` *(all optional)* | `report` |
+
+- **Configuration** is the single place for compiler settings *and* the Knowledge
+  Base loader: it reads the Knowledge Base that ships with the package and emits it
+  on its `knowledge_base` output, which you wire into the Resolver. Bump its
+  `knowledge_base_reload` counter after editing the Knowledge Base to re-read it.
+- **Debug Viewer** is read-only; connect any intermediate state to inspect it.
+
+A typical graph:
+
+```
+Configuration ─ config ──────────► Scene Analyzer / Scene Validator / Resolver
+              └ knowledge_base ───► Resolver
+
+Scene Analyzer → Scene Validator → Resolver → (your image workflow)
+```
 
 ### Knowledge Base Editor (optional web tool)
 
-Version 2 adds an optional browser editor for curated Knowledge Base entries, served
-by ComfyUI at `http://127.0.0.1:8188/scene-compiler/kb`. It offers create/edit/delete
-with live validation and atomic, format-safe saves. It is entirely off the compile
-critical path — the compiler never depends on it.
+Not a node. Version 2 adds an optional browser editor for curated Knowledge Base
+entries, served by ComfyUI at `http://127.0.0.1:8188/scene-compiler/kb`. It offers
+create/edit/delete with live validation and atomic, format-safe saves. It is the
+*only* manual surface in the project and is entirely off the compile critical path —
+the compiler never depends on it.
 
 ---
 
@@ -120,12 +185,17 @@ instance for language understanding; the rest of the pipeline runs fully offline
 
 ## Quick start
 
-1. Add a **Scene Analyzer** node and type a description, e.g.
+1. Add a **Configuration** node (it also loads the Knowledge Base).
+2. Add a **Scene Analyzer** and type a description, e.g.
    *"A blonde girl wearing a white dress hugs a young man while walking in the rain."*
-2. Connect **Scene Analyzer → Scene Validator → Resolver**.
-3. Wire the **Resolver**'s `prompt` output into your image-generation workflow
+3. Wire **Scene Analyzer → Scene Validator → Resolver**, and connect Configuration's
+   `config` to each stage and its `knowledge_base` to the Resolver.
+4. Send the **Resolver**'s `prompt` output into your image-generation workflow
    (e.g. EasyIllustrious).
-4. Use the **Debug Viewer** on any connection to inspect the intermediate state.
+5. Drop a **Debug Viewer** on any connection to inspect the intermediate state.
+
+A ready-made graph is in
+[`examples/workflows/scene_compiler_pipeline.json`](examples/workflows/scene_compiler_pipeline.json).
 
 Given the example above, the compiler extracts `female`, `blonde hair`,
 `white dress`, `male`, the interaction `hug`, and environment `rain` — and
@@ -144,14 +214,20 @@ Full documentation lives in the **[Wiki](../../wiki)**:
 - [Scene JSON & Schemas](../../wiki/Scene-JSON-and-Schemas)
 - [Scene Analyzer](../../wiki/Scene-Analyzer)
 - [Knowledge Base](../../wiki/Knowledge-Base)
-- [Resolver, Categories & Prompt Builder](../../wiki/Resolver-Categories-and-Prompt-Builder)
+- [Resolver & Prompt](../../wiki/Resolver-and-Prompt)
 - [ComfyUI Nodes](../../wiki/ComfyUI-Nodes)
 - [Configuration, Errors & Logging](../../wiki/Configuration-Errors-and-Logging)
 - [Development, Testing & Contributing](../../wiki/Development-Testing-and-Contributing)
 - [Roadmap](../../wiki/Roadmap)
 - [Glossary & Reference](../../wiki/Glossary-and-Reference)
 
-The complete normative specification is [`MASTER_SPEC.md`](../MASTER_SPEC.md).
+In-repo notes live in [`docs/`](docs/) — see [`docs/nodes.md`](docs/nodes.md) for the
+node reference and [`docs/knowledge_base_build.md`](docs/knowledge_base_build.md) for
+how the Knowledge Base is regenerated.
+
+[`MASTER_SPEC.md`](../MASTER_SPEC.md) is the original design specification. It records
+the V1 design intent; where it and the shipped code disagree, the code and this
+documentation win.
 
 ---
 
@@ -160,15 +236,15 @@ The complete normative specification is [`MASTER_SPEC.md`](../MASTER_SPEC.md).
 - **Version 1 — Deterministic Compiler Foundation** *(done — v1.0.0 / v1.1.0)*: the
   complete deterministic pipeline for Illustrious, plus Ollama integration, Knowledge
   Base, Debug Viewer, and regression tests.
-- **Version 2 — Semantic Resolution** *(done on `main`)*: opt-in semantic/embedding
-  fallback search, Knowledge Base editor, automatic Knowledge Base builder, Knowledge
-  Base versioning, concept fidelity, and performance — determinism preserved.
-  (Analyzer localization was dropped as unnecessary.)
+- **Version 2 — Semantic Resolution** *(done — v2.0.0 / v2.1.0)*: opt-in
+  semantic/embedding fallback, automatic Knowledge Base builder, Knowledge Base
+  versioning and editor, concept fidelity, performance, and the node/configuration
+  consolidation — determinism preserved. (Analyzer localization was dropped as
+  unnecessary.)
 - **Version 3 — Extensible Compiler Platform**: multi-model Resolvers, a plugin
   system, multiple Analyzer backends, and a standalone Compiler SDK.
-- **Version 4 — Consolidation**: tidy-up and a single unified node that runs the
-  whole pipeline, since most stage nodes carry little configuration. The granular
-  nodes stay available for debugging.
+- **Version 4 — Consolidation**: a single unified node that runs the whole pipeline,
+  continuing the V2 consolidation. The granular nodes stay available for debugging.
 
 See the [Roadmap](../../wiki/Roadmap) for details.
 
@@ -176,7 +252,8 @@ See the [Roadmap](../../wiki/Roadmap) for details.
 
 ## Contributing
 
-Contributions are welcome — especially Knowledge Base entries. Please read the
+Contributions are welcome — especially Knowledge Base entries. Please read
+[CONTRIBUTING.md](CONTRIBUTING.md) and the
 [Development, Testing & Contributing](../../wiki/Development-Testing-and-Contributing)
 guide first. Core rule: **never hardcode knowledge, and never break determinism.**
 
