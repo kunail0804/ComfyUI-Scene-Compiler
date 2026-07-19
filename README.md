@@ -225,9 +225,9 @@ In-repo notes live in [`docs/`](docs/) — see [`docs/nodes.md`](docs/nodes.md) 
 node reference and [`docs/knowledge_base_build.md`](docs/knowledge_base_build.md) for
 how the Knowledge Base is regenerated.
 
-[`MASTER_SPEC.md`](../MASTER_SPEC.md) is the original design specification. It records
-the V1 design intent; where it and the shipped code disagree, the code and this
-documentation win.
+[`MASTER_SPEC.md`](MASTER_SPEC.md) is the full normative specification, maintained
+through Version 2. Chapters superseded by later versions are marked in place rather
+than deleted, so the original design intent stays readable.
 
 ---
 
