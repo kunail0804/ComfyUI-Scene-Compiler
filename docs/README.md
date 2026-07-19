@@ -3,10 +3,11 @@
 Project documentation is maintained primarily in the
 [GitHub Wiki](https://github.com/kunail0804/ComfyUI-Scene-Compiler/wiki).
 
-[`MASTER_SPEC.md`](../MASTER_SPEC.md) at the repository root is the original design
-specification: it records the Version 1 design intent and is kept for reference.
-Where it and the shipped code disagree, **the code and this documentation win** —
-V1.1 and V2 changed parts of the pipeline (see the [Roadmap](https://github.com/kunail0804/ComfyUI-Scene-Compiler/wiki/Roadmap)).
+[`MASTER_SPEC.md`](../MASTER_SPEC.md) at the repository root is the full normative
+specification, maintained through Version 2. Chapters that later versions superseded
+(the Category Splitter and Prompt Builder stages, the Knowledge Base Loader node) are
+marked in place rather than deleted, so the original design intent stays readable
+alongside what ships today.
 
 This `docs/` directory holds documentation that is **not** part of the wiki —
 developer guides and generated references.
