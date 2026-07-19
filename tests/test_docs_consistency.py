@@ -29,15 +29,23 @@ def test_docs_mention_every_node(doc: Path) -> None:
 
 
 def test_node_reference_covers_inter_stage_types() -> None:
+    # The live inter-stage types. RESOLVED_TAGS and CATEGORY_MAP were retired with
+    # the Category Splitter and Prompt Builder in V1.1, so the reference must not be
+    # required to mention them.
     text = (REPO_ROOT / "docs" / "nodes.md").read_text(encoding="utf-8")
-    for type_name in (
-        "SCENE",
-        "RESOLVED_TAGS",
-        "CATEGORY_MAP",
-        "KNOWLEDGE_BASE",
-        "COMPILER_CONFIG",
-    ):
+    for type_name in ("SCENE", "KNOWLEDGE_BASE", "COMPILER_CONFIG"):
         assert type_name in text
+
+
+def test_node_reference_does_not_resurrect_removed_nodes() -> None:
+    """Guard the reference against listing nodes that no longer ship.
+
+    Matches table rows only, so prose explaining that a node was removed is fine.
+    """
+    text = (REPO_ROOT / "docs" / "nodes.md").read_text(encoding="utf-8")
+    for removed in ("Knowledge Base Loader", "Category Splitter", "Prompt Builder"):
+        row = f"| **{removed}**"
+        assert row not in text, f"docs/nodes.md still lists the removed {removed!r} node"
 
 
 def test_contributing_links_the_knowledge_base_guide() -> None:
